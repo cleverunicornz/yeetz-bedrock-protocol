@@ -20,6 +20,8 @@ Witnesses are grouped by the promise they observe.
 - `Head` — the exact commit the observation ran against
 - `Observed` — the date of the observation
 - `Evidence` — URLs, digests, and artifact references
+- `Oracle legs` — one row per oracle Pass leg, naming the evidence that
+  decided it
 
 ## Results
 
@@ -35,6 +37,9 @@ Witnesses are grouped by the promise they observe.
   artifact digest, or a committed result file.
 - A failed witness explains how a promise's state changed; keep it.
 - A witness observes one promise under one oracle at one head.
+- Every Pass leg is independently evidenced. The artifact whose provenance
+  is being judged cannot serve as evidence for its own provenance.
+- A PASS witness that omits an oracle leg is INVALID, not partial PASS.
 
 ## Reference discipline
 

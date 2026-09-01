@@ -52,6 +52,13 @@ Every state transition cites its cause:
 
 State never rests on uncited judgment.
 
+## Assurance coverage
+
+A promise may enter `assured` only when its cited PASS witnesses cover every
+behavior asserted in the Promise section. Any behavior not exercised by the
+witnesses must be named explicitly in Residual as outside the assurance.
+Residual cannot silently narrow the behavior marked invariant by `assured`.
+
 ## Rules
 
 - A promise states behavior, not implementation detail.

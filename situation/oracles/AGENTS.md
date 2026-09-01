@@ -18,17 +18,37 @@ O-<six digits>-<kebab-case-name>.md
 - `Pass` — the condition that passes
 - `Fail` — the condition that fails
 - `Implementation` — present only when state is `implemented`
+- `Implementation coverage` — one row per Pass and Fail leg, naming the
+  executable decision or marking the leg `manual`
 
 ## States
 
 `designed` — the judgment rule is stated but no executable check exists.
 
 `implemented` — a test, workflow, or checker command exists and runs. The
-Implementation section links it.
+Implementation section links it. `implemented` does not mean every leg is
+automated; the coverage table states exactly which legs are executable and
+which remain manual.
+
+## Implementation coverage
+
+Every independently decidable Pass and Fail leg appears once:
+
+```markdown
+| Leg | Decision | Coverage |
+|---|---|---|
+| P1 | Every locked digest matches | `scripts/protocol-sync.sh` |
+| P2 | Release tag resolves to locked commit | manual |
+```
+
+An executable may not be credited with a leg it does not decide. A manual
+leg is valid, but witnesses must carry direct evidence for it.
 
 ## Rules
 
 - Pass and fail conditions must be decidable from the stated inputs.
+- `implemented` requires at least one executable leg. A wholly manual
+  oracle remains `designed`.
 - One oracle may judge one promise. When a judgment rule serves multiple
   promises, write one oracle per promise and link them in References.
 - The oracle does not record results; witnesses do that.

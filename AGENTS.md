@@ -43,6 +43,9 @@ deliberate.
   clone, a private checkout, or a machine-local path.
 - Files are copied byte-for-byte by consumers. Any edit to a published file
   requires a version bump, a manifest regeneration, and a release.
+- Quantitative protocol claims identify their source path and are derived
+  mechanically where possible; one protocol record is never treated as the
+  authority for another record's count.
 - Each release is an immutable tag. Never move a tag.
 - Add a migration note under `migrations/` when a release changes published
   files.
