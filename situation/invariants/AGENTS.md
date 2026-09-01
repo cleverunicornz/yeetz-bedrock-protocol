@@ -34,7 +34,7 @@ that explains why:
 ```
 ## Basis
 
-- [D-000014](../decisions/D-000014-postgres-authority.md)
+- [D-000014](situation/decisions/D-000014-postgres-authority.md)
 ```
 
 The decision states the why. The invariant states the rule. An agent that
