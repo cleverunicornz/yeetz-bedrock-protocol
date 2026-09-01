@@ -1,42 +1,42 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Bedrock protocol published files. Copy byte-for-byte into adopting repositories under the same paths.",
   "files": [
     {
       "path": "situation/AGENTS.md",
-      "sha256": "ae8ccdadc4f7dc3e490e6f40f6e64180fe44f19a06a759b130a34dc76d26672f"
+      "sha256": "00b5c354c28ff92e53dba6aca1a1758bfc5e143cf65b185162cf3d8b077faccc"
     },
     {
       "path": "situation/decisions/AGENTS.md",
-      "sha256": "46adedee9599817f1e78b0f41ef7a05b1cdc5d5717d9156ed08abc9a3b1ee8e0"
+      "sha256": "468afc769789a78e3dcad3b43901c4bd3915c6f2dd27cd897857feb6ef93ace3"
     },
     {
       "path": "situation/invariants/AGENTS.md",
-      "sha256": "825803335f43da9da03e0eba061395d2c9d3bbccb7cffb9c7624350b0649c6b7"
+      "sha256": "f343b8142ad9c09fc174d6ff2d6878ec3c00ecc18796a044bcf019c8f83a0a26"
     },
     {
       "path": "situation/oracles/AGENTS.md",
-      "sha256": "596db55c942b3d3d0f7519583012e437660e9c2d80aae7e5a1f3c3d34700cf24"
+      "sha256": "1d4874bf1bd76f51a39596843a0e92af67101225934911a44265d180d5605af6"
     },
     {
       "path": "situation/plans/AGENTS.md",
-      "sha256": "6b2245f4977bd9bf63d182b05f3826863e64912e857f9a47a1d52f0f1ab954ed"
+      "sha256": "e6f20ef0939e3ce2f7260e432176a2be2f409ecc563330f59e86a4c3df70bd91"
     },
     {
       "path": "situation/promises/AGENTS.md",
-      "sha256": "c08fd61d497921f4c4476573c74e86ce449ff955feec6d20d1d5b0d30435bc89"
+      "sha256": "c8dd79b4adba45dca82085aa6424cf342aad963bda0cc12704c0a0d844e690db"
     },
     {
       "path": "situation/references/AGENTS.md",
-      "sha256": "72fdca0fa1a7a41205792cfcaae6dacded8e838b5153c69bc24858051a0b6f78"
+      "sha256": "c2d2cc2836045acaf0c293f4495ff99fe3add7b605aabb125533b025189a8e27"
     },
     {
       "path": "situation/runs/AGENTS.md",
-      "sha256": "d4582c6bcac66ff0980e89379dec3e1c1c071f05d056229af02e12a64134a105"
+      "sha256": "9e93a60f71e583eaa39e36e56a240ebdb26fe1749295043be452a1dcd8c73861"
     },
     {
       "path": "situation/witnesses/AGENTS.md",
-      "sha256": "81c9b0ca69fae039b99d68e1fc4df9b2602832f12dee9dfed1928538a4881029"
+      "sha256": "6611e7c51e7881018ef7e0022568b48c30cfe809e92abd59cd1a5885220c542d"
     }
   ]
 }

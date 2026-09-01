@@ -48,3 +48,10 @@ needs the full rationale follows the link.
   unless the rule must be resident in the root `AGENTS.md`.
 - Changing a critical invariant requires a decision unless it is an axiom
   being restated.
+
+## Reference discipline
+
+Files inside this repository are referenced by repository-root-relative
+path. Files outside this repository are referenced only by full public URL.
+Never reference a local clone, a private checkout, or a machine-local path.
+Every reference must resolve for a reader on any machine.

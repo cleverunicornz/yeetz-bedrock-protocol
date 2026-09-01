@@ -25,3 +25,10 @@ A reference is a child of the record that links it.
 - Donor material retained for historical value lives here, never in
   namespace folders.
 - Any content type is acceptable: markdown, images, data, diagrams.
+
+## Reference discipline
+
+Files inside this repository are referenced by repository-root-relative
+path. Files outside this repository are referenced only by full public URL.
+Never reference a local clone, a private checkout, or a machine-local path.
+Every reference must resolve for a reader on any machine.

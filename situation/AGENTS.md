@@ -32,15 +32,23 @@ Identifiers are minimum six decimal digits, zero-padded, monotonically
 allocated, never reused, never renumbered. Expansion beyond six digits is
 allowed.
 
-## Link rules
+## Reference discipline
 
-All record links are repository-root-relative. A link from any file targets
-a path from the repository root, never a path that walks above the
-repository:
+References must resolve for a reader on any machine. The rules are simple
+and admit no exceptions:
 
-```
-situation/promises/P-000001-stable-identity.md
-```
+- A file **inside this repository** is referenced by its repository-root-
+  relative path: `situation/promises/P-000001-stable-identity.md`. Never a
+  path that walks above the repository, never a machine-local path.
+- A file **outside this repository** is referenced only by its full public
+  URL, including the exact path to the file. Never a bare repository name,
+  a local clone path, or a private checkout path.
+- Never reference a local clone of a public project as if other machines
+  could access it. If the material matters, it is either committed into
+  this repository (usually under `references/`) or linked by public URL.
+
+A reference that a reader on another machine cannot resolve is a defect,
+not a style issue.
 
 ## Relationships
 

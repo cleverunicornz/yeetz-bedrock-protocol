@@ -42,3 +42,10 @@ links the decision in its state evidence.
 - Supersession replaces a decision with a new record; both remain.
 - A decision without evidence is a preference, not a decision; say which it
   is.
+
+## Reference discipline
+
+Files inside this repository are referenced by repository-root-relative
+path. Files outside this repository are referenced only by full public URL.
+Never reference a local clone, a private checkout, or a machine-local path.
+Every reference must resolve for a reader on any machine.
