@@ -101,3 +101,41 @@ history.
 current-phase fact; it never implies the repository's purpose is
 documentation. Future-facing records are valid when clearly represented as
 intended rather than implemented.
+
+## Bedrock operation
+
+Repository phase and closure operation are separate classifications:
+
+- `INITIALIZE` — no substantive donor or implementation; install the
+  substrate and minimal orientation without inventing behavior.
+- `BACKPORT` — substantive existing documentation/code, no completed Bedrock
+  adoption; establish records from existing behavior and preserve already
+  collapsed choices as Decisions.
+- `DELTA` — a completed adoption exists; inspect only the pull-request diff
+  and records it directly affects. Never re-derive unchanged donors.
+
+Every run records its operation in the opening checkpoint.
+
+## Repository ownership
+
+- `OWNED` — normal repository; the operational trunk is its default branch.
+- `UPSTREAM_FORK` — `main` mirrors upstream; `internal/main` is the
+  Bedrock-enabled operational trunk. Normal work branches from
+  `internal/main`; only selected upstream contribution branches target
+  `main`; `internal/main` never merges into `main`.
+
+Every run records ownership and, for forks, upstream coordinates and trunk
+roles in `context.md` and root `AGENTS.md`.
+
+## README lifecycle
+
+README is human-facing orientation and is always considered after records and
+root `AGENTS.md` stabilize:
+
+- `INITIALIZE` — minimal purpose and pointers; no invented behavior.
+- `BACKPORT` — replace dense canonical detail with concise human orientation
+  and pointers into `situation/`; retain donor depth through references.
+- `DELTA` — update only when the delta changes human-facing purpose, usage,
+  setup, or capabilities; otherwise leave it unchanged.
+
+README never overrides records under `situation/`.

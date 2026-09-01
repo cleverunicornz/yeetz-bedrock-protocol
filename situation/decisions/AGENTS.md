@@ -36,6 +36,10 @@ invariants do.
 When a promise is refuted or superseded, a decision records why. The promise
 links the decision in its state evidence.
 
+During BACKPORT, a donor's selected provider, rejected alternative, or stated
+revisit condition is a collapsed choice and requires a Decision even when the
+corresponding Promise remains `hypothesis` for lack of feasibility evidence.
+
 ## Rules
 
 - One decision per file, immutable after acceptance.
