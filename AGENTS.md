@@ -36,10 +36,11 @@ deliberate.
 - Never name organizations, hosts, domains, GitHub actors, model providers,
   credentials, or private repositories in any published file.
 - Reference discipline is law in every published file: repository files are
-  referenced by repository-root-relative path; external files are referenced
-  only by full public URL. Never reference a local clone, a private
-  checkout, or a machine-local path. Every reference must resolve for a
-  reader on any machine.
+  referenced by repository-root-relative path; external public files by
+  full public URL; external private files by declared coordinate
+  (`Private: owner/repo@<ref>#<path>`). A declared-private reference that
+  is unreachable is expected and never halts work. Never reference a local
+  clone, a private checkout, or a machine-local path.
 - Files are copied byte-for-byte by consumers. Any edit to a published file
   requires a version bump, a manifest regeneration, and a release.
 - Each release is an immutable tag. Never move a tag.
