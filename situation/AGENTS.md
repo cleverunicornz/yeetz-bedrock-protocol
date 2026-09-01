@@ -34,21 +34,34 @@ allowed.
 
 ## Reference discipline
 
-References must resolve for a reader on any machine. The rules are simple
-and admit no exceptions:
+Every reference carries a visibility class so a reader never has to guess
+whether a reference is broken or access-controlled.
 
 - A file **inside this repository** is referenced by its repository-root-
   relative path: `situation/promises/P-000001-stable-identity.md`. Never a
   path that walks above the repository, never a machine-local path.
-- A file **outside this repository** is referenced only by its full public
-  URL, including the exact path to the file. Never a bare repository name,
-  a local clone path, or a private checkout path.
+- A file **in an external public repository** is referenced only by its
+  full public URL, including the exact path to the file.
+- A file **in an external private repository** is referenced by its
+  coordinate — `Private: owner/repo@<ref>#<path>` — with a short access
+  note. Never by an unauthenticated URL, never undeclared.
 - Never reference a local clone of a public project as if other machines
   could access it. If the material matters, it is either committed into
   this repository (usually under `references/`) or linked by public URL.
 
-A reference that a reader on another machine cannot resolve is a defect,
-not a style issue.
+## Private reference behavior
+
+A declared-private reference that cannot be fetched is a normal, expected
+state — not an error, not a missing file, and never grounds to stop work,
+remove the reference, or invent its contents. Access to private
+repositories is environment-dependent: a failed API call does not mean a
+credentialed clone will not work. Agents use whatever access method their
+environment provides; when the material is unreachable, they record the
+need and proceed with available evidence. Content from a private reference
+is never copied into a public document.
+
+An undeclared reference that cannot be resolved is a defect. A declared
+private reference that cannot be resolved is expected.
 
 ## Relationships
 
