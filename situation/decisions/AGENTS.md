@@ -39,6 +39,8 @@ links the decision in its state evidence.
 ## Rules
 
 - One decision per file, immutable after acceptance.
+- A decision introduced on an unmerged pull request is not yet accepted
+  repository history and may be corrected in place before merge.
 - Supersession replaces a decision with a new record; both remain.
 - A decision without evidence is a preference, not a decision; say which it
   is.

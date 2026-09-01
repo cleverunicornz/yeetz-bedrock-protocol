@@ -23,6 +23,8 @@ runs/bedrock-<timestamp>-<head prefix>-<suffix>/
 - Run directories are append-only; a completed run is never edited.
 - Reports state what happened, not a second derivation of the repository.
 - Run evidence is for evaluation and audit; it is not repository law.
+- A completed run always commits `result.json`. If no structured result was
+  produced, the run is incomplete.
 
 ## Reference discipline
 

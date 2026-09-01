@@ -63,6 +63,13 @@ is never copied into a public document.
 An undeclared reference that cannot be resolved is a defect. A declared
 private reference that cannot be resolved is expected.
 
+## Quantitative and provenance discipline
+
+Every numeric claim names the exact repository-root-relative path or public
+source it was counted from. Counts are re-derived from that source rather
+than copied from another record. Words such as `donor`, `legacy`, `current`,
+or `generated` always resolve to a named path, tree, commit, or URL.
+
 ## Relationships
 
 ```
