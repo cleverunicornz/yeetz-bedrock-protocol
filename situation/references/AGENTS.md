@@ -38,3 +38,23 @@ private checkout, or a machine-local path.
 A declared-private reference that cannot be fetched is expected, not an
 error: never stop for one, never remove it, never invent its contents.
 Content from a private reference never crosses into a public document.
+
+## Donor receipts
+
+BACKPORT records each donor in `references/donors.json`:
+
+```json
+{
+  "donors": [
+    {
+      "path": "README.md",
+      "sha256": "<digest>",
+      "head": "<commit>",
+      "lines": 1997
+    }
+  ]
+}
+```
+
+On DELTA, an unchanged digest prohibits re-ingestion. A changed donor is
+reviewed through its diff only, and affected citations/receipts are refreshed.
