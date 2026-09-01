@@ -59,3 +59,10 @@ State never rests on uncited judgment.
 - Every assured promise is invariant behavior; changing it requires
   supersession, a decision, a replacement oracle, and new witnesses.
 - Refuted and withdrawn promises are retained; they are evidence.
+
+## Reference discipline
+
+Files inside this repository are referenced by repository-root-relative
+path. Files outside this repository are referenced only by full public URL.
+Never reference a local clone, a private checkout, or a machine-local path.
+Every reference must resolve for a reader on any machine.

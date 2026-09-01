@@ -27,3 +27,10 @@ directory is the lifecycle state; the file does not repeat it.
   explains the transition in its message.
 - A done plan's promises must have reached the states its Completion
   section requires.
+
+## Reference discipline
+
+Files inside this repository are referenced by repository-root-relative
+path. Files outside this repository are referenced only by full public URL.
+Never reference a local clone, a private checkout, or a machine-local path.
+Every reference must resolve for a reader on any machine.

@@ -23,3 +23,10 @@ runs/bedrock-<timestamp>-<head prefix>-<suffix>/
 - Run directories are append-only; a completed run is never edited.
 - Reports state what happened, not a second derivation of the repository.
 - Run evidence is for evaluation and audit; it is not repository law.
+
+## Reference discipline
+
+Files inside this repository are referenced by repository-root-relative
+path. Files outside this repository are referenced only by full public URL.
+Never reference a local clone, a private checkout, or a machine-local path.
+Every reference must resolve for a reader on any machine.

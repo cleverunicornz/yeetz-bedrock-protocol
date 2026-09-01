@@ -35,3 +35,10 @@ Witnesses are grouped by the promise they observe.
   artifact digest, or a committed result file.
 - A failed witness explains how a promise's state changed; keep it.
 - A witness observes one promise under one oracle at one head.
+
+## Reference discipline
+
+Files inside this repository are referenced by repository-root-relative
+path. Files outside this repository are referenced only by full public URL.
+Never reference a local clone, a private checkout, or a machine-local path.
+Every reference must resolve for a reader on any machine.
