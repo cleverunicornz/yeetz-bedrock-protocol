@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "description": "Bedrock protocol published files. Copy byte-for-byte into adopting repositories under the same paths.",
+  "files": [
+    {
+      "path": "situation/AGENTS.md",
+      "sha256": "ae8ccdadc4f7dc3e490e6f40f6e64180fe44f19a06a759b130a34dc76d26672f"
+    },
+    {
+      "path": "situation/decisions/AGENTS.md",
+      "sha256": "46adedee9599817f1e78b0f41ef7a05b1cdc5d5717d9156ed08abc9a3b1ee8e0"
+    },
+    {
+      "path": "situation/invariants/AGENTS.md",
+      "sha256": "825803335f43da9da03e0eba061395d2c9d3bbccb7cffb9c7624350b0649c6b7"
+    },
+    {
+      "path": "situation/oracles/AGENTS.md",
+      "sha256": "596db55c942b3d3d0f7519583012e437660e9c2d80aae7e5a1f3c3d34700cf24"
+    },
+    {
+      "path": "situation/plans/AGENTS.md",
+      "sha256": "6b2245f4977bd9bf63d182b05f3826863e64912e857f9a47a1d52f0f1ab954ed"
+    },
+    {
+      "path": "situation/promises/AGENTS.md",
+      "sha256": "c08fd61d497921f4c4476573c74e86ce449ff955feec6d20d1d5b0d30435bc89"
+    },
+    {
+      "path": "situation/references/AGENTS.md",
+      "sha256": "72fdca0fa1a7a41205792cfcaae6dacded8e838b5153c69bc24858051a0b6f78"
+    },
+    {
+      "path": "situation/runs/AGENTS.md",
+      "sha256": "d4582c6bcac66ff0980e89379dec3e1c1c071f05d056229af02e12a64134a105"
+    },
+    {
+      "path": "situation/witnesses/AGENTS.md",
+      "sha256": "81c9b0ca69fae039b99d68e1fc4df9b2602832f12dee9dfed1928538a4881029"
+    }
+  ]
+}
