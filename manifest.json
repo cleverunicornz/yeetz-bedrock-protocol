@@ -1,18 +1,18 @@
 {
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Bedrock protocol published files and root operating axiom block.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
-    "sha256": "e9ae48cd1016586342839022722dcde6293bfef3d67f6a848804f11243fcaa7e"
+    "sha256": "d3b904e4562249d52a93dbfa84e9aaf3c303edd41fd5ea8f6fb458c055edcfb2"
   },
   "files": [
     {
       "path": "situation/AGENTS.md",
-      "sha256": "4e40cffbb13cdce945188623ca4b017c771c40646e24af26407130ec4ab35c8f"
+      "sha256": "d2e0bb74a8c87ff1ce91589db8c42470a0f4f0d672a3733248d723f87d91ba40"
     },
     {
       "path": "situation/candidates/AGENTS.md",
-      "sha256": "eaed365dc59ca8401becb8b233b058d8550066148292f5db4f78ec1630812b80"
+      "sha256": "a6009417507f82d7785768a2e668eaa63639c5cf1297f79a903c43e6019ab50a"
     },
     {
       "path": "situation/decisions/AGENTS.md",
@@ -28,15 +28,15 @@
     },
     {
       "path": "situation/oracles/AGENTS.md",
-      "sha256": "c2bfc3a51fff38315ac4cef45f750f1046f65b7a2d6e63966213b410c4f6a8d0"
+      "sha256": "f0a105f7a777d8aaa9f28fe471585bed98b7f358d29a94b5529b45252bf078dc"
     },
     {
       "path": "situation/plans/AGENTS.md",
-      "sha256": "ed6d71dcc2cecc0f933e50f1827bdebebfa60d89bf919aafbbe068e76c2fc679"
+      "sha256": "f603502d820d5c7a09d7099212e6c719144a98f4d7c73178064c7c8606a72931"
     },
     {
       "path": "situation/promises/AGENTS.md",
-      "sha256": "7e39588a06aaa14d225e9602e7990d4aef993650abac8db6671c455d37e3c4a6"
+      "sha256": "80890c61782eaa93900dc64b30549de194db44f3d8ba4960ce7c455e960afdf4"
     },
     {
       "path": "situation/references/AGENTS.md",
@@ -44,7 +44,7 @@
     },
     {
       "path": "situation/runs/AGENTS.md",
-      "sha256": "10935380d9a0beacd4effae7be3427943581a12a135f1762f76c0a78aba18935"
+      "sha256": "af50c798a9f2d22fde0d61d4b6083aac92024d9e0df7bd2b1fecdc2b1f8fee1a"
     },
     {
       "path": "situation/witnesses/AGENTS.md",

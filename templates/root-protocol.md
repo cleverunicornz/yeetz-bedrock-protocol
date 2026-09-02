@@ -45,7 +45,7 @@ Gaps record what relevant capability, evidence, decision, implementation, or
 instrument is absent. Candidates are possible responses derived from evidence.
 A Candidate becomes behavior only through a Decision that promotes it into a
 falsifiable Promise with an Oracle. Plans qualify Candidates and implement or
-assure Promises; no separate spike concept exists.
+assure Promises.
 
 The learning loop is:
 
@@ -62,8 +62,8 @@ coordinates; inability to fetch a declared-private reference is expected and
 never grounds to stop, remove it, or invent its contents.
 
 When repository orientation identifies an upstream fork, upstream
-synchronization and contribution are outside Bedrock. Use the designated
-fork-operations skill; do not infer or recreate that procedure from repository
+synchronization and contribution are outside Bedrock. Invoke the exact
+`fork-operations` skill; do not infer or recreate that procedure from repository
 records.
 
 This protocol block is protocol-owned. Agents must not edit any byte inside it.

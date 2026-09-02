@@ -30,6 +30,9 @@ bedrock: open closure <run-id>
 It records run ID and trigger head. The orchestrator pushes and verifies it
 before delegating work.
 
+Checkpoint metadata is one contiguous final Git trailer block with no blank
+lines between trailer lines, so `git interpret-trailers --parse` can read it.
+
 ## Interior events
 
 Everything after opening and before closing is append-only agent work. There may
@@ -37,8 +40,10 @@ be one commit or hundreds; records, root AGENTS.md, README, validation, and
 corrections may each change repeatedly. No deterministic process counts, orders,
 names, or interprets middle commits.
 
-Each agent commits and pushes its own completed work immediately. A completed
-file may have its own commit; files that must remain atomic may share one.
+Each agent commits and pushes each completed file immediately. Multiple files
+share a commit only when the protocol explicitly requires one atomic state
+transition, such as Candidate promotion or Gap closure. Shared topic,
+convenience, or completing a phase is not an atomicity reason.
 Corrections are new forward commits. Never amend, rebase, reset, or force-push
 published work.
 
@@ -53,6 +58,8 @@ bedrock: complete closure <run-id>
 It records the run ID and opening checkpoint SHA. The orchestrator creates it
 only after delegated agents have clean working trees and all completed work is
 present on the remote PR branch.
+
+Closing metadata uses the same contiguous Git trailer rule as opening metadata.
 
 ## Recovery
 

@@ -54,11 +54,10 @@ the Candidate remains `qualifying`.
 - Every Candidate has an evidence-bearing Origin. Unbounded brainstorming does
   not become repository knowledge.
 
-## Plans, not spikes
+## Qualification plans
 
 Plans contain Candidates being qualified and Promises being implemented or
-assured. No separate spike record or concept exists; qualification is ordinary
-Plan work over Candidates.
+assured. Qualification is ordinary Plan work over Candidates.
 
 ## Reference discipline
 

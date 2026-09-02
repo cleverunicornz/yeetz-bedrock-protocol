@@ -26,7 +26,7 @@ Witnesses for a promise live under `witnesses/P-<same six digits>/`.
 
 ```
 hypothesis      stated, no feasibility evidence
-qualifying      spike or investigation in progress
+qualifying      feasibility or evidence assessment in progress
 qualified       evidence shows implementation is feasible
 implementing    implementation work is active
 implemented     code exists; assurance not yet complete
