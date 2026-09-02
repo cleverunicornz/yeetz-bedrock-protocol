@@ -15,6 +15,7 @@ content classes are:
 - `VERSION`, the current protocol version;
 - `situation/AGENTS.md` and one `AGENTS.md` per namespace directory, which
   adopters copy byte-for-byte;
+- `templates/root-protocol.md`, the protocol-owned root AGENTS.md block;
 - `migrations/`, one note per release transition.
 
 This repository does not contain application code, product documentation,

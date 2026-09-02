@@ -40,6 +40,10 @@ During BACKPORT, a donor's selected provider, rejected alternative, or stated
 revisit condition is a collapsed choice and requires a Decision even when the
 corresponding Promise remains `hypothesis` for lack of feasibility evidence.
 
+A Candidate promotion/rejection Decision links the Candidate and every Promise
+and Oracle created by promotion. Promotion is incomplete unless all records and
+state changes land atomically.
+
 ## Rules
 
 - One decision per file, immutable after acceptance.
