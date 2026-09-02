@@ -116,6 +116,11 @@ Repository phase and closure operation are separate classifications:
 
 Every run records its operation in the opening checkpoint.
 
+Git checkpoint/stage history is the sole processing receipt. A file handled by
+a stage commit inside a completed closure interval is already processed. DELTA
+compares that stage to the current head and reviews only the changed lines. No
+parallel donor registry or copied donor snapshot exists.
+
 ## Repository ownership
 
 - `OWNED` — normal repository; the operational trunk is its default branch.

@@ -1,10 +1,10 @@
 {
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Bedrock protocol published files. Copy byte-for-byte into adopting repositories under the same paths.",
   "files": [
     {
       "path": "situation/AGENTS.md",
-      "sha256": "c5c7a6528a99b22c2edba7cb29effcd3167a36d4eb4c544b7ab6b17ba91e996a"
+      "sha256": "4d557dd9dbb7bea7758d2f6b7b4a979afc240ebf79874b4599f01ccb1ed84d74"
     },
     {
       "path": "situation/decisions/AGENTS.md",
@@ -28,7 +28,7 @@
     },
     {
       "path": "situation/references/AGENTS.md",
-      "sha256": "e19728e941723c09f7758e8af528868e7983734e8873b60691c1e0cfe9489b26"
+      "sha256": "5cf3ab0564a4c4b8f9fa3bfb5d0138d2f4c00f3721af0b460b0c72c224feea65"
     },
     {
       "path": "situation/runs/AGENTS.md",

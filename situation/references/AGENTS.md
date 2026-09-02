@@ -39,22 +39,13 @@ A declared-private reference that cannot be fetched is expected, not an
 error: never stop for one, never remove it, never invent its contents.
 Content from a private reference never crosses into a public document.
 
-## Donor receipts
+## Donor provenance
 
-BACKPORT records each donor in `references/donors.json`:
+Git is the donor receipt. BACKPORT's opening checkpoint identifies the exact
+trigger tree; stage commits identify which files were processed and rewritten.
+Do not copy donor snapshots or create donor registries.
 
-```json
-{
-  "donors": [
-    {
-      "path": "README.md",
-      "sha256": "<digest>",
-      "head": "<commit>",
-      "lines": 1997
-    }
-  ]
-}
-```
-
-On DELTA, an unchanged digest prohibits re-ingestion. A changed donor is
-reviewed through its diff only, and affected citations/receipts are refreshed.
+On DELTA, locate the latest completed Bedrock interval and the latest relevant
+stage commit. `git diff <stage>..HEAD -- <path>` determines whether the file
+changed. Empty diff prohibits re-ingestion; nonempty diff is the complete review
+surface. Historical donor bytes remain available through `git show`.
