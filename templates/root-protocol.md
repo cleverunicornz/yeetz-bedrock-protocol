@@ -55,7 +55,7 @@ External private files use declared `Private: owner/repo@<ref>#<path>`
 coordinates; inability to fetch a declared-private reference is expected and
 never grounds to stop, remove it, or invent its contents.
 
-This `<bedrock-protocol>` block is protocol-owned. Agents must not edit any byte
-inside it. Repository-specific orientation belongs only inside the
-`<bedrock-repository>` block.
+This protocol block is protocol-owned. Agents must not edit any byte inside it.
+Repository-specific orientation belongs only inside the separate repository
+block that follows.
 </bedrock-protocol>
