@@ -66,6 +66,8 @@ Residual cannot silently narrow the behavior marked invariant by `assured`.
 - Every assured promise is invariant behavior; changing it requires
   supersession, a decision, a replacement oracle, and new witnesses.
 - Refuted and withdrawn promises are retained; they are evidence.
+- A Promise promoted from a Candidate links that Candidate and the selecting
+  Decision. Direct feature work may create a Promise without a Candidate.
 
 ## Reference discipline
 

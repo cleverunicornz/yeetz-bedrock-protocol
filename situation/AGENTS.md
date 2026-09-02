@@ -10,7 +10,9 @@ the structure, identifier rules, and relationships between namespaces.
 - `oracles/` — judgment rules that decide whether a promise holds
 - `witnesses/` — immutable observations from real runs
 - `decisions/` — append-only records of why a choice collapsed
-- `plans/` — thin containers grouping promises into a delivery effort
+- `gaps/` — bounded repository-relevant absences
+- `candidates/` — evidence-derived possibilities, not commitments
+- `plans/` — thin containers grouping candidates and promises into work
 - `references/` — retained depth linked from records
 - `runs/` — automation-run evidence folders
 - `context.md` — repository identity, phase, and current/intended state
@@ -25,6 +27,8 @@ P-000001  promise
 O-000001  oracle
 W-000001  witness
 D-000001  decision
+G-000001  gap
+C-000001  candidate
 PLAN-000001  plan
 ```
 
@@ -77,9 +81,10 @@ or `generated` always resolve to a named path, tree, commit, or URL.
 
 ```
 Promise -> Oracle -> Witness -> disposition in the Promise
+Gap -> Candidate -> Decision -> promoted Promise + Oracle
 Decision -> Invariant (basis)
 Decision -> Decision (supersedes)
-Plan -> Promise set
+Plan -> Candidate and Promise set
 Reference -> owning record
 Run -> automation evidence
 ```
@@ -89,6 +94,24 @@ retains one observation. The promise's state records the current disposition
 after applying the oracle to available witnesses. A decision explains why a
 path was accepted or rejected; an invariant states the binding rule that
 results.
+
+## Gaps, Candidates, and the learning loop
+
+A Gap records a bounded absence relevant to existing repository behavior or
+work. A Candidate records an evidence-derived possible response. Candidates are
+not commitments. Plans qualify Candidates and implement/assure Promises. A
+Decision promotes or rejects a Candidate; promotion creates the falsifiable
+Promise and Oracle atomically. No separate spike concept exists.
+
+```text
+Promise -> implementation -> Oracle -> Witness -> disposition
+        -> Gap -> Candidates -> Plan -> Decision
+        -> promoted Promise + Oracle -> implementation
+```
+
+Risk is assessed when needed from Promise state, Oracle maturity, Witness
+results, open Gaps, qualifying Candidates, Decisions, and dependencies. It is
+not stored as a duplicate record class.
 
 ## Assured promises are invariant
 
