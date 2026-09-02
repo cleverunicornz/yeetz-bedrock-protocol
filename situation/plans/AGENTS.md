@@ -22,7 +22,9 @@ directory is the lifecycle state; the file does not repeat it.
 
 - A plan contains promises, dependencies, and a completion condition.
   Nothing else.
-- Completion is defined by promise states, never by prose judgment.
+- Completion is written as a target condition ("completes when...") and is
+  defined by promise states, never as a present-tense claim that target states
+  already hold.
 - Moving a plan between lifecycle directories is an explicit commit that
   explains the transition in its message.
 - A done plan's promises must have reached the states its Completion
