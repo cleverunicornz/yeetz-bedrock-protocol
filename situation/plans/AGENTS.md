@@ -2,7 +2,7 @@
 
 A plan is a thin container that groups Candidates being qualified and Promises
 being implemented or assured. It does not restate those records and does not
-carry design detail. No separate spike concept exists.
+carry design detail.
 
 ## File naming
 

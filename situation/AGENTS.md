@@ -101,7 +101,7 @@ A Gap records a bounded absence relevant to existing repository behavior or
 work. A Candidate records an evidence-derived possible response. Candidates are
 not commitments. Plans qualify Candidates and implement/assure Promises. A
 Decision promotes or rejects a Candidate; promotion creates the falsifiable
-Promise and Oracle atomically. No separate spike concept exists.
+Promise and Oracle atomically.
 
 ```text
 Promise -> implementation -> Oracle -> Witness -> disposition
@@ -155,8 +155,9 @@ parallel donor registry or copied donor snapshot exists.
 
 Every run records ownership and, for forks, the upstream coordinate in
 `context.md` and root `AGENTS.md`. Upstream synchronization and contribution
-are separate operations outside Bedrock. Root `AGENTS.md` directs agents to the
-designated fork-operations skill; Bedrock does not restate that procedure.
+are separate operations outside Bedrock. Root `AGENTS.md` directs agents to
+invoke the exact `fork-operations` skill; Bedrock does not restate that
+procedure.
 
 ## README lifecycle
 
