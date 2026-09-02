@@ -106,5 +106,10 @@ No session-local or external result state is required.
 - Opening and completion files are authored only by the orchestrator.
 - Repository knowledge is authored only by closer/corrector stage commits.
 - Each agent commits and pushes its own stages immediately.
+- A pushed checkpoint or stage commit is immutable. Never amend, rebase,
+  reset, or force-push it. A malformed stage is repaired by a new superseding
+  stage commit; both SHAs and the reason are disclosed in run evidence.
+- Before pushing, the author verifies the required subject and trailers from
+  the commit object itself.
 - Completed run directories are immutable.
 - Re-running creates a new run ID and checkpoint pair.
