@@ -1,14 +1,14 @@
 {
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Bedrock protocol published files and root operating axiom block.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
-    "sha256": "f09019b793491d8b5fd471c3db843852bdc3659e44cd9d3f1dd69a55d4ac80ad"
+    "sha256": "e9ae48cd1016586342839022722dcde6293bfef3d67f6a848804f11243fcaa7e"
   },
   "files": [
     {
       "path": "situation/AGENTS.md",
-      "sha256": "457b6c8d23f87466f4dd018fe087c15009f4c187f4e39a518d0a59b9eaf37482"
+      "sha256": "4e40cffbb13cdce945188623ca4b017c771c40646e24af26407130ec4ab35c8f"
     },
     {
       "path": "situation/candidates/AGENTS.md",
