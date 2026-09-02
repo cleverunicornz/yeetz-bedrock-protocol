@@ -61,6 +61,11 @@ External private files use declared `Private: owner/repo@<ref>#<path>`
 coordinates; inability to fetch a declared-private reference is expected and
 never grounds to stop, remove it, or invent its contents.
 
+When repository orientation identifies an upstream fork, upstream
+synchronization and contribution are outside Bedrock. Use the designated
+fork-operations skill; do not infer or recreate that procedure from repository
+records.
+
 This protocol block is protocol-owned. Agents must not edit any byte inside it.
 Repository-specific orientation belongs only inside the separate repository
 block that follows.

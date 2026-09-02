@@ -150,13 +150,13 @@ parallel donor registry or copied donor snapshot exists.
 ## Repository ownership
 
 - `OWNED` — normal repository; the operational trunk is its default branch.
-- `UPSTREAM_FORK` — `main` mirrors upstream; `internal/main` is the
-  Bedrock-enabled operational trunk. Normal work branches from
-  `internal/main`; only selected upstream contribution branches target
-  `main`; `internal/main` never merges into `main`.
+- `UPSTREAM_FORK` — repository has an external upstream authority. Record the
+  upstream public URL and identify the repository as a fork.
 
-Every run records ownership and, for forks, upstream coordinates and trunk
-roles in `context.md` and root `AGENTS.md`.
+Every run records ownership and, for forks, the upstream coordinate in
+`context.md` and root `AGENTS.md`. Upstream synchronization and contribution
+are separate operations outside Bedrock. Root `AGENTS.md` directs agents to the
+designated fork-operations skill; Bedrock does not restate that procedure.
 
 ## README lifecycle
 
@@ -164,12 +164,38 @@ README is human-facing orientation and is always considered after records and
 root `AGENTS.md` stabilize:
 
 - `INITIALIZE` — minimal purpose and pointers; no invented behavior.
-- `BACKPORT` — replace dense canonical detail with concise human orientation
-  and pointers into `situation/`; retain donor depth through references.
+- `BACKPORT` — replace dense canonical detail with human orientation and
+  pointers into `situation/`; Git retains historical donor bytes.
 - `DELTA` — update only when the delta changes human-facing purpose, usage,
   setup, or capabilities; otherwise leave it unchanged.
 
 README never overrides records under `situation/`.
-When multiple root human orientations exist (for example `README.md` and
-`README.zh.md`), BACKPORT/DELTA keeps their purpose, status, branch topology,
-and situation pointers consistent across languages.
+
+For `UPSTREAM_FORK`, the operational tree contains exactly one root README:
+English `README.md`. It is a minimal human projection naming the project and
+pointing to root `AGENTS.md` and `situation/`. BACKPORT considers unique content
+from alternate root READMEs, then removes every alternate-language/root variant.
+DELTA never recreates them.
+
+## Documentation classification
+
+Repository-operational knowledge — architecture explanations, maintainer or
+contributor procedure, plans, rationale, setup/status prose, and agent guidance
+— is represented under `situation/` or removed from an operational fork tree.
+It does not remain as a competing documentation authority.
+
+Documentation that is functionally part of the product remains in its native
+path: website/help content, API/schema inputs, generated-code inputs, build or
+test fixtures, release/legal material, and other files whose removal changes a
+runtime, build, test, release, or delivered documentation artifact.
+
+On `UPSTREAM_FORK`, any README outside the one root `README.md` is retained only
+when it is product-functional under that test; otherwise its relevant knowledge
+is internalized and the file removed.
+
+## AGENTS.md placement
+
+AGENTS.md files may exist only at the repository root, `situation/`, and the
+protocol namespace roots listed in Structure. Any other AGENTS.md is competing
+operating authority: internalize relevant rules into situation records and
+remove it.
