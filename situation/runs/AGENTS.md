@@ -1,27 +1,25 @@
 # Runs
 
-Runs retain automation evidence as a bounded Git event interval. Git commits,
-not a parallel result database, are the authoritative event log.
+A run is a Git event interval bounded by one opening checkpoint and one closing
+checkpoint. Git commits are the event log; no parallel result database exists.
 
 ## Structure
 
-Each run creates one append-only directory:
+Each run owns one append-only directory:
 
 ```
 runs/bedrock-<timestamp>-<head prefix>-<suffix>/
 ```
 
-## Standard contents
+Standard contents:
 
-- `opening.md` — immutable opening checkpoint metadata
-- `closure-report.md` — what the closer observed and changed
-- `validation-report.md` — what the validator found
-- `correction-report.md` — present only when correction ran
-- `completion.md` — immutable closing checkpoint metadata
+- `opening.md` — opening checkpoint metadata
+- `closure-report.md` — closer summary
+- `validation-report.md` — validator output
+- `correction-report.md` — present when correction ran
+- `completion.md` — closing checkpoint metadata
 
-No `result.json` exists. Stage commits and their ancestry are the result.
-
-## Opening checkpoint commit
+## Opening checkpoint
 
 Subject:
 
@@ -29,48 +27,22 @@ Subject:
 bedrock: open closure <run-id>
 ```
 
-Required trailers:
+It records run ID and trigger head. The orchestrator pushes and verifies it
+before delegating work.
 
-```
-Bedrock-Run: <run-id>
-Bedrock-Event: open
-Bedrock-Operation: INITIALIZE | BACKPORT | DELTA
-Bedrock-Ownership: OWNED | UPSTREAM_FORK
-Bedrock-Trigger-Head: <sha>
-Bedrock-Protocol: <sha>
-```
+## Interior events
 
-The commit adds `opening.md` and nothing else.
+Everything after opening and before closing is append-only agent work. There may
+be one commit or hundreds; records, root AGENTS.md, README, validation, and
+corrections may each change repeatedly. No deterministic process counts, orders,
+names, or interprets middle commits.
 
-## Stage commits
+Each agent commits and pushes its own completed work immediately. A completed
+file may have its own commit; files that must remain atomic may share one.
+Corrections are new forward commits. Never amend, rebase, reset, or force-push
+published work.
 
-Closer stages, when changed:
-
-```
-bedrock: <run-id> records
-bedrock: <run-id> agents-index
-bedrock: <run-id> readme
-```
-
-Validator:
-
-```
-bedrock: <run-id> validation approved
-bedrock: <run-id> validation correct
-```
-
-Corrector stages, only when its docket touches them:
-
-```
-bedrock: <run-id> correct records
-bedrock: <run-id> correct agents-index
-bedrock: <run-id> correct readme
-```
-
-Every stage commit carries `Bedrock-Run`, `Bedrock-Event`, and
-`Bedrock-Opening` trailers. Each stage is pushed before the next stage begins.
-
-## Closing checkpoint commit
+## Closing checkpoint
 
 Subject:
 
@@ -78,38 +50,25 @@ Subject:
 bedrock: complete closure <run-id>
 ```
 
-It adds `completion.md` and carries:
-
-```
-Bedrock-Run: <run-id>
-Bedrock-Event: complete
-Bedrock-Opening: <sha>
-Bedrock-Operation: <operation>
-Bedrock-Records: <sha or unchanged>
-Bedrock-Agents-Index: <sha or unchanged>
-Bedrock-README: <sha or unchanged>
-Bedrock-Validation: <sha>
-Bedrock-Correction: <sha or none>
-Bedrock-Verdict: APPROVED | CORRECTED
-Bedrock-Protocol: <sha>
-```
+It records the run ID and opening checkpoint SHA. The orchestrator creates it
+only after delegated agents have clean working trees and all completed work is
+present on the remote PR branch.
 
 ## Recovery
 
-An opening checkpoint without a matching closing checkpoint is an incomplete
-run. A replacement orchestrator reads Git history, verifies stage subjects,
-trailers, ancestry, and path scopes, then resumes from the last valid stage.
-No session-local or external result state is required.
+An opening checkpoint without a closing checkpoint is incomplete and resumable.
+The orchestrator inspects Git history and reinvokes the responsible agent for
+any dirty or unpushed work. It never publishes another agent's work. Existing
+remote commits are retained and work proceeds forward.
 
-## Rules
+## Hard boundary
 
-- Opening and completion files are authored only by the orchestrator.
-- Repository knowledge is authored only by closer/corrector stage commits.
-- Each agent commits and pushes its own stages immediately.
-- A pushed checkpoint or stage commit is immutable. Never amend, rebase,
-  reset, or force-push it. A malformed stage is repaired by a new superseding
-  stage commit; both SHAs and the reason are disclosed in run evidence.
-- Before pushing, the author verifies the required subject and trailers from
-  the commit object itself.
-- Completed run directories are immutable.
-- Re-running creates a new run ID and checkpoint pair.
+The only hard run contract is:
+
+- opening checkpoint exists;
+- closing checkpoint exists with the same run ID;
+- closing descends from opening;
+- closing is the remote PR head;
+- terminal state identifies the closing head.
+
+Nothing about the interior commit count or shape is part of the hard contract.

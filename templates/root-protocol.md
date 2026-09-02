@@ -31,6 +31,12 @@ The record classes are:
 - **References** retain supporting depth.
 - **Runs** preserve closure lineage through Git checkpoints and stage commits.
 
+Git is the run's append-only event log. Agents commit and push completed units
+of work promptly; corrections are new forward commits. Published history is
+never amended, rebased, reset, or force-pushed. Only opening and closing
+checkpoints define the run container; interior commit count and shape are not
+prescribed.
+
 Every assured Promise is invariant behavior. Changing it requires a superseding
 Promise, a Decision explaining the change, a replacement Oracle, and new
 Witnesses.
