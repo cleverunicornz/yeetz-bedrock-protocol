@@ -40,6 +40,9 @@ whether a reference is broken or access-controlled.
 - A file **inside this repository** is referenced by its repository-root-
   relative path: `situation/promises/P-000001-stable-identity.md`. Never a
   path that walks above the repository, never a machine-local path.
+- Historical bytes from this repository are referenced as
+  `<commit>:<repository-root-relative-path>` and resolved with `git show`.
+  This is the canonical form when a BACKPORT later rewrites the live file.
 - A file **in an external public repository** is referenced only by its
   full public URL, including the exact path to the file.
 - A file **in an external private repository** is referenced by its
@@ -144,3 +147,6 @@ root `AGENTS.md` stabilize:
   setup, or capabilities; otherwise leave it unchanged.
 
 README never overrides records under `situation/`.
+When multiple root human orientations exist (for example `README.md` and
+`README.zh.md`), BACKPORT/DELTA keeps their purpose, status, branch topology,
+and situation pointers consistent across languages.

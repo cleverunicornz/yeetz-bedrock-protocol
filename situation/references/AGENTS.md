@@ -22,8 +22,9 @@ A reference is a child of the record that links it.
   are misplaced.
 - References are depth, not law. They never override a promise, oracle,
   decision, or invariant.
-- Donor material retained for historical value lives here, never in
-  namespace folders.
+- Git is the canonical store for historical donor bytes. Copy donor material
+  here only when active human/agent retrieval needs an in-tree reference; any
+  copy must be owned by and linked from a record.
 - Any content type is acceptable: markdown, images, data, diagrams.
 
 ## Reference discipline
