@@ -39,7 +39,8 @@ allowed.
 ## Reference discipline
 
 Every reference carries a visibility class so a reader never has to guess
-whether a reference is broken or access-controlled.
+whether a reference is broken or access-controlled. This section and the next
+state that discipline once for every namespace.
 
 - A file **inside this repository** is referenced by its repository-root-
   relative path: `situation/promises/P-000001-stable-identity.md`. Never a

@@ -27,18 +27,17 @@ A reference is a child of the record that links it.
   copy must be owned by and linked from a record.
 - Any content type is acceptable: markdown, images, data, diagrams.
 
+## Procedures
+
+A repository procedure is a Reference owned by the Invariant that requires it
+or the Promise it satisfies. Guidance that fits in a few lines and applies to
+every session belongs in the root `AGENTS.md` blocks instead. Fleet-wide
+procedures, such as `fork-operations`, are named skills supplied outside the
+repository and invoked by exact name; a repository never restates one.
+
 ## Reference discipline
 
-Files inside this repository are referenced by repository-root-relative
-path. Files in external public repositories are referenced only by full
-public URL. Files in external private repositories are referenced by
-declared coordinate — `Private: owner/repo@<ref>#<path>` — never by an
-unauthenticated URL, never undeclared. Never reference a local clone, a
-private checkout, or a machine-local path.
-
-A declared-private reference that cannot be fetched is expected, not an
-error: never stop for one, never remove it, never invent its contents.
-Content from a private reference never crosses into a public document.
+Reference discipline is defined in `situation/AGENTS.md`.
 
 ## Donor provenance
 
