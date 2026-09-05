@@ -43,10 +43,8 @@ Content from a private reference never crosses into a public document.
 ## Donor provenance
 
 Git is the donor receipt. BACKPORT's opening checkpoint identifies the exact
-trigger tree; stage commits identify which files were processed and rewritten.
-Do not copy donor snapshots or create donor registries.
+trigger tree. Do not copy donor snapshots or create donor registries.
 
-On DELTA, locate the latest completed Bedrock interval and the latest relevant
-stage commit. `git diff <stage>..HEAD -- <path>` determines whether the file
-changed. Empty diff prohibits re-ingestion; nonempty diff is the complete review
-surface. Historical donor bytes remain available through `git show`.
+On DELTA, `git diff <last closing checkpoint>..<trigger head>` is the complete
+review surface. An empty diff means there is no closure work; a nonempty diff
+bounds it. Historical donor bytes remain available through `git show`.

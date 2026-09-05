@@ -46,9 +46,10 @@ state changes land atomically.
 
 ## Rules
 
-- One decision per file, immutable after acceptance.
-- A decision introduced on an unmerged pull request is not yet accepted
-  repository history and may be corrected in place before merge.
+- One decision per file, immutable once its closure closes.
+- A decision created or changed inside the current closure interval, on the
+  open pull request, may be corrected in place by a forward commit.
+  Immutability begins at the closing checkpoint.
 - Supersession replaces a decision with a new record; both remain.
 - A decision without evidence is a preference, not a decision; say which it
   is.

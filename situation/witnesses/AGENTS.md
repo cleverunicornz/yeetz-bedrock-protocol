@@ -1,6 +1,6 @@
 # Witnesses
 
-A witness retains one observation from one real run. It is immutable
+A witness retains one observation from one real run. It is retained
 evidence, not a living status. A witness proves an observation happened,
 never that a behavior always holds.
 
@@ -32,7 +32,10 @@ Witnesses are grouped by the promise they observe.
 
 ## Rules
 
-- Never edit a witness after creation. Corrections are new witnesses.
+- A witness created or changed inside the current closure interval, on the
+  open pull request, may be corrected in place by a forward commit.
+  Immutability begins at the closing checkpoint; after it, corrections are
+  new witnesses.
 - Evidence must be retained and retrievable: a workflow run URL, an
   artifact digest, or a committed result file.
 - A failed witness explains how a promise's state changed; keep it.

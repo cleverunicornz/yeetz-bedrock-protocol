@@ -30,7 +30,7 @@ C-<six digits>-<kebab-case-name>.md
 
 ## Promotion transaction
 
-Promotion is one atomic records-stage commit:
+Promotion is one atomic commit:
 
 ```text
 Candidate -> promoted
