@@ -188,8 +188,8 @@ completed closure the second line is `- Last completed closure: none` and the
 third is `- Transcript: none`.
 
 The opening checkpoint sets `Current run`. The closing checkpoint sets
-`Current run` to none and updates the other two lines. The most recent closing
-checkpoint commit, located by its subject, is the DELTA base.
+`Current run` to none and updates the other two lines. The most recent commit
+with subject `bedrock: complete closure <run-id>` is the DELTA base.
 
 ## Repository ownership
 

@@ -1,54 +1,54 @@
 {
-  "version": "1.7.0",
-  "description": "Bedrock protocol published files and root operating axiom block.",
+  "version": "1.8.0",
+  "description": "Bedrock protocol published files, root operating axiom block, and repository block template.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
-    "sha256": "d3b904e4562249d52a93dbfa84e9aaf3c303edd41fd5ea8f6fb458c055edcfb2"
+    "sha256": "7d48c3d588ebbe49e4a571d5137862d719bdaaf7cb0fe6f7e9628ad68262481b"
+  },
+  "repository_block": {
+    "path": "templates/repository-block.md",
+    "sha256": "a1c02d200ebc2bf188b2ae4e8a42f4641d583d3d657dbcb39eb2825bc4c0e8b2"
   },
   "files": [
     {
       "path": "situation/AGENTS.md",
-      "sha256": "d2e0bb74a8c87ff1ce91589db8c42470a0f4f0d672a3733248d723f87d91ba40"
+      "sha256": "b5b7e6b424e9918b569e0d1ad2d2f688de368687052810938146ce3d9f168df3"
     },
     {
       "path": "situation/candidates/AGENTS.md",
-      "sha256": "a6009417507f82d7785768a2e668eaa63639c5cf1297f79a903c43e6019ab50a"
+      "sha256": "93a93fec5fdf78e9a847d3fe19f4a6b041f9221ee101e9a6d78d841a3eec10c9"
     },
     {
       "path": "situation/decisions/AGENTS.md",
-      "sha256": "bdeeed6783ce64172f42ba01bfe91c6a23c604504f665941ad43052660b64016"
+      "sha256": "6c08badb83869cd5c6017e4577d5efff44a3b0da91c11c96113167af5c6852f1"
     },
     {
       "path": "situation/gaps/AGENTS.md",
-      "sha256": "6c92dc85120dc709013b4b6b5c899dc39afc4c1528400c1e0127c1e652022742"
+      "sha256": "e5d13ac237706188e030b3cbf27443ec9afa4db2645c80695a41ab2e3c011b83"
     },
     {
       "path": "situation/invariants/AGENTS.md",
-      "sha256": "dd8ef20d39a2548076902ae08b7e6e86c19bc57f47198c0eeb17eba68c4aa15d"
+      "sha256": "0c1d2ff334e419d4c057dcf3bc615899bfbe9ad2824c4e1d2b1cc588b8bd7c4f"
     },
     {
       "path": "situation/oracles/AGENTS.md",
-      "sha256": "f0a105f7a777d8aaa9f28fe471585bed98b7f358d29a94b5529b45252bf078dc"
+      "sha256": "48b42f0602e95183c581acf39d067e12b36026492d2811ffff3bd144cfbf3402"
     },
     {
       "path": "situation/plans/AGENTS.md",
-      "sha256": "f603502d820d5c7a09d7099212e6c719144a98f4d7c73178064c7c8606a72931"
+      "sha256": "5b84a08ecc490f4fc666f1beb0dae70d7c06ffc66db8e0cd356144a24dce5051"
     },
     {
       "path": "situation/promises/AGENTS.md",
-      "sha256": "80890c61782eaa93900dc64b30549de194db44f3d8ba4960ce7c455e960afdf4"
+      "sha256": "9b8ec140d2d9915f8151b8f8277288ad49e58188a9cc41b6900736a1b2a60429"
     },
     {
       "path": "situation/references/AGENTS.md",
-      "sha256": "065cd0e1bad35fe4347fd035bbf208e15749ee93be5b5afef12d439cc94476c3"
-    },
-    {
-      "path": "situation/runs/AGENTS.md",
-      "sha256": "af50c798a9f2d22fde0d61d4b6083aac92024d9e0df7bd2b1fecdc2b1f8fee1a"
+      "sha256": "bcac56fbb5b22d25bbdc94c1415e8bf1d9dcab651d8d37d2d93c3ae21b464a82"
     },
     {
       "path": "situation/witnesses/AGENTS.md",
-      "sha256": "8127fac6383ac37fc7ee14446315053c63dca787e903bcdc304f476e931b16ed"
+      "sha256": "08f6949b63230c6304f12549ea431d74f49bef303937527a18943bc6fd30be55"
     }
   ]
 }

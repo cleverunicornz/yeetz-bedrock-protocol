@@ -16,6 +16,8 @@ content classes are:
 - `situation/AGENTS.md` and one `AGENTS.md` per namespace directory, which
   adopters copy byte-for-byte;
 - `templates/root-protocol.md`, the protocol-owned root AGENTS.md block;
+- `templates/repository-block.md`, the required shape of the repository-owned
+  root AGENTS.md block;
 - `migrations/`, one note per release transition.
 
 This repository does not contain application code, product documentation,
@@ -42,6 +44,8 @@ deliberate.
   (`Private: owner/repo@<ref>#<path>`). A declared-private reference that
   is unreachable is expected and never halts work. Never reference a local
   clone, a private checkout, or a machine-local path.
+- Reference discipline is stated once, in `situation/AGENTS.md`. Every other
+  published file points to that statement rather than restating it.
 - Files are copied byte-for-byte by consumers. Any edit to a published file
   requires a version bump, a manifest regeneration, and a release.
 - Quantitative protocol claims identify their source path and are derived
@@ -66,5 +70,7 @@ deliberate.
 ## Manifest contract
 
 `manifest.json` lists every published file with its SHA-256 digest relative
-to the repository root. Consumers verify digests before copying. The
-manifest is data, not an application; it contains no logic.
+to the repository root: the namespace files under `files`, the root protocol
+block under `root_protocol`, and the repository block template under
+`repository_block`. Consumers verify digests before copying. The manifest is
+data, not an application; it contains no logic.

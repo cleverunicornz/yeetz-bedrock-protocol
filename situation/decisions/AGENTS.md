@@ -46,7 +46,7 @@ state changes land atomically.
 
 ## Rules
 
-- One decision per file, immutable once its closure closes.
+- One decision per file, immutable from the closing checkpoint onward.
 - A decision created or changed inside the current closure interval, on the
   open pull request, may be corrected in place by a forward commit.
   Immutability begins at the closing checkpoint.

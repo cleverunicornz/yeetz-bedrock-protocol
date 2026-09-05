@@ -1,8 +1,9 @@
 # Bedrock Protocol
 
 This repository publishes the Bedrock knowledge protocol: the standard
-`AGENTS.md` files and manifest that adopting repositories install under their
-`situation/` directory.
+`AGENTS.md` files that adopting repositories install under their `situation/`
+directory, the two root `AGENTS.md` block templates, and the manifest that
+lists them.
 
 ## What this is
 
@@ -26,6 +27,11 @@ class is and how to author one:
 - **Plans** are thin containers grouping promises into a delivery effort.
 - **References** hold retained depth linked from records.
 
+Two templates complete an installation: `templates/root-protocol.md`, the
+protocol-owned block that opens the adopter's root `AGENTS.md`, and
+`templates/repository-block.md`, the required shape of the repository-owned
+block that closes it.
+
 ## What this is not
 
 This repository contains no application code, no organization-specific
@@ -35,7 +41,9 @@ its own. It is exempt by design: the protocol source does not consume itself.
 ## Usage
 
 Reference a release tag (for example `v1.0.0`) and copy the files listed in
-`manifest.json` into the adopting repository. Store the resolved commit SHA
-and file digests in the adopter's `situation/protocol-lock.json`. See the
-Bedrock closure workflow documentation in the consuming repository for the
-synchronization contract.
+`manifest.json` into the adopting repository. Install the root protocol block
+byte-for-byte at the top of the adopter's root `AGENTS.md`; the repository
+block template is the shape the closer fills in, not a file to copy. Store the
+resolved commit SHA and file digests in the adopter's
+`situation/protocol-lock.json`. See the Bedrock closure workflow documentation
+in the consuming repository for the synchronization contract.
