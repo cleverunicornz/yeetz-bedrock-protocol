@@ -3,7 +3,7 @@
   "description": "Bedrock protocol published files, root operating axiom block, and repository block template.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
-    "sha256": "404cab36cbee76c8998958bc524b3cade9ef83358146d5c019009e8a934d0b75"
+    "sha256": "75025880bc208f394391e86d328507b7b2d4791a122980ab8a5043901a71d593"
   },
   "repository_block": {
     "path": "templates/repository-block.md",
@@ -12,7 +12,7 @@
   "files": [
     {
       "path": "situation/AGENTS.md",
-      "sha256": "df111e14a7ef1d2ef6cd7c0b0602b8fcfcaf8a610c0680b3f3a67f8e8e39fa27"
+      "sha256": "260c2e825f6f3ae9cb8335db8dd2f02157957b5099310d031509af281175df60"
     },
     {
       "path": "situation/candidates/AGENTS.md",

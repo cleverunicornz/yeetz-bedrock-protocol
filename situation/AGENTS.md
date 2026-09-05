@@ -247,9 +247,9 @@ Root `AGENTS.md` carries three tagged blocks in this order:
 - `bedrock-organization` — organization-owned; synchronized by the closure
   automation and immutable to agents. It is optional; adopters whose automation
   supplies none carry the other two blocks.
-- `bedrock-repository` — repository-owned; written by the closer in the
-  required shape given by the protocol template
-  `templates/repository-block.md`.
+- `bedrock-repository` — repository-owned; written by the closer in the shape
+  given by the repository block template published with the protocol release
+  and reproduced in the closure automation.
 
 Agents edit only the repository block.
 

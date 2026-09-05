@@ -88,8 +88,7 @@ by the closure automation and is optional; adopters whose automation supplies
 none carry the other two blocks.
 
 This protocol block is protocol-owned; the organization block is
-organization-owned. Agents must not edit any byte inside either. Agents edit
-only the repository block, which holds all repository-specific orientation in
-the required shape given by the protocol template
-`templates/repository-block.md`.
+organization-owned. Agents must not edit any byte inside either. Agents edit only the repository block, which holds all repository-specific
+orientation in the shape given by the repository block template published with
+the protocol release and reproduced in the closure automation.
 </bedrock-protocol>
