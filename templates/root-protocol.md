@@ -81,7 +81,15 @@ synchronization and contribution are outside Bedrock. Invoke the exact
 `fork-operations` skill; do not infer or recreate that procedure from repository
 records.
 
-This protocol block is protocol-owned. Agents must not edit any byte inside it.
-Repository-specific orientation belongs only inside the separate repository
-block that follows.
+Root `AGENTS.md` carries three tagged blocks in this order: the protocol block
+`bedrock-protocol`, the organization block `bedrock-organization`, and the
+repository block `bedrock-repository`. The organization block is
+organization-owned and synchronized by the closure automation; it is optional,
+and adopters whose automation supplies none carry the other two blocks.
+
+This protocol block is protocol-owned and the organization block is
+organization-owned: agents must not edit any byte inside either. Agents edit
+only the repository block, which holds all repository-specific orientation in
+the required shape given by the protocol template
+`templates/repository-block.md`.
 </bedrock-protocol>

@@ -237,6 +237,21 @@ On `UPSTREAM_FORK`, any README outside the one root `README.md` is retained only
 when it is product-functional under that test; otherwise its relevant knowledge
 is internalized and the file removed.
 
+## Root AGENTS.md blocks
+
+Root `AGENTS.md` carries three tagged blocks in this order:
+
+- `bedrock-protocol` — protocol-owned; the published root protocol block,
+  installed byte-for-byte and immutable to agents.
+- `bedrock-organization` — organization-owned; synchronized by the closure
+  automation and immutable to agents. It is optional; adopters whose automation
+  supplies none carry the other two blocks.
+- `bedrock-repository` — repository-owned; written by the closer in the
+  required shape given by the protocol template
+  `templates/repository-block.md`.
+
+Agents edit only the repository block.
+
 ## AGENTS.md placement
 
 AGENTS.md files may exist only at the repository root, `situation/`, and the
