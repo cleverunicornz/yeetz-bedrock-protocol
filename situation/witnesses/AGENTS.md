@@ -32,10 +32,9 @@ Witnesses are grouped by the promise they observe.
 
 ## Rules
 
-- A witness created or changed inside the current closure interval, on the
-  open pull request, may be corrected in place by a forward commit.
-  Immutability begins at the closing checkpoint; after it, corrections are
-  new witnesses.
+- A witness is immutable from the first closing checkpoint that follows its
+  creation or change; after that, corrections are new witnesses. Until then,
+  on the open pull request, it may be corrected in place by a forward commit.
 - Evidence must be retained and retrievable: a workflow run URL, an
   artifact digest, or a committed result file.
 - A failed witness explains how a promise's state changed; keep it.

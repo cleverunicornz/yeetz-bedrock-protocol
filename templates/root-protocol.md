@@ -48,9 +48,9 @@ marks a failed closure: the pull request is closed with a pointer to its rerun,
 and the rerun starts on a new branch from the head admitted before the failed
 run. The failed branch and its comments remain the record.
 
-Records created or changed inside the current closure interval, on the open pull
-request, may be corrected in place by a forward commit. Immutability begins at
-the closing checkpoint.
+A record is immutable from the first closing checkpoint that follows its
+creation or change. Until then, on the open pull request, it may be corrected
+in place by a forward commit.
 
 Every assured Promise is invariant behavior. Changing it requires a superseding
 Promise, a Decision explaining the change, a replacement Oracle, and new

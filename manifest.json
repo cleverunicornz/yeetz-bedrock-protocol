@@ -3,7 +3,7 @@
   "description": "Bedrock protocol published files, root operating axiom block, and repository block template.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
-    "sha256": "7d48c3d588ebbe49e4a571d5137862d719bdaaf7cb0fe6f7e9628ad68262481b"
+    "sha256": "404cab36cbee76c8998958bc524b3cade9ef83358146d5c019009e8a934d0b75"
   },
   "repository_block": {
     "path": "templates/repository-block.md",
@@ -12,7 +12,7 @@
   "files": [
     {
       "path": "situation/AGENTS.md",
-      "sha256": "b5b7e6b424e9918b569e0d1ad2d2f688de368687052810938146ce3d9f168df3"
+      "sha256": "df111e14a7ef1d2ef6cd7c0b0602b8fcfcaf8a610c0680b3f3a67f8e8e39fa27"
     },
     {
       "path": "situation/candidates/AGENTS.md",
@@ -20,7 +20,7 @@
     },
     {
       "path": "situation/decisions/AGENTS.md",
-      "sha256": "6c08badb83869cd5c6017e4577d5efff44a3b0da91c11c96113167af5c6852f1"
+      "sha256": "35cb11346c4b2c9543e73b9fd1a742ee175730f3a84aca7dd19a2d1dadceb9a2"
     },
     {
       "path": "situation/gaps/AGENTS.md",
@@ -48,7 +48,7 @@
     },
     {
       "path": "situation/witnesses/AGENTS.md",
-      "sha256": "08f6949b63230c6304f12549ea431d74f49bef303937527a18943bc6fd30be55"
+      "sha256": "982ee98b719dd752599cf5a6585d18e604b849f598fa21f36cb2492b2e410cb5"
     }
   ]
 }
