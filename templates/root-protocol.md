@@ -77,9 +77,9 @@ coordinates; inability to fetch a declared-private reference is expected and
 never grounds to stop, remove it, or invent its contents.
 
 When repository orientation identifies an upstream fork, upstream
-synchronization and contribution are outside Bedrock. Invoke the exact
-`fork-operations` skill; do not infer or recreate that procedure from repository
-records.
+synchronization and contribution follow the organization's fork rules in the
+root organization block. Bedrock records ownership and the upstream coordinate
+and performs neither.
 
 Root `AGENTS.md` carries three tagged blocks in this order: the protocol block
 `bedrock-protocol`, the organization block `bedrock-organization`, and the
