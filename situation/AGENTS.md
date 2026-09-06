@@ -216,9 +216,10 @@ root `AGENTS.md` stabilize:
 
 README never overrides records under `situation/`.
 
-For `UPSTREAM_FORK`, README and every other file the upstream owns stay
-untouched so the trunk merges cleanly with upstream; the fork's orientation
-lives only in the root `AGENTS.md` blocks and `situation/`.
+During a Bedrock closure, upstream-owned files remain untouched by the
+knowledge projection; fork orientation lives only in the root `AGENTS.md`
+blocks and `situation/`. This restriction governs Bedrock alignment, not
+ordinary product changes made through the fork's working trunk.
 
 ## Documentation classification
 
@@ -233,7 +234,8 @@ path: website/help content, API/schema inputs, generated-code inputs, build or
 test fixtures, release/legal material, and other files whose removal changes a
 runtime, build, test, release, or delivered documentation artifact.
 
-On `UPSTREAM_FORK`, no upstream-owned documentation is removed or rewritten.
+On `UPSTREAM_FORK`, Bedrock does not remove or rewrite upstream-owned
+documentation to impose repository-operational orientation.
 
 ## Root AGENTS.md blocks
 
