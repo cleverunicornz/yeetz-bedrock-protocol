@@ -199,9 +199,9 @@ with subject `bedrock: complete closure <run-id>` is the DELTA base.
 
 Every run records ownership and, for forks, the upstream coordinate in
 `context.md` and the repository block of root `AGENTS.md`. Upstream
-synchronization and contribution are separate operations outside Bedrock. Root
-`AGENTS.md` directs agents to invoke the exact `fork-operations` skill; Bedrock
-does not restate that procedure.
+synchronization and contribution are separate operations outside Bedrock that
+follow the organization's fork rules in the root organization block; Bedrock
+does not restate them.
 
 ## README lifecycle
 
@@ -216,27 +216,24 @@ root `AGENTS.md` stabilize:
 
 README never overrides records under `situation/`.
 
-For `UPSTREAM_FORK`, the operational tree contains exactly one root README:
-English `README.md`. It is a minimal human projection naming the project and
-pointing to root `AGENTS.md` and `situation/`. BACKPORT considers unique content
-from alternate root READMEs, then removes every alternate-language/root variant.
-DELTA never recreates them.
+For `UPSTREAM_FORK`, README and every other file the upstream owns stay
+untouched so the trunk merges cleanly with upstream; the fork's orientation
+lives only in the root `AGENTS.md` blocks and `situation/`.
 
 ## Documentation classification
 
 Repository-operational knowledge — architecture explanations, maintainer or
 contributor procedure, plans, rationale, setup/status prose, and agent guidance
-— is represented under `situation/` or removed from an operational fork tree.
-It does not remain as a competing documentation authority.
+— is represented under `situation/`. In an owned repository it does not remain
+as a competing documentation authority; in an upstream fork, upstream-owned
+files remain as they are.
 
 Documentation that is functionally part of the product remains in its native
 path: website/help content, API/schema inputs, generated-code inputs, build or
 test fixtures, release/legal material, and other files whose removal changes a
 runtime, build, test, release, or delivered documentation artifact.
 
-On `UPSTREAM_FORK`, any README outside the one root `README.md` is retained only
-when it is product-functional under that test; otherwise its relevant knowledge
-is internalized and the file removed.
+On `UPSTREAM_FORK`, no upstream-owned documentation is removed or rewritten.
 
 ## Root AGENTS.md blocks
 

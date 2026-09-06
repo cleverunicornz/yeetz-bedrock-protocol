@@ -31,9 +31,9 @@ A reference is a child of the record that links it.
 
 A repository procedure is a Reference owned by the Invariant that requires it
 or the Promise it satisfies. Guidance that fits in a few lines and applies to
-every session belongs in the root `AGENTS.md` blocks instead. Fleet-wide
-procedures, such as `fork-operations`, are named skills supplied outside the
-repository and invoked by exact name; a repository never restates one.
+every session belongs in the root `AGENTS.md` blocks instead. Organization-wide rules, such as fork synchronization and contribution, live
+in the root organization block; tool procedures are named skills supplied
+outside the repository. A repository never restates either.
 
 ## Reference discipline
 
