@@ -1,5 +1,5 @@
 {
-  "version": "1.9.1",
+  "version": "1.9.2",
   "description": "Bedrock protocol published files, root operating axiom block, and repository block template.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
@@ -7,7 +7,7 @@
   },
   "repository_block": {
     "path": "templates/repository-block.md",
-    "sha256": "a1c02d200ebc2bf188b2ae4e8a42f4641d583d3d657dbcb39eb2825bc4c0e8b2"
+    "sha256": "a419ee8c2b069d94550a9af2b662c0cbb318ea648b0f1a062bc941783e83a347"
   },
   "files": [
     {
