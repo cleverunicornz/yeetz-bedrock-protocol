@@ -37,6 +37,12 @@ corrections are new forward commits. Published history is never amended,
 rebased, reset, or force-pushed. Only opening and closing checkpoints define the
 run container; interior commit count and shape are not prescribed.
 
+Every trunk change lands through a pull request. Passing branch protection and
+satisfying review requirements make a pull request mergeable; they do not
+authorize an agent to merge it. An agent opens or updates a pull request and
+leaves it open unless the active task explicitly authorizes that agent to merge
+that exact pull request.
+
 Run reports — closer summary, validator docket, corrector summary — are pull
 request comments, never repository files. Agent transcripts are archived outside
 the repository; both checkpoint commits carry the archive URI in a

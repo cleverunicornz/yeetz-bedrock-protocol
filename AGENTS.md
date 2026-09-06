@@ -52,6 +52,10 @@ deliberate.
   mechanically where possible; one protocol record is never treated as the
   authority for another record's count.
 - Each release is an immutable tag. Never move a tag.
+- Pull-request review requirements and authority to execute a merge are
+  independent. An agent opens or updates a pull request and leaves it open
+  unless the active task explicitly authorizes that agent to merge that exact
+  pull request.
 - Add a migration note under `migrations/` when a release changes published
   files.
 - Update `manifest.json` and `VERSION` in the same commit as the file
@@ -64,7 +68,8 @@ deliberate.
    SHA-256 digests.
 3. Bump `VERSION` using semantic versioning.
 4. Write `migrations/<old>-to-<new>.md` when published files changed.
-5. Open a pull request; a human merges.
+5. Open a pull request; absent explicit agent authority to merge that exact
+   pull request, a human merges it.
 6. Tag the merge commit as `v<VERSION>` and publish a release.
 
 ## Manifest contract
