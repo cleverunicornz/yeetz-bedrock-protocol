@@ -10,7 +10,7 @@ the structure, identifier rules, and relationships between namespaces.
 - `oracles/` — judgment rules that decide whether a promise holds
 - `witnesses/` — immutable observations from real runs
 - `decisions/` — append-only records of why a choice collapsed
-- `gaps/` — bounded repository-relevant absences
+- `gaps/` — repository-relevant absences, concerns, and uncertainties
 - `candidates/` — evidence-derived possibilities, not commitments
 - `plans/` — thin containers grouping candidates and promises into work
 - `references/` — retained depth linked from records
@@ -97,11 +97,13 @@ results.
 
 ## Gaps, Candidates, and the learning loop
 
-A Gap records a bounded absence relevant to existing repository behavior or
-work. A Candidate records an evidence-derived possible response. Candidates are
-not commitments. Plans qualify Candidates and implement/assure Promises. A
-Decision promotes or rejects a Candidate; promotion creates the falsifiable
-Promise and Oracle atomically.
+A Gap preserves an absence, concern, or uncertainty encountered during work;
+`gaps/AGENTS.md` governs incidental reporting, related observations, and later
+disposition. A Candidate records an evidence-derived possible response.
+Candidates are not commitments. Plans qualify Candidates and implement/assure
+Promises. A Decision promotes or rejects a Candidate; promotion creates the
+falsifiable Promise and Oracle atomically. Reporting a Gap does not assign any
+of those subsequent steps to its reporter.
 
 ```text
 Promise -> implementation -> Oracle -> Witness -> disposition
@@ -175,6 +177,9 @@ by the next run's opening checkpoint.
 A record is immutable from the first closing checkpoint that follows its
 creation or change. Until then, on the open pull request, it may be corrected
 in place by a forward commit.
+Gaps permit append-only observations after closure and separately assigned
+State/Resolution updates as defined in `gaps/AGENTS.md`; earlier observations
+remain unchanged.
 
 ## Closure state
 

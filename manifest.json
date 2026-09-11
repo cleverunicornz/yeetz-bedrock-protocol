@@ -1,9 +1,9 @@
 {
-  "version": "1.9.3",
+  "version": "1.10.0",
   "description": "Bedrock protocol published files, root operating axiom block, and repository block template.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
-    "sha256": "dce013c0afbfcafe58407e7f72ab89c80d5275e5f162c3168171f7b5a7d1b9ff"
+    "sha256": "11005b2e99b24be20b7f6bc8559ec4c5525c5af03a988dfd889e1766d725b2d8"
   },
   "repository_block": {
     "path": "templates/repository-block.md",
@@ -12,7 +12,7 @@
   "files": [
     {
       "path": "situation/AGENTS.md",
-      "sha256": "5767bb58aaa27bf5b0a1c761281d480c8240ac170659d30e5a33bb55a42fb529"
+      "sha256": "514fa780d209b42b79ca8ba5cbabf96fb502fc99057ff884bbeacbeb32ca894b"
     },
     {
       "path": "situation/candidates/AGENTS.md",
@@ -24,7 +24,7 @@
     },
     {
       "path": "situation/gaps/AGENTS.md",
-      "sha256": "e5d13ac237706188e030b3cbf27443ec9afa4db2645c80695a41ab2e3c011b83"
+      "sha256": "e064682b53221b2fb0401635329be65e1655c7e1ea449cfdfa8dee46366a4324"
     },
     {
       "path": "situation/invariants/AGENTS.md",
@@ -32,7 +32,7 @@
     },
     {
       "path": "situation/oracles/AGENTS.md",
-      "sha256": "48b42f0602e95183c581acf39d067e12b36026492d2811ffff3bd144cfbf3402"
+      "sha256": "85261ec0ff08472b870acb0d6c202e21530c05e79828980b17bad73d1d1e9d19"
     },
     {
       "path": "situation/plans/AGENTS.md",
