@@ -22,7 +22,8 @@ class is and how to author one:
 - **Decisions** record why a choice collapsed and must not be relitigated.
 - **Invariants** state binding repository rules; critical ones surface in the
   root `AGENTS.md`.
-- **Gaps** retain bounded, repository-relevant absences.
+- **Gaps** preserve encountered absences, concerns, and uncertainties, with
+  additive observations kept separate from qualification or resolution.
 - **Candidates** retain evidence-derived possibilities before commitment.
 - **Plans** are thin containers grouping promises into a delivery effort.
 - **References** hold retained depth linked from records.
