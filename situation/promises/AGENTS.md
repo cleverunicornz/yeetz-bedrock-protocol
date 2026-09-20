@@ -71,11 +71,10 @@ granularity too coarse to judge falsifiably is still too coarse.
 ## Adopted specifications
 
 A promise may adopt a specification by reference for detailed requirements:
-an API description, a schema, a standard. The reference follows the
-repository reference discipline and pins the exact adopted version — a full
-public URL or a declared-private coordinate, resolved to the versioned
-artifact. Adopted requirements are part of the promise's contract within
-Scope; the oracle judges them like any stated requirement.
+an API description, a schema, a standard. The reference pins the exact
+adopted version. Reference discipline is defined in `situation/AGENTS.md`.
+Adopted requirements are part of the promise's contract within Scope; the
+oracle judges them like any stated requirement.
 
 Selecting a different version of an adopted specification changes the
 contract. On an assured promise that change takes the supersession path
