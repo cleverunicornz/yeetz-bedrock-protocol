@@ -52,6 +52,10 @@ leg is valid, but witnesses must carry direct evidence for it.
   Scope, or attempt to disprove infinite negative space. Outside-Scope behavior
   is not a failed leg or a failure of that Promise; incidental concerns may
   still be surfaced as Gaps.
+- The oracle judges the promise's stated contract — including requirements
+  adopted by reference — never the implementation's current behavior as the
+  contract's source; how the code happens to behave is an observation, and
+  the Pass and Fail conditions decide.
 - Scope bounds the positive behavioral claim even when the Promise is phrased
   as a prohibition. Residual names only relevant unassured boundaries; it does
   not enumerate everything the software could theoretically do.

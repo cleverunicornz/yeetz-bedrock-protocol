@@ -35,6 +35,9 @@ existing Gaps and supporting records. Surfacing a Gap does not assign its
 investigation or resolution to this task; continue the assigned
 Promise/Oracle/Witness work.
 
+A change affecting claimed behavior repairs missing local Promise/Oracle/Witness
+lineage in its own closure; a Gap about unaffected behavior remains an observation.
+
 Git is the run's append-only event log. A run performs one closure on one pull
 request branch, bounded by an opening checkpoint commit and a closing checkpoint
 commit on that branch. Agents commit and push completed units of work promptly;
@@ -77,6 +80,9 @@ Candidates are possible responses derived from evidence. A Candidate becomes
 behavior only through a Decision that promotes it into a falsifiable Promise
 with an Oracle. Plans qualify Candidates and implement or assure Promises;
 recording a Gap does not assign that subsequent work.
+Detailed requirements may be adopted by reference from a pinned specification;
+changing it follows the assured-promise path. A promoted Promise is the selected
+commitment stating the accepted behavior; implementation never redefines it.
 
 The learning loop is:
 
