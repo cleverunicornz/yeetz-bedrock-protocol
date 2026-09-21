@@ -95,6 +95,20 @@ after applying the oracle to available witnesses. A decision explains why a
 path was accepted or rejected; an invariant states the binding rule that
 results.
 
+Working a change means traversing the links: from the affected behavior to
+its promise, the oracle judging it, the witnesses observed under it, and the
+decisions, candidates, and gaps linked to them. A record set that cannot be
+traversed from the affected behavior to its lineage is incomplete for that
+behavior. This is authoring discipline over the links the record contracts
+already require; no tooling performs it.
+
+A contract composed over several repositories' behavior — an organization,
+program, or project contract — selects and links the local promises that
+carry each behavior; it does not restate them. Linking keeps one authority
+per behavior; restating local behavior in the composing contract creates a
+second, drifting authority. A local change's lineage obligation is not
+discharged by a higher-level contract mentioning the behavior.
+
 ## Gaps, Candidates, and the learning loop
 
 A Gap preserves an absence, concern, or uncertainty encountered during work;
@@ -147,6 +161,10 @@ Every run records its operation in its opening checkpoint.
 DELTA reviews `git diff <last closing checkpoint>..<trigger head>`. That diff is
 the complete review surface; an empty diff means there is no closure work. No
 parallel donor registry or copied donor snapshot exists.
+
+A delta that affects claimed behavior repairs that behavior's missing local
+Promise, Oracle, and Witness lineage in its own run; missing lineage the diff
+does not affect is Gap material.
 
 ## Runs
 

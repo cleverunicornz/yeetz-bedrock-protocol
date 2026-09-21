@@ -56,6 +56,17 @@ resolution belong to separately assigned work. Continue the current
 Promise/Oracle/Witness assignment. An open Gap alone neither invalidates a
 passing Oracle nor changes a failing, invalid, or blocked Witness into PASS.
 
+## Closure repair
+
+A Gap is an observation, and recording one assigns nothing. When the change
+under review affects behavior the repository claims and that behavior has no
+local Promise, Oracle, or Witness lineage, establishing the missing records
+is repair work inside the assigned closure: write the promise and oracle
+honestly — retrospectively when the behavior predates the records — rather
+than discharging the obligation as an incidental Gap. Lineage missing for
+behavior the change does not affect remains an ordinary Gap observation for
+separately assigned work.
+
 ## Additive observations
 
 After a closing checkpoint, earlier Gap statements and observations remain
