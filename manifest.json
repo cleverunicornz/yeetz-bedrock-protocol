@@ -11,7 +11,7 @@
   },
   "organization": {
     "path": "templates/organization.md",
-    "sha256": "ad7c4c63300e3d89651ea4dba2a2f0b86fce6946064759ffeee6f16e75cbf319"
+    "sha256": "79ffe46fb32258a0fae1d52ac39deafabd09d6388ed6b8b7d7c918d97e25c88b"
   },
   "files": [
     {
@@ -62,11 +62,11 @@
     },
     {
       "path": "skills/ci-runners/SKILL.md",
-      "sha256": "429fe33ace6273d558b2f7bcef73de64f08d3cba3e924284d90c749edb8e9211"
+      "sha256": "13ee00dca2a0a1e8933cf3a360d6c0c1a51db237f28570d58d4402572d61bb86"
     },
     {
       "path": "skills/git-etiquette/SKILL.md",
-      "sha256": "e14c2070fa7fba022ca62a3074981cabf9d1c36652054ff805dc8a91be62f715"
+      "sha256": "da5ca60ae38b392fcaf93e502d6bd9773549fcb4a57904ea6d1ccda7a73035e3"
     },
     {
       "path": "skills/implementer/SKILL.md",
@@ -74,7 +74,7 @@
     },
     {
       "path": "skills/multi-agent/SKILL.md",
-      "sha256": "629806c81a8ed537ba528e1b4bdf36714041cff15047d744f8e8d16a2db251bf"
+      "sha256": "e892927b50dc46cbf68eb8ddff87b4094ce5431d67d22bcc74761ec429762e54"
     },
     {
       "path": "skills/orchestrator/SKILL.md",
@@ -90,7 +90,7 @@
     },
     {
       "path": "skills/workbench/SKILL.md",
-      "sha256": "db5b1ffc6186815ce5a51627e91749e3e43222ae5268b8f3755151a6e3c24d98"
+      "sha256": "a6bcd2eed7403f74ee2df8ab4fe33bbe5597e5e60de7e3b71748ead39100a7b4"
     }
   ]
 }

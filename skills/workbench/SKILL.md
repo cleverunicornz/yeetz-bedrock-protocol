@@ -16,6 +16,7 @@ repository work in their own workspaces on the same workbench.
 ## When
 
 - Reading, searching, editing, and git stay in the repo pod.
+- Each workbench command is capped at 3 minutes.
 - Commands that fit the cap: `cargo clippy --all-targets -- -D
   warnings`, a filtered `cargo nextest run <filter>`, `pnpm tsc --noEmit`,
   `uv run pytest -k <expr>`, `ruff check`.

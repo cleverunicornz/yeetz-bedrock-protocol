@@ -8,7 +8,31 @@ description: How to run other agents through Paseo - choosing and materializing 
 The mechanics of starting and working with other agents through Paseo's MCP
 tools or the `paseo` CLI. The Paseo skills `paseo` (full tool reference),
 `paseo-committee`, `paseo-advisor`, and `paseo-handoff` are installed with
-Paseo; the roles, fallbacks, and committee members are organization rules.
+Paseo.
+
+## Profiles and roles
+
+| Profile | Role skill | Use |
+|---|---|---|
+| `scout` | `scout` | find things out, with proof |
+| `implementer` | `implementer` | write and fix code, test first |
+| `validator` | `validator` | judge another agent's work |
+| `advisor` | `advisor` | a second opinion |
+| `orchestrator` | `orchestrator` | run a flow of agents |
+| `security-implementer` | `implementer` | fallback only, see below |
+| `security-validator` | `validator` | fallback only, see below |
+| `committee-openai`, `committee-claude` | `advisor` | the committee |
+
+- **Security fallback.** Implementation and validation always start under
+  `implementer` and `validator`. When that model refuses the task on security
+  grounds (defensive work such as authorization code), the same brief runs
+  under `security-implementer` or `security-validator`.
+- **Committee.** When work is stuck, looping, or faces a hard design or
+  planning choice, `committee-openai` and `committee-claude` answer it
+  together (see Run a committee).
+- **Usage limits.** When a Claude agent stops on a usage limit, start a new
+  agent with the same profile and brief; it gets a fresh account and
+  continues from the pushed branch.
 
 ## Start an agent
 

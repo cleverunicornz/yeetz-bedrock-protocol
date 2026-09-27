@@ -6,8 +6,8 @@ description: The organization's GitHub Actions runners for application repositor
 # ci-runners
 
 Every CI job runs on an organization runner: one ephemeral container per job
-on the organization's cluster. Which label fits which job is an organization
-rule; this skill gives the sizes, the exact `runs-on` line, and the details.
+on the organization's cluster. Pick the smallest label that fits the job;
+`automation-test-s` is the default.
 
 ## Sizes
 
