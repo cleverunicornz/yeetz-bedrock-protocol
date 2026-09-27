@@ -1,9 +1,11 @@
 # Organization operating layer
 
-Every agent reads this file first, whatever its harness. It is installed at
-user level with the organization skills; repositories add their own root
-`AGENTS.md`, `.agents/skills/`, and `paseo.json` on top of it. This layer
-supersedes any `bedrock-organization` block a repository still carries.
+Every agent reads this file first, whatever its harness. It is baked into the
+agent container image at user level with the role and organization skills,
+one level above every repository, and ships with each container release. A
+repository's own root `AGENTS.md` carries only that repository's situational
+state; its `.agents/skills/` and `paseo.json` add repository tooling. This
+layer supersedes any `bedrock-organization` block a repository still carries.
 
 ## Invariants
 
@@ -12,7 +14,13 @@ supersedes any `bedrock-organization` block a repository still carries.
   Read `multi-agent` before starting one.
 - **A profile name is a role.** An agent started under the profile `scout`,
   `implementer`, `validator`, `advisor`, or `orchestrator` is that role and
-  follows the skill of the same name.
+  follows the skill of the same name. `security-implementer` follows
+  `implementer`, `security-validator` follows `validator`, and
+  `committee-openai` / `committee-claude` follow `advisor`.
+- **Security fallback.** Implementation and validation always start under
+  `implementer` and `validator`. When that model refuses the task on security
+  grounds — defensive work such as authorization code — start the same brief
+  under `security-implementer` or `security-validator`.
 - **Full access.** Agents run with full tool access; the container is the
   boundary. Role skills give guidance on what the role delivers.
 - **Usage-limited Claude sessions end.** A Claude session that stalls or ends

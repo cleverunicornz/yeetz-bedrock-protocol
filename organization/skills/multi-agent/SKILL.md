@@ -23,7 +23,9 @@ role's name, and the agent started under one follows the skill of that name:
 | `validator` | checks another agent's work, returns a verdict |
 | `advisor` | gives a recommendation |
 | `orchestrator` | runs agent flows |
-| `committee-openai`, `committee-claude` | the two committee members (below) |
+| `security-implementer` | fallback implementer; follows `implementer` |
+| `security-validator` | fallback validator; follows `validator` |
+| `committee-openai`, `committee-claude` | the two committee members (below); follow `advisor` |
 
 Each profile fixes the harness, model, reasoning effort, and full-access mode.
 Use the profile for the role; pick a different model only when the requester
@@ -39,13 +41,21 @@ asks for one.
 - `settings.features` = its `featureValues`
 
 Title agents `[<role>] <task>`. The first line of every brief is
-`You are the <role>. Read the <role> skill first.`, followed by a
-self-contained assignment: goal, acceptance criteria, repository, branch and
-pull request, relevant paths, and earlier agents' results. The new agent has
-no other context.
+`You are the <role>. Read the <role> skill first.`, where `<role>` is the
+skill the profile follows. A self-contained assignment follows: goal,
+acceptance criteria, repository, branch and pull request, relevant paths, and
+earlier agents' results. The new agent has no other context.
 
 CLI equivalent:
 `paseo run --provider <provider/model> --thinking <id> --mode <modeId> --title "[<role>] <task>" "<brief>"`.
+
+## Security fallback
+
+Implementation and validation always start under `implementer` and
+`validator`. When that agent refuses the task on security grounds — defensive
+work such as authentication or authorization code — start a new agent with
+the same brief under `security-implementer` or `security-validator`; the
+brief's first line names the `implementer` or `validator` skill. Continue the loop with the normal profiles for the next step.
 
 ## Workspaces
 

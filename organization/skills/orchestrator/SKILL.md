@@ -22,7 +22,10 @@ scout -> implementer -> validator -> implementer (fix) -> validator -> ...
 3. **Validator** judges the result against the acceptance criteria.
 4. On `FAIL`, an **implementer** fixes with the validator's findings, then a
    validator re-checks. Repeat until `PASS`.
-5. When the loop stops converging, or the question is a hard design choice,
+5. When the implementer or validator refuses on security grounds, repeat that
+   step with the same brief under `security-implementer` or
+   `security-validator` (`multi-agent`).
+6. When the loop stops converging, or the question is a hard design choice,
    convene a committee or an advisor, then continue the loop with its answer.
 
 ## Rules of the flow

@@ -54,7 +54,7 @@
   "organization": [
     {
       "path": "organization/AGENTS.md",
-      "sha256": "03a6507b75c9216715a44ddbe92344a63ec8ff9e6cfafc96d31b7bf1bd258649"
+      "sha256": "b24d9d7e8327aa18c4adaaa0c8d4ad38f720565a5e7240213827a26a5dfc5e0e"
     },
     {
       "path": "organization/skills/advisor/SKILL.md",
@@ -70,23 +70,23 @@
     },
     {
       "path": "organization/skills/implementer/SKILL.md",
-      "sha256": "2f51511bd079fe515d9895c2808c188d227bbde69ff173c08eed5e1757684341"
+      "sha256": "6a25a088155956610625f10f5588a9e73f9193f65926ea716de8a4d0c1205b71"
     },
     {
       "path": "organization/skills/multi-agent/SKILL.md",
-      "sha256": "28b2cde2534f6328ad59218616315567758f7a7c950a9c91bf10a5ce18a3bb59"
+      "sha256": "0893f7003f803abfbfaa83fdb1d0b19abbf4b160ecbb602ff5280082127343b6"
     },
     {
       "path": "organization/skills/orchestrator/SKILL.md",
-      "sha256": "7a6da3dc48fb22c5e2581e33f01c0ba3304066c7109706134bea5077c33d58bf"
+      "sha256": "0c05dee458ff322851bc986bbbb6efed690da64bb41eef7418736a75424af01e"
     },
     {
       "path": "organization/skills/scout/SKILL.md",
-      "sha256": "4cb832eea69ea808e04da923f2cbf84cf7457be5897b62d13c65503a7510e12b"
+      "sha256": "8a501a1cabc16b9252b68907edc91d58886a31675088476465d3a53f5a703f0b"
     },
     {
       "path": "organization/skills/validator/SKILL.md",
-      "sha256": "70b2f2c1fb3fad75da7133201702fcaa85cbd16bc43fa922a1895054aee56b48"
+      "sha256": "d31df69214fed0fdc3e299944cc78216e4d4d1b6f380a9b34cda81c0388dac1d"
     },
     {
       "path": "organization/skills/workbench/SKILL.md",
