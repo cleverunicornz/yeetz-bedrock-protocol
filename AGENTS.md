@@ -9,15 +9,17 @@ the organization operating layer every agent runs under.
 
 Agent instructions come from two levels, each with one source:
 
-1. **Organization layer** — `organization/AGENTS.md`, the role skills, and the
-   organization skills. It is baked into the agent container image at user
-   level, one level above every repository, and ships with each container
-   release (canary, then rollout). Every agent in every repository runs under
-   it, whatever its harness.
-2. **Repository layer** — a repository's own root `AGENTS.md` carries only
-   that repository's situational state (with the protocol block where the
-   repository adopts the Bedrock protocol), plus its `.agents/skills/` and
-   `paseo.json`.
+1. **User level** — the protocol block and the organization layer, baked into
+   the agent container image one level above every repository and shipped
+   with each container release (canary, then rollout). Every agent in every
+   repository runs under it, whatever its harness. Its `AGENTS.md` is composed
+   from `templates/root-protocol.md` followed by `organization/AGENTS.md` —
+   never from a repository's root `AGENTS.md` — and the role and organization
+   skills under `organization/skills/` sit beside it.
+2. **Repository level** — a repository's own root `AGENTS.md` holds only its
+   repository block (`templates/repository-block.md`): that repository's
+   situational state. `.agents/skills/` and `paseo.json` add repository
+   tooling.
 
 Earlier Bedrock releases put an organization block, `bedrock-organization`,
 into each repository's root `AGENTS.md`. The organization layer replaces it and
@@ -34,9 +36,10 @@ Its content classes are:
 - `VERSION`, the current protocol version;
 - `situation/AGENTS.md` and one `AGENTS.md` per namespace directory, which
   adopters copy byte-for-byte;
-- `templates/root-protocol.md`, the protocol-owned root AGENTS.md block;
-- `templates/repository-block.md`, the required shape of the repository-owned
-  root AGENTS.md block;
+- `templates/root-protocol.md`, the protocol block, composed at user level
+  ahead of `organization/AGENTS.md`;
+- `templates/repository-block.md`, the required shape of the repository block,
+  the only content of a repository's root `AGENTS.md`;
 - `organization/AGENTS.md`, the organization operating layer every agent
   reads at user level, whatever its harness;
 - `organization/skills/<name>/SKILL.md`, the organization skills installed at

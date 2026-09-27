@@ -29,9 +29,9 @@ class is and how to author one:
 - **References** hold retained depth linked from records.
 
 Two templates complete an installation: `templates/root-protocol.md`, the
-protocol-owned block that opens the adopter's root `AGENTS.md`, and
-`templates/repository-block.md`, the required shape of the repository-owned
-block that closes it.
+protocol block provided at user level by the agent container, and
+`templates/repository-block.md`, the required shape of the repository block,
+the only content of the adopter's root `AGENTS.md`.
 
 ## Layers
 
@@ -40,8 +40,13 @@ instructions come from two levels:
 
 | Level | Content | Where it lives | How it ships |
 |---|---|---|---|
-| Organization | `organization/AGENTS.md`, role skills, organization skills | the agent container image, user level, one level above every repository | each container release (canary, then rollout) |
-| Repository | the repository's own root `AGENTS.md` — only that repository's situational state — plus `.agents/skills/` and `paseo.json` | the repository | the repository's own pull requests |
+| User | protocol block + organization layer: `AGENTS.md` composed from `templates/root-protocol.md` then `organization/AGENTS.md`, plus the skills under `organization/skills/` | the agent container image, one level above every repository | each container release (canary, then rollout) |
+| Repository | the repository's root `AGENTS.md`, holding only its repository block (`templates/repository-block.md`) — that repository's situational state — plus `.agents/skills/` and `paseo.json` | the repository | the repository's own pull requests |
+
+**Composition rule:** the user-level `AGENTS.md` is exactly
+`templates/root-protocol.md` followed by `organization/AGENTS.md`. A
+repository's root `AGENTS.md` is never part of it; the harness reads that file
+separately, from the repository.
 
 Earlier Bedrock releases put an organization block (`bedrock-organization`)
 into every repository's root `AGENTS.md`. The organization layer replaces it
@@ -55,10 +60,12 @@ its own. It is exempt by design: the protocol source does not consume itself.
 
 ## Usage
 
-Reference a release tag (for example `v1.0.0`) and copy the files listed in
-`manifest.json` into the adopting repository. Install the root protocol block
-byte-for-byte at the top of the adopter's root `AGENTS.md`; the repository
-block template is the shape the closer fills in, not a file to copy. Store the
+Reference a release tag (for example `v1.0.0`) and copy the namespace files
+listed under `files` in `manifest.json` into the adopting repository. The root protocol block is
+provided byte-for-byte at user level by the agent container, composed with the
+organization layer as above; the adopter's root `AGENTS.md` holds only the
+repository block, whose template is the shape the closer fills in, not a file
+to copy. Store the
 resolved commit SHA and file digests in the adopter's
 `situation/protocol-lock.json`. See the Bedrock closure workflow documentation
 in the consuming repository for the synchronization contract.

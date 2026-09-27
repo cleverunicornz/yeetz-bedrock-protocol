@@ -100,17 +100,20 @@ never grounds to stop, remove it, or invent its contents.
 
 When repository orientation identifies an upstream fork, upstream
 synchronization and contribution follow the organization's fork rules in the
-root organization block. Bedrock records ownership and the upstream coordinate
-and performs neither.
+organization layer. Bedrock records ownership and the upstream coordinate and
+performs neither.
 
-Root `AGENTS.md` carries three tagged blocks in this order: the protocol block
-`bedrock-protocol`, the organization block `bedrock-organization`, and the
-repository block `bedrock-repository`. The organization block is synchronized
-by the closure automation and is optional; adopters whose automation supplies
-none carry the other two blocks.
+Agent instructions come in three layers. This protocol block and the
+organization layer are provided at user level by the agent container, above
+every repository: the user-level instructions are this block followed by the
+organization layer's `AGENTS.md`, and never include a repository's root
+`AGENTS.md`. The organization layer is optional; environments that supply
+none provide this block alone. A repository's root `AGENTS.md` holds only the
+repository block `bedrock-repository`.
 
-This protocol block is protocol-owned; the organization block is
-organization-owned. Agents must not edit any byte inside either. Agents edit only the repository block, which holds all repository-specific
-orientation in the shape given by the repository block template published with
-the protocol release and reproduced in the closure automation.
+This protocol block is protocol-owned and the organization layer is
+organization-owned; agents change neither. Agents edit only the repository
+block, which holds all repository-specific orientation in the shape given by
+the repository block template published with the protocol release and
+reproduced in the closure automation.
 </bedrock-protocol>

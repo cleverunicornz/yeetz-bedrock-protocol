@@ -227,8 +227,8 @@ with subject `bedrock: complete closure <run-id>` is the DELTA base.
 Every run records ownership and, for forks, the upstream coordinate in
 `context.md` and the repository block of root `AGENTS.md`. Upstream
 synchronization and contribution are separate operations outside Bedrock that
-follow the organization's fork rules in the root organization block; Bedrock
-does not restate them.
+follow the organization's fork rules in the organization layer; Bedrock does
+not restate them.
 
 ## README lifecycle
 
@@ -244,8 +244,8 @@ root `AGENTS.md` stabilize:
 README never overrides records under `situation/`.
 
 During a Bedrock closure, upstream-owned files remain untouched by the
-knowledge projection; fork orientation lives only in the root `AGENTS.md`
-blocks and `situation/`. This restriction governs Bedrock alignment, not
+knowledge projection; fork orientation lives only in the repository block of
+root `AGENTS.md` and `situation/`. This restriction governs Bedrock alignment, not
 ordinary product changes made through the fork's working trunk.
 
 ## Documentation classification
@@ -264,20 +264,25 @@ runtime, build, test, release, or delivered documentation artifact.
 On `UPSTREAM_FORK`, Bedrock does not remove or rewrite upstream-owned
 documentation to impose repository-operational orientation.
 
-## Root AGENTS.md blocks
+## Instruction layers
 
-Root `AGENTS.md` carries three tagged blocks in this order:
+Agent instructions come in three layers:
 
 - `bedrock-protocol` — protocol-owned; the published root protocol block,
-  installed byte-for-byte and immutable to agents.
-- `bedrock-organization` — organization-owned; synchronized by the closure
-  automation and immutable to agents. It is optional; adopters whose automation
-  supplies none carry the other two blocks.
-- `bedrock-repository` — repository-owned; written by the closer in the shape
-  given by the repository block template published with the protocol release
-  and reproduced in the closure automation.
+  provided byte-for-byte at user level by the agent container and immutable
+  to agents.
+- organization layer — organization-owned; the organization's `AGENTS.md` and
+  skills, provided at user level by the agent container beside the protocol
+  block and immutable to agents. It is optional.
+- `bedrock-repository` — repository-owned; the only block in the repository's
+  root `AGENTS.md`, written by the closer in the shape given by the repository
+  block template published with the protocol release and reproduced in the
+  closure automation.
 
-Agents edit only the repository block.
+The user-level instructions are composed from the root protocol block followed
+by the organization layer's `AGENTS.md`; a repository's root `AGENTS.md` is
+never part of that composition. A repository carries neither the protocol
+block nor organization rules. Agents edit only the repository block.
 
 ## AGENTS.md placement
 
