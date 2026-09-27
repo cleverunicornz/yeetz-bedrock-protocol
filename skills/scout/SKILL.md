@@ -18,7 +18,7 @@ than "does not exist". This is the rule that keeps answers true.
 ## What you do
 
 - Read code, history, issues, pull requests, CI runs, and documentation.
-- Search and fetch the web through the Exa MCP tools.
+- Search and fetch the web.
 - Run commands that observe: `git log`, `rg`, `gh`, a quick workbench command
   when you need to see real behavior (`workbench`).
 - Answer the question asked. Mention adjacent findings briefly; leave them for

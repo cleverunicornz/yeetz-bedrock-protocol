@@ -266,23 +266,17 @@ documentation to impose repository-operational orientation.
 
 ## Instruction layers
 
-Agent instructions come in three layers:
-
 - `bedrock-protocol` — protocol-owned; the published root protocol block,
-  provided byte-for-byte at user level by the agent container and immutable
+  supplied byte-for-byte at user level, outside the repository, and immutable
   to agents.
-- organization layer — organization-owned; the organization's `AGENTS.md` and
-  skills, provided at user level by the agent container beside the protocol
-  block and immutable to agents. It is optional.
-- `bedrock-repository` — repository-owned; the only block in the repository's
-  root `AGENTS.md`, written by the closer in the shape given by the repository
-  block template published with the protocol release and reproduced in the
-  closure automation.
+- `bedrock-repository` — repository-owned; the only content of the
+  repository's root `AGENTS.md`, written by the closer in the shape given by
+  the repository block template published with the protocol release and
+  reproduced in the closure automation.
 
-The user-level instructions are composed from the root protocol block followed
-by the organization layer's `AGENTS.md`; a repository's root `AGENTS.md` is
-never part of that composition. A repository carries neither the protocol
-block nor organization rules. Agents edit only the repository block.
+An organization may supply its own operating layer at user level beside the
+protocol block; organization-wide rules, including fork rules, live there and
+never in a repository. Agents edit only the repository block.
 
 ## AGENTS.md placement
 

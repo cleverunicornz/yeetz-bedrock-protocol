@@ -22,11 +22,11 @@ separate list and do not decide the verdict.
 
 ## What you do
 
-- Read the assignment and its acceptance criteria first; judge against them.
-  When the brief states no criteria, write down the ones you apply before you
-  look at the work.
+- Read the assignment and its acceptance criteria first. When the brief
+  states no criteria, write down the ones you apply before you look at the
+  work.
 - Regenerate the evidence yourself: read the diff, build, run the tests on the
-  workbench, open the CI run. A claim in a report is a lead, never evidence.
+  workbench, open the CI run. A claim in a report is only a lead.
 - Try to break it: inputs at the edges, error paths, missing permissions,
   concurrent use — whatever the promise covers.
 - Check that tests actually exercise the claimed behavior and fail without

@@ -13,9 +13,9 @@ Agent instructions come from two levels, each with one source:
    the agent container image one level above every repository and shipped
    with each container release (canary, then rollout). Every agent in every
    repository runs under it, whatever its harness. Its `AGENTS.md` is composed
-   from `templates/root-protocol.md` followed by `organization/AGENTS.md` —
-   never from a repository's root `AGENTS.md` — and the role and organization
-   skills under `organization/skills/` sit beside it.
+   from `templates/root-protocol.md` followed by `templates/organization.md` —
+   never from a repository's root `AGENTS.md` — and the skills under
+   `skills/` are installed beside it.
 2. **Repository level** — a repository's own root `AGENTS.md` holds only its
    repository block (`templates/repository-block.md`): that repository's
    situational state. `.agents/skills/` and `paseo.json` add repository
@@ -36,17 +36,18 @@ Its content classes are:
 - `VERSION`, the current protocol version;
 - `situation/AGENTS.md` and one `AGENTS.md` per namespace directory, which
   adopters copy byte-for-byte;
-- `templates/root-protocol.md`, the protocol block, composed at user level
-  ahead of `organization/AGENTS.md`;
+- `templates/root-protocol.md`, the protocol block: the Bedrock protocol and
+  how agents engage with it;
+- `templates/organization.md`, the organization operating layer: runtime,
+  roles, and working rules that are not protocol;
 - `templates/repository-block.md`, the required shape of the repository block,
   the only content of a repository's root `AGENTS.md`;
-- `organization/AGENTS.md`, the organization operating layer every agent
-  reads at user level, whatever its harness;
-- `organization/skills/<name>/SKILL.md`, the organization skills installed at
-  user level beside it;
+- `skills/<name>/SKILL.md`, the role and organization skills installed at
+  user level beside the composed `AGENTS.md`;
 - `migrations/`, one note per release transition.
 
-Organization-specific material lives only under `organization/`. This
+Organization-specific material lives only in `templates/organization.md` and
+`skills/`. This
 repository does not contain application code, product documentation,
 credentials, automation workflows, or target repository state. If a change
 requires private context to justify, it does not belong here.
@@ -64,17 +65,23 @@ deliberate.
   sense to a public reader with no knowledge of any adopting organization.
 - Never name organizations, hosts, domains, GitHub actors, model providers,
   credentials, or private repositories in any protocol file: the namespace
-  files and the two templates.
-- Organization layer files under `organization/` state the organization's
-  own operating rules. This repository is public and that is intended: model
+  files, `templates/root-protocol.md`, and `templates/repository-block.md`.
+- Each template has one job. `templates/root-protocol.md` states the Bedrock
+  protocol and how to engage with it, and nothing about runtimes, runners,
+  harnesses, models, or git and pull-request practice.
+  `templates/organization.md` states organization operating rules and
+  restates no protocol concept. Each fact lives in exactly one place:
+  `templates/organization.md` states the rule, a skill carries the procedure
+  and details and never restates the rule.
+- `templates/organization.md` and `skills/` state the organization's own
+  operating rules and procedures. This repository is public and that is intended: model
   names, repository names, runner labels, harnesses, and tools are all
   published freely. The one exclusion is personally identifying information:
   never name the operator's machines, local folder paths, or usernames other
   than GitHub usernames.
-- An organization skill is a directory `organization/skills/<name>/` holding
-  one `SKILL.md` with `name` and `description` front matter; the directory
-  name equals `name`. Organization skills are installed at user level and
-  never copied into repositories.
+- A skill is a directory `skills/<name>/` holding one `SKILL.md` with `name`
+  and `description` front matter; the directory name equals `name`. Skills
+  are installed at user level and never copied into repositories.
 - Reference discipline is law in every published file: repository files are
   referenced by repository-root-relative path; external public files by
   full public URL; external private files by declared coordinate
@@ -114,5 +121,6 @@ deliberate.
 `manifest.json` lists every published file with its SHA-256 digest relative
 to the repository root: the namespace files under `files`, the root protocol
 block under `root_protocol`, the repository block template under
-`repository_block`, and the organization layer files under `organization`. Consumers verify digests before copying. The manifest is
+`repository_block`, the organization template under `organization`, and the
+skills under `skills`. Consumers verify digests before copying. The manifest is
 data, not an application; it contains no logic.

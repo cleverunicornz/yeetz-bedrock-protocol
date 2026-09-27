@@ -1,18 +1,22 @@
 {
   "version": "1.12.1",
-  "description": "Bedrock protocol published files, root operating axiom block, repository block template, and organization operating layer.",
+  "description": "Bedrock protocol published files, root protocol block, repository block template, organization template, and skills.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
-    "sha256": "100ee426afb8b460e748ffb59cb37f9cd39520b163a699f27263eef7c81cb266"
+    "sha256": "6aaa375cae7eda53d8fd9b872f1f57691770fecab5fe198b3d72cde5334f1b35"
   },
   "repository_block": {
     "path": "templates/repository-block.md",
     "sha256": "a419ee8c2b069d94550a9af2b662c0cbb318ea648b0f1a062bc941783e83a347"
   },
+  "organization": {
+    "path": "templates/organization.md",
+    "sha256": "ad7c4c63300e3d89651ea4dba2a2f0b86fce6946064759ffeee6f16e75cbf319"
+  },
   "files": [
     {
       "path": "situation/AGENTS.md",
-      "sha256": "a09999073eb31d8b0f8d9bf13599a05c92c5b146831083ea044dbe639c6e1df3"
+      "sha256": "9e1a8efc4d8cf39908a32cb103a04988524e1fe88a8add928752849aa1088f93"
     },
     {
       "path": "situation/candidates/AGENTS.md",
@@ -51,46 +55,42 @@
       "sha256": "982ee98b719dd752599cf5a6585d18e604b849f598fa21f36cb2492b2e410cb5"
     }
   ],
-  "organization": [
+  "skills": [
     {
-      "path": "organization/AGENTS.md",
-      "sha256": "b24d9d7e8327aa18c4adaaa0c8d4ad38f720565a5e7240213827a26a5dfc5e0e"
+      "path": "skills/advisor/SKILL.md",
+      "sha256": "613e332b4fdf16cfac8718b8859371d8b456c7ef0a246e28f8084f13f170e672"
     },
     {
-      "path": "organization/skills/advisor/SKILL.md",
-      "sha256": "f3067fabaeed52764812ff167363e99ccd07094698b98a3ec13059dd1e2b2474"
+      "path": "skills/ci-runners/SKILL.md",
+      "sha256": "429fe33ace6273d558b2f7bcef73de64f08d3cba3e924284d90c749edb8e9211"
     },
     {
-      "path": "organization/skills/ci-runners/SKILL.md",
-      "sha256": "14586139490147289f584174724ae294a29690788a52dc7d9a34d7ebbd8794e9"
+      "path": "skills/git-etiquette/SKILL.md",
+      "sha256": "e14c2070fa7fba022ca62a3074981cabf9d1c36652054ff805dc8a91be62f715"
     },
     {
-      "path": "organization/skills/git-etiquette/SKILL.md",
-      "sha256": "a4e9b94fc69c748571a3a9c7ec729c0a0746cf56c64ecad6dd1620e7880708d2"
+      "path": "skills/implementer/SKILL.md",
+      "sha256": "4105b5e32f66d08759cd089e5396361ee6cf4e6ac40ce81a23bcd4aa8091079d"
     },
     {
-      "path": "organization/skills/implementer/SKILL.md",
-      "sha256": "6a25a088155956610625f10f5588a9e73f9193f65926ea716de8a4d0c1205b71"
+      "path": "skills/multi-agent/SKILL.md",
+      "sha256": "629806c81a8ed537ba528e1b4bdf36714041cff15047d744f8e8d16a2db251bf"
     },
     {
-      "path": "organization/skills/multi-agent/SKILL.md",
-      "sha256": "0893f7003f803abfbfaa83fdb1d0b19abbf4b160ecbb602ff5280082127343b6"
+      "path": "skills/orchestrator/SKILL.md",
+      "sha256": "dd2c850c5b7ea92f962f43002d39295feaeda6746d7311a7d788cc1721fe6461"
     },
     {
-      "path": "organization/skills/orchestrator/SKILL.md",
-      "sha256": "0c05dee458ff322851bc986bbbb6efed690da64bb41eef7418736a75424af01e"
+      "path": "skills/scout/SKILL.md",
+      "sha256": "da2857b666f7667dcbeaaa6c0b13ba2d7ed44dcd82c0ec5679f5538067fa576b"
     },
     {
-      "path": "organization/skills/scout/SKILL.md",
-      "sha256": "8a501a1cabc16b9252b68907edc91d58886a31675088476465d3a53f5a703f0b"
+      "path": "skills/validator/SKILL.md",
+      "sha256": "204d6cb84a3f201b3c5d444e4e1526bb51b9c1ccb1608e93a5923189c0d2c566"
     },
     {
-      "path": "organization/skills/validator/SKILL.md",
-      "sha256": "d31df69214fed0fdc3e299944cc78216e4d4d1b6f380a9b34cda81c0388dac1d"
-    },
-    {
-      "path": "organization/skills/workbench/SKILL.md",
-      "sha256": "c7f2575d0c9fe8db81201a4d6da54848803d87154402e92354cd79b18852d6d3"
+      "path": "skills/workbench/SKILL.md",
+      "sha256": "db5b1ffc6186815ce5a51627e91749e3e43222ae5268b8f3755151a6e3c24d98"
     }
   ]
 }
