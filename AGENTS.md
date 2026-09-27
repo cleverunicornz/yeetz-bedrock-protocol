@@ -1,13 +1,32 @@
 # Bedrock Protocol Source
 
-This repository is the source of the Bedrock knowledge protocol. It publishes
-the standard nested `AGENTS.md` files and the manifest that adopting
-repositories consume.
+This repository is the governance layer for the whole agent runtime. It is
+the source of the Bedrock knowledge protocol — the standard nested
+`AGENTS.md` files and the manifest that adopting repositories consume — and of
+the organization operating layer every agent runs under.
+
+## Layers
+
+Agent instructions come from two levels, each with one source:
+
+1. **Organization layer** — `organization/AGENTS.md`, the role skills, and the
+   organization skills. It is baked into the agent container image at user
+   level, one level above every repository, and ships with each container
+   release (canary, then rollout). Every agent in every repository runs under
+   it, whatever its harness.
+2. **Repository layer** — a repository's own root `AGENTS.md` carries only
+   that repository's situational state (with the protocol block where the
+   repository adopts the Bedrock protocol), plus its `.agents/skills/` and
+   `paseo.json`.
+
+Earlier Bedrock releases put an organization block, `bedrock-organization`,
+into each repository's root `AGENTS.md`. The organization layer replaces it and
+supersedes any such block a repository still carries; organization rules are
+never written into a repository.
 
 ## What this repository represents
 
-This repository represents the protocol definition and nothing more. Its
-content classes are:
+Its content classes are:
 
 - the root `README.md`, a brief human-facing summary;
 - this root `AGENTS.md`, the operating contract for authoring the protocol;
@@ -18,12 +37,16 @@ content classes are:
 - `templates/root-protocol.md`, the protocol-owned root AGENTS.md block;
 - `templates/repository-block.md`, the required shape of the repository-owned
   root AGENTS.md block;
+- `organization/AGENTS.md`, the organization operating layer every agent
+  reads at user level, whatever its harness;
+- `organization/skills/<name>/SKILL.md`, the organization skills installed at
+  user level beside it;
 - `migrations/`, one note per release transition.
 
-This repository does not contain application code, product documentation,
-organization-specific material, credentials, automation workflows, or target
-repository state. If a change requires private context to justify, it does
-not belong here.
+Organization-specific material lives only under `organization/`. This
+repository does not contain application code, product documentation,
+credentials, automation workflows, or target repository state. If a change
+requires private context to justify, it does not belong here.
 
 ## Bedrock exemption
 
@@ -37,7 +60,18 @@ deliberate.
 - Every namespace `AGENTS.md` is generic and domain-neutral. It must make
   sense to a public reader with no knowledge of any adopting organization.
 - Never name organizations, hosts, domains, GitHub actors, model providers,
-  credentials, or private repositories in any published file.
+  credentials, or private repositories in any protocol file: the namespace
+  files and the two templates.
+- Organization layer files under `organization/` state the organization's
+  own operating rules. This repository is public and that is intended: model
+  names, repository names, runner labels, harnesses, and tools are all
+  published freely. The one exclusion is personally identifying information:
+  never name the operator's machines, local folder paths, or usernames other
+  than GitHub usernames.
+- An organization skill is a directory `organization/skills/<name>/` holding
+  one `SKILL.md` with `name` and `description` front matter; the directory
+  name equals `name`. Organization skills are installed at user level and
+  never copied into repositories.
 - Reference discipline is law in every published file: repository files are
   referenced by repository-root-relative path; external public files by
   full public URL; external private files by declared coordinate
@@ -76,6 +110,6 @@ deliberate.
 
 `manifest.json` lists every published file with its SHA-256 digest relative
 to the repository root: the namespace files under `files`, the root protocol
-block under `root_protocol`, and the repository block template under
-`repository_block`. Consumers verify digests before copying. The manifest is
+block under `root_protocol`, the repository block template under
+`repository_block`, and the organization layer files under `organization`. Consumers verify digests before copying. The manifest is
 data, not an application; it contains no logic.

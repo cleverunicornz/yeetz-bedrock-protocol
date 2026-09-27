@@ -33,10 +33,24 @@ protocol-owned block that opens the adopter's root `AGENTS.md`, and
 `templates/repository-block.md`, the required shape of the repository-owned
 block that closes it.
 
+## Layers
+
+This repository is the governance layer for the whole agent runtime. Agent
+instructions come from two levels:
+
+| Level | Content | Where it lives | How it ships |
+|---|---|---|---|
+| Organization | `organization/AGENTS.md`, role skills, organization skills | the agent container image, user level, one level above every repository | each container release (canary, then rollout) |
+| Repository | the repository's own root `AGENTS.md` — only that repository's situational state — plus `.agents/skills/` and `paseo.json` | the repository | the repository's own pull requests |
+
+Earlier Bedrock releases put an organization block (`bedrock-organization`)
+into every repository's root `AGENTS.md`. The organization layer replaces it
+and supersedes any such block a repository still carries.
+
 ## What this is not
 
 This repository contains no application code, no organization-specific
-information, no credentials, no automation runtime, and no Bedrock closure of
+information outside `organization/`, no credentials, no automation runtime, and no Bedrock closure of
 its own. It is exempt by design: the protocol source does not consume itself.
 
 ## Usage

@@ -1,6 +1,6 @@
 {
-  "version": "1.11.0",
-  "description": "Bedrock protocol published files, root operating axiom block, and repository block template.",
+  "version": "1.12.0",
+  "description": "Bedrock protocol published files, root operating axiom block, repository block template, and organization operating layer.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
     "sha256": "ed50ac4b7b3cae475406fe462c78f821599ee0fa93e2a80c88afc8631173a6d4"
@@ -49,6 +49,48 @@
     {
       "path": "situation/witnesses/AGENTS.md",
       "sha256": "982ee98b719dd752599cf5a6585d18e604b849f598fa21f36cb2492b2e410cb5"
+    }
+  ],
+  "organization": [
+    {
+      "path": "organization/AGENTS.md",
+      "sha256": "b24d9d7e8327aa18c4adaaa0c8d4ad38f720565a5e7240213827a26a5dfc5e0e"
+    },
+    {
+      "path": "organization/skills/advisor/SKILL.md",
+      "sha256": "f3067fabaeed52764812ff167363e99ccd07094698b98a3ec13059dd1e2b2474"
+    },
+    {
+      "path": "organization/skills/ci-runners/SKILL.md",
+      "sha256": "14586139490147289f584174724ae294a29690788a52dc7d9a34d7ebbd8794e9"
+    },
+    {
+      "path": "organization/skills/git-etiquette/SKILL.md",
+      "sha256": "a4e9b94fc69c748571a3a9c7ec729c0a0746cf56c64ecad6dd1620e7880708d2"
+    },
+    {
+      "path": "organization/skills/implementer/SKILL.md",
+      "sha256": "6a25a088155956610625f10f5588a9e73f9193f65926ea716de8a4d0c1205b71"
+    },
+    {
+      "path": "organization/skills/multi-agent/SKILL.md",
+      "sha256": "0893f7003f803abfbfaa83fdb1d0b19abbf4b160ecbb602ff5280082127343b6"
+    },
+    {
+      "path": "organization/skills/orchestrator/SKILL.md",
+      "sha256": "0c05dee458ff322851bc986bbbb6efed690da64bb41eef7418736a75424af01e"
+    },
+    {
+      "path": "organization/skills/scout/SKILL.md",
+      "sha256": "8a501a1cabc16b9252b68907edc91d58886a31675088476465d3a53f5a703f0b"
+    },
+    {
+      "path": "organization/skills/validator/SKILL.md",
+      "sha256": "d31df69214fed0fdc3e299944cc78216e4d4d1b6f380a9b34cda81c0388dac1d"
+    },
+    {
+      "path": "organization/skills/workbench/SKILL.md",
+      "sha256": "c7f2575d0c9fe8db81201a4d6da54848803d87154402e92354cd79b18852d6d3"
     }
   ]
 }
