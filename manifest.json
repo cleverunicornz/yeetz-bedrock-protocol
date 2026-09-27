@@ -1,18 +1,22 @@
 {
-  "version": "1.12.0",
-  "description": "Bedrock protocol published files, root operating axiom block, repository block template, and organization operating layer.",
+  "version": "1.12.1",
+  "description": "Bedrock protocol published files, root protocol block, repository block template, organization template, and skills.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
-    "sha256": "ed50ac4b7b3cae475406fe462c78f821599ee0fa93e2a80c88afc8631173a6d4"
+    "sha256": "aed76f348a9f1c67a72697e1bf007faec95d46eee9a2f3323db789ebc6e0330f"
   },
   "repository_block": {
     "path": "templates/repository-block.md",
     "sha256": "a419ee8c2b069d94550a9af2b662c0cbb318ea648b0f1a062bc941783e83a347"
   },
+  "organization": {
+    "path": "templates/organization.md",
+    "sha256": "11f2d29e9a28d268ffa5ad856b8deca6dc1d58ce02f5d5ba5efe751092239ea5"
+  },
   "files": [
     {
       "path": "situation/AGENTS.md",
-      "sha256": "e7c059ed85904cb2b0d2354f8290587a93b6748d921849fdbf74338bf3ae7b7e"
+      "sha256": "5d46cca6dd1a07c3e8631865ab885bd219206ce9299b2f17473dc227c0389144"
     },
     {
       "path": "situation/candidates/AGENTS.md",
@@ -44,53 +48,49 @@
     },
     {
       "path": "situation/references/AGENTS.md",
-      "sha256": "41698ac88408a3b07eb141646ddd5f0acbfd4bd7fcdc49655e959a1f77b8a559"
+      "sha256": "ec630fdd1350106c100fa5d40c57bdfa25c45f518f9f1ba25057f5af5396efcf"
     },
     {
       "path": "situation/witnesses/AGENTS.md",
       "sha256": "982ee98b719dd752599cf5a6585d18e604b849f598fa21f36cb2492b2e410cb5"
     }
   ],
-  "organization": [
+  "skills": [
     {
-      "path": "organization/AGENTS.md",
-      "sha256": "b24d9d7e8327aa18c4adaaa0c8d4ad38f720565a5e7240213827a26a5dfc5e0e"
+      "path": "skills/advisor/SKILL.md",
+      "sha256": "613e332b4fdf16cfac8718b8859371d8b456c7ef0a246e28f8084f13f170e672"
     },
     {
-      "path": "organization/skills/advisor/SKILL.md",
-      "sha256": "f3067fabaeed52764812ff167363e99ccd07094698b98a3ec13059dd1e2b2474"
+      "path": "skills/ci-runners/SKILL.md",
+      "sha256": "13ee00dca2a0a1e8933cf3a360d6c0c1a51db237f28570d58d4402572d61bb86"
     },
     {
-      "path": "organization/skills/ci-runners/SKILL.md",
-      "sha256": "14586139490147289f584174724ae294a29690788a52dc7d9a34d7ebbd8794e9"
+      "path": "skills/git-etiquette/SKILL.md",
+      "sha256": "5910ea758733524b7472aea57222df5a42f6ab9568438e3439dca87c69fa66c5"
     },
     {
-      "path": "organization/skills/git-etiquette/SKILL.md",
-      "sha256": "a4e9b94fc69c748571a3a9c7ec729c0a0746cf56c64ecad6dd1620e7880708d2"
+      "path": "skills/implementer/SKILL.md",
+      "sha256": "4105b5e32f66d08759cd089e5396361ee6cf4e6ac40ce81a23bcd4aa8091079d"
     },
     {
-      "path": "organization/skills/implementer/SKILL.md",
-      "sha256": "6a25a088155956610625f10f5588a9e73f9193f65926ea716de8a4d0c1205b71"
+      "path": "skills/multi-agent/SKILL.md",
+      "sha256": "e892927b50dc46cbf68eb8ddff87b4094ce5431d67d22bcc74761ec429762e54"
     },
     {
-      "path": "organization/skills/multi-agent/SKILL.md",
-      "sha256": "0893f7003f803abfbfaa83fdb1d0b19abbf4b160ecbb602ff5280082127343b6"
+      "path": "skills/orchestrator/SKILL.md",
+      "sha256": "dd2c850c5b7ea92f962f43002d39295feaeda6746d7311a7d788cc1721fe6461"
     },
     {
-      "path": "organization/skills/orchestrator/SKILL.md",
-      "sha256": "0c05dee458ff322851bc986bbbb6efed690da64bb41eef7418736a75424af01e"
+      "path": "skills/scout/SKILL.md",
+      "sha256": "da2857b666f7667dcbeaaa6c0b13ba2d7ed44dcd82c0ec5679f5538067fa576b"
     },
     {
-      "path": "organization/skills/scout/SKILL.md",
-      "sha256": "8a501a1cabc16b9252b68907edc91d58886a31675088476465d3a53f5a703f0b"
+      "path": "skills/validator/SKILL.md",
+      "sha256": "204d6cb84a3f201b3c5d444e4e1526bb51b9c1ccb1608e93a5923189c0d2c566"
     },
     {
-      "path": "organization/skills/validator/SKILL.md",
-      "sha256": "d31df69214fed0fdc3e299944cc78216e4d4d1b6f380a9b34cda81c0388dac1d"
-    },
-    {
-      "path": "organization/skills/workbench/SKILL.md",
-      "sha256": "c7f2575d0c9fe8db81201a4d6da54848803d87154402e92354cd79b18852d6d3"
+      "path": "skills/workbench/SKILL.md",
+      "sha256": "a6bcd2eed7403f74ee2df8ab4fe33bbe5597e5e60de7e3b71748ead39100a7b4"
     }
   ]
 }

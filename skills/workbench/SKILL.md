@@ -1,6 +1,6 @@
 ---
 name: workbench
-description: Run heavy or interactive work on the repository's shared workbench - builds, clippy, filtered tests, lint, dev servers, docker compose stacks, Testcontainers, a Playwright browser, preview URLs, a desktop view. Covers when to use it, the 3-minute command cap, sizes (normal and xl), the HTTP interface every harness can call, and adding tools through the repository's devcontainer. Read it before compiling, testing, or starting servers.
+description: Run heavy or interactive work on the repository's shared workbench - builds, clippy, filtered tests, lint, dev servers, docker compose stacks, Testcontainers, a Playwright browser, preview URLs, a desktop view. Covers when to use it, commands that fit the cap, sizes (normal and xl), the HTTP interface every harness can call, and adding tools through the repository's devcontainer. Read it before compiling, testing, or starting servers.
 ---
 
 # workbench
@@ -15,15 +15,13 @@ repository work in their own workspaces on the same workbench.
 
 ## When
 
-- Compiling, testing, dev servers, Docker, and browsers run on the workbench.
-  Reading, searching, editing, and git stay in the repo pod.
-- **Every command has a hard 3-minute cap (180 s).** Keep commands short:
-  `cargo clippy --all-targets -- -D warnings`, a filtered
-  `cargo nextest run <filter>`, `pnpm tsc --noEmit`, `uv run pytest -k <expr>`,
-  `ruff check`.
-- Longer work (full suites, release builds, benchmarks) runs on the GitHub
-  test runners: push the branch and let CI run it (`ci-runners`). A long job
-  stays one CI job rather than many 3-minute pieces.
+- Reading, searching, editing, and git stay in the repo pod.
+- Each workbench command is capped at 3 minutes.
+- Commands that fit the cap: `cargo clippy --all-targets -- -D
+  warnings`, a filtered `cargo nextest run <filter>`, `pnpm tsc --noEmit`,
+  `uv run pytest -k <expr>`, `ruff check`.
+- Full suites, release builds, and benchmarks go to CI as one job each, not
+  as many capped pieces (`ci-runners`).
 - `cargo clippy -- -D warnings` is a compile sanity check: it must compile.
   Fix lints that are cheap and correct; leave code readable.
 

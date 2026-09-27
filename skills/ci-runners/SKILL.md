@@ -6,25 +6,25 @@ description: The organization's GitHub Actions runners for application repositor
 # ci-runners
 
 Every CI job runs on an organization runner: one ephemeral container per job
-on the organization's cluster, in runner group `ci`. The five labels below are
-the whole set for application repositories.
+on the organization's cluster. Pick the smallest label that fits the job;
+`automation-test-s` is the default.
 
-## Pick a runner
+## Sizes
 
-| Label | Use for | Memory / disk | Parallelism `N` |
+| Label | Memory / disk | Parallelism `N` | Examples |
 |---|---|---|---|
-| `automation-test-s` | tests, lint, small builds; **the default** | 5 GiB / 30 GiB | 2 |
-| `automation-test-l` | heavy tests, clippy on large workspaces | 10 GiB / 60 GiB | 4 |
-| `automation-test-xl` | test suites that run many containers in Docker (Testcontainers, compose stacks, federation suites) | 6 GiB job + 24 GiB Docker / 100 GiB | 8 |
-| `build-native` | Rust, Go, and other native builds without Docker | 15 GiB / 40 GiB | 6 |
-| `build-docker` | Docker image builds; any job with `services:` or a Docker daemon | 6 GiB job + 24 GiB Docker / 40 GiB | 8 |
+| `automation-test-s` | 5 GiB / 30 GiB | 2 | unit tests, lint |
+| `automation-test-l` | 10 GiB / 60 GiB | 4 | clippy on large workspaces |
+| `automation-test-xl` | 6 GiB job + 24 GiB Docker / 100 GiB | 8 | Testcontainers, compose stacks, federation suites |
+| `build-native` | 15 GiB / 40 GiB | 6 | Rust and Go release builds |
+| `build-docker` | 6 GiB job + 24 GiB Docker / 40 GiB | 8 | image builds, jobs with `services:` |
 
 ```yaml
 runs-on: {group: ci, labels: automation-test-s}
 ```
 
 - `automation-infra-v2` belongs to the infrastructure repository alone; other
-  repositories target the five labels above.
+  repositories target the five labels above, in runner group `ci`.
 - Any other label, including retired `cvu-*` labels, matches no runner: the
   job waits until GitHub cancels it after 24 hours.
 - Test runners and `build-*` jobs wait for capacity when the pool is full;

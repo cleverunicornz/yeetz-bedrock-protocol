@@ -13,6 +13,10 @@ repository against the consumer's `situation/protocol-lock.json`. When the
 release has changed, it copies the protocol-owned files byte-for-byte, writes
 an explicit sync commit, and only then starts any agent work.
 
+The closure workflow is not running at this time. Agents do not request,
+open, or perform closures; repositories with `situation/` keep their records
+current in the pull request that makes each change.
+
 The protocol files explain, in each namespace directory, what that record
 class is and how to author one:
 
@@ -28,10 +32,16 @@ class is and how to author one:
 - **Plans** are thin containers grouping promises into a delivery effort.
 - **References** hold retained depth linked from records.
 
-Two templates complete an installation: `templates/root-protocol.md`, the
-protocol-owned block that opens the adopter's root `AGENTS.md`, and
-`templates/repository-block.md`, the required shape of the repository-owned
-block that closes it.
+Three templates complete an installation, each with one job:
+
+- `templates/root-protocol.md` — the Bedrock protocol and how agents engage
+  with it;
+- `templates/organization.md` — the organization operating layer: agent
+  runtime, roles, and working rules that are not protocol;
+- `templates/repository-block.md` — the required shape of the repository
+  block, the only content of the adopter's root `AGENTS.md`.
+
+The role and organization skills live in `skills/`.
 
 ## Layers
 
@@ -40,8 +50,13 @@ instructions come from two levels:
 
 | Level | Content | Where it lives | How it ships |
 |---|---|---|---|
-| Organization | `organization/AGENTS.md`, role skills, organization skills | the agent container image, user level, one level above every repository | each container release (canary, then rollout) |
-| Repository | the repository's own root `AGENTS.md` — only that repository's situational state — plus `.agents/skills/` and `paseo.json` | the repository | the repository's own pull requests |
+| User | protocol block + organization layer: `AGENTS.md` composed from `templates/root-protocol.md` then `templates/organization.md`, plus the skills under `skills/` | the agent container image, one level above every repository | each container release (canary, then rollout) |
+| Repository | the repository's root `AGENTS.md`, holding only its repository block (`templates/repository-block.md`) — that repository's situational state — plus `.agents/skills/` and `paseo.json` | the repository | the repository's own pull requests |
+
+**Composition rule:** the user-level `AGENTS.md` is exactly
+`templates/root-protocol.md` followed by `templates/organization.md`. A
+repository's root `AGENTS.md` is never part of it; the harness reads that file
+separately, from the repository.
 
 Earlier Bedrock releases put an organization block (`bedrock-organization`)
 into every repository's root `AGENTS.md`. The organization layer replaces it
@@ -50,15 +65,16 @@ and supersedes any such block a repository still carries.
 ## What this is not
 
 This repository contains no application code, no organization-specific
-information outside `organization/`, no credentials, no automation runtime, and no Bedrock closure of
-its own. It is exempt by design: the protocol source does not consume itself.
+information outside `templates/organization.md` and `skills/`, no
+credentials, no automation runtime, and no Bedrock closure of its own. It is exempt by design: the protocol source does not consume itself.
 
 ## Usage
 
-Reference a release tag (for example `v1.0.0`) and copy the files listed in
-`manifest.json` into the adopting repository. Install the root protocol block
-byte-for-byte at the top of the adopter's root `AGENTS.md`; the repository
-block template is the shape the closer fills in, not a file to copy. Store the
-resolved commit SHA and file digests in the adopter's
+Reference a release tag (for example `v1.0.0`) and copy the namespace files
+listed under `files` in `manifest.json` into the adopting repository. The root
+protocol block is provided byte-for-byte at user level by the agent container,
+composed with the organization template as above; the adopter's root
+`AGENTS.md` holds only the repository block, whose template is the shape the
+closer fills in, not a file to copy. Store the resolved commit SHA and file digests in the adopter's
 `situation/protocol-lock.json`. See the Bedrock closure workflow documentation
 in the consuming repository for the synchronization contract.
