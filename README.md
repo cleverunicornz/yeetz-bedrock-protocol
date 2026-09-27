@@ -33,10 +33,14 @@ protocol-owned block that opens the adopter's root `AGENTS.md`, and
 `templates/repository-block.md`, the required shape of the repository-owned
 block that closes it.
 
+`organization/` holds the organization operating layer: `AGENTS.md` and the
+organization skills under `skills/`. Agent environments install them at user
+level for every harness; repositories do not copy them.
+
 ## What this is not
 
 This repository contains no application code, no organization-specific
-information, no credentials, no automation runtime, and no Bedrock closure of
+information outside `organization/`, no credentials, no automation runtime, and no Bedrock closure of
 its own. It is exempt by design: the protocol source does not consume itself.
 
 ## Usage
