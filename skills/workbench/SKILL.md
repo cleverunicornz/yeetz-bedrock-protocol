@@ -1,6 +1,6 @@
 ---
 name: workbench
-description: Run heavy or interactive work on the repository's shared workbench - builds, clippy, filtered tests, lint, dev servers, docker compose stacks, Testcontainers, a Playwright browser, preview URLs, a desktop view. Covers when to use it, commands that fit the cap, sizes (normal and xl), the HTTP interface every harness can call, and adding tools through the repository's devcontainer. Read it before compiling, testing, or starting servers.
+description: Run heavy or interactive work on the repository's shared workbench - builds, clippy, filtered tests, lint, dev servers, docker compose stacks, Testcontainers, a Playwright browser, preview URLs, a desktop view. Covers when to use it, choosing each command's time (60 to 600 seconds), the workbench MCP tools for Claude Code and Codex, NOOA's tools and the HTTP fallback, sizes (normal and xl), and adding tools through the repository's devcontainer. Read it before compiling, testing, or starting servers.
 ---
 
 # workbench
@@ -16,12 +16,14 @@ repository work in their own workspaces on the same workbench.
 ## When
 
 - Reading, searching, editing, and git stay in the repo pod.
-- Each workbench command is capped at 3 minutes.
-- Commands that fit the cap: `cargo clippy --all-targets -- -D
-  warnings`, a filtered `cargo nextest run <filter>`, `pnpm tsc --noEmit`,
-  `uv run pytest -k <expr>`, `ruff check`.
-- Full suites, release builds, and benchmarks go to CI as one job each, not
-  as many capped pieces (`ci-runners`).
+- **You choose every command's time: 60 to 600 seconds.** Pick what the
+  command needs plus a margin: 60 for quick checks (`cargo clippy` on one
+  crate, `pnpm tsc --noEmit`, a filtered `cargo nextest run <filter>`,
+  `uv run pytest -k <expr>`, `ruff check`), more for builds and larger
+  suites. At that time the command and everything it started are killed;
+  other agents' commands, your services, and the workbench keep running.
+- Work longer than 600 seconds (full suites, release builds, benchmarks) goes
+  to CI as one job (`ci-runners`), not as many pieces.
 - `cargo clippy -- -D warnings` is a compile sanity check: it must compile.
   Fix lints that are cheap and correct; leave code readable.
 
@@ -33,39 +35,55 @@ directories (`target/`, `node_modules/`, `.venv/`) are never synced: install
 dependencies on the workbench (`pnpm install`, `uv sync`). Git history is not
 there.
 
-**Any harness** — the workbench shim listens on `127.0.0.1:8099` in the repo
-pod; `cwd` is your worktree path:
+**Claude Code and Codex: the `workbench` MCP tools** (already configured):
 
-```sh
-W=127.0.0.1:8099; CWD=$(git rev-parse --show-toplevel)
-curl -s -XPOST $W/v1/open -d "{\"cwd\":\"$CWD\"}"                 # open (add ,"size":"xl"); returns workspace, ports, mcp_url
-curl -sN -XPOST $W/v1/run -d "{\"cwd\":\"$CWD\",\"cmd\":\"cargo nextest run parser\",\"timeout_s\":170}"
-curl -s -XPOST $W/v1/service -d "{\"cwd\":\"$CWD\",\"name\":\"web\",\"command\":\"pnpm dev --port \$PORT --host 127.0.0.1\"}"
-curl -s "$W/v1/service/logs?cwd=$CWD&name=web&tail=50"
-curl -s -XDELETE $W/v1/service -d "{\"cwd\":\"$CWD\",\"name\":\"web\"}"
-curl -s "$W/v1/url?cwd=$CWD&port=<port>"                           # preview URL for people + local URL
-curl -s -XPOST $W/v1/desktop -d "{\"cwd\":\"$CWD\"}"               # live desktop with a visible Chromium
-curl -s "$W/v1/status?cwd=$CWD"                                    # idle time, running commands, disk, caps
-```
+- `open(size?)`: opens the workbench (waits while it is queued or starting)
+  and returns your workspace and ports. `size: "xl"` only for full stacks.
+- `run(cmd, timeout_seconds)`: `timeout_seconds` is required, an integer from
+  60 to 600. Returns `exit_code`, `timed_out`, `memory_exceeded`, parsed
+  compiler and test diagnostics, and the last 200 lines of output with a note
+  of what was cut; filter noisy commands with `| tail` or `| grep`.
+- `service_start(name, command)`, `service_logs(name, tail?)`,
+  `service_stop(name)`: long-lived processes (dev servers,
+  `docker compose up`).
+- `url(port)`: the local address for the browser and the preview URL for
+  people.
+- `desktop()`: a live desktop with a visible Chromium that people can watch.
+- `status()`: idle time, running commands, limits, disk, services.
+- `playwright_browser_*`: the workspace's Playwright browser tools (navigate,
+  snapshot, click, ...); add `visible: true` to drive the desktop's Chromium.
 
-`run` streams NDJSON: `{"t":"o"|"e","d":...}` output, then
-`{"t":"exit",...}` with `exit_code`, `timed_out`, `memory_exceeded`, and a
-final `{"t":"summary","diagnostics":[...]}` of parsed compiler and test
-diagnostics. `open` returns `mcp_url` (headless browser) and `mcp_visible_url`
-(the desktop's browser): Playwright MCP endpoints for your workspace.
-
-**NOOA** — the same through `self.workbench`: `open(size=...)`, `run(cmd,
+**NOOA**: the same through `self.workbench`: `open(size=...)`, `run(cmd,
 timeout=...)`, `service_start/stop/logs`, `url(port)`, `browser(visible=...)`,
 `desktop()`, `status()`.
 
-- Ports: `$PORT` is the first port of your range; use anything in
-  `$WORKBENCH_PORT_BASE..$WORKBENCH_PORT_END` except the last three, which
-  belong to the browser tools. Bind servers to `127.0.0.1` or `0.0.0.0`.
-- Services are exempt from the cap and live until stopped or the workbench
-  stops; `docker compose up` works as a service. Background processes started
-  inside `run` end with it.
+**Fallback for any harness without the MCP tools**: the workbench shim on
+`127.0.0.1:8099`; `cwd` is your worktree path; `timeout_s` follows the same
+60 to 600 rule:
+
+```sh
+W=127.0.0.1:8099; CWD=$(git rev-parse --show-toplevel)
+curl -s -XPOST $W/v1/open -d "{\"cwd\":\"$CWD\"}"                 # add ,"size":"xl" for xl
+curl -sN -XPOST $W/v1/run -d "{\"cwd\":\"$CWD\",\"cmd\":\"cargo nextest run parser\",\"timeout_s\":240}"
+curl -s -XPOST $W/v1/service -d "{\"cwd\":\"$CWD\",\"name\":\"web\",\"command\":\"pnpm dev --port \$PORT --host 127.0.0.1\"}"
+curl -s "$W/v1/service/logs?cwd=$CWD&name=web&tail=50"
+curl -s -XDELETE $W/v1/service -d "{\"cwd\":\"$CWD\",\"name\":\"web\"}"
+curl -s "$W/v1/url?cwd=$CWD&port=<port>"
+curl -s -XPOST $W/v1/desktop -d "{\"cwd\":\"$CWD\"}"
+curl -s "$W/v1/status?cwd=$CWD"
+```
+
+`run` streams NDJSON: `{"t":"o"|"e","d":...}` output, then `{"t":"exit",...}`
+(`exit_code`, `timed_out`, `memory_exceeded`), then
+`{"t":"summary","diagnostics":[...]}`.
+
+- Ports: `$PORT` is the first port of your range; use anything in the range
+  except the last three, which belong to the browser tools. Bind servers to
+  `127.0.0.1` or `0.0.0.0`.
+- Services are exempt from the command time and live until stopped or the
+  workbench stops. Background processes started inside `run` end with it.
 - The browser uses local addresses (`http://127.0.0.1:<port>`); the preview
-  URL from `url` is for people.
+  URL is for people.
 - After about 30 minutes without activity the workbench stops; workspaces and
   caches stay, and the next `open` restarts it. `open` answering `waiting`
   means capacity is in use; it waits for a slot.
