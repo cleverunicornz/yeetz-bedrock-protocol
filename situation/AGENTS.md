@@ -146,6 +146,10 @@ intended rather than implemented.
 
 ## Bedrock operation
 
+Bedrock closure automation is not running. This section, Runs, and Closure
+state describe it for when it returns; agents do not request, open, or perform
+closures.
+
 Repository phase and closure operation are separate classifications:
 
 - `INITIALIZE` — no substantive donor or implementation; install the

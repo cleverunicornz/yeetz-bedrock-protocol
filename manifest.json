@@ -3,7 +3,7 @@
   "description": "Bedrock protocol published files, root protocol block, repository block template, organization template, and skills.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
-    "sha256": "6aaa375cae7eda53d8fd9b872f1f57691770fecab5fe198b3d72cde5334f1b35"
+    "sha256": "aed76f348a9f1c67a72697e1bf007faec95d46eee9a2f3323db789ebc6e0330f"
   },
   "repository_block": {
     "path": "templates/repository-block.md",
@@ -11,12 +11,12 @@
   },
   "organization": {
     "path": "templates/organization.md",
-    "sha256": "79ffe46fb32258a0fae1d52ac39deafabd09d6388ed6b8b7d7c918d97e25c88b"
+    "sha256": "11f2d29e9a28d268ffa5ad856b8deca6dc1d58ce02f5d5ba5efe751092239ea5"
   },
   "files": [
     {
       "path": "situation/AGENTS.md",
-      "sha256": "9e1a8efc4d8cf39908a32cb103a04988524e1fe88a8add928752849aa1088f93"
+      "sha256": "5d46cca6dd1a07c3e8631865ab885bd219206ce9299b2f17473dc227c0389144"
     },
     {
       "path": "situation/candidates/AGENTS.md",
@@ -66,7 +66,7 @@
     },
     {
       "path": "skills/git-etiquette/SKILL.md",
-      "sha256": "da5ca60ae38b392fcaf93e502d6bd9773549fcb4a57904ea6d1ccda7a73035e3"
+      "sha256": "5910ea758733524b7472aea57222df5a42f6ab9568438e3439dca87c69fa66c5"
     },
     {
       "path": "skills/implementer/SKILL.md",

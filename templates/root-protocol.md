@@ -1,9 +1,14 @@
 <bedrock-protocol>
 ## Repository knowledge protocol
 
-This repository operates under the Bedrock knowledge protocol. These policies
-are repository law: follow them as written; do not readjudicate them during
-ordinary work.
+A repository that carries a `situation/` directory keeps its knowledge under
+the Bedrock knowledge protocol. In such a repository these policies are
+repository law: follow them as written; do not readjudicate them during
+ordinary work. A repository without `situation/` is outside the protocol.
+
+Bedrock closure automation is not running. Agents do not request, open, or
+perform closures, and record changes land in the pull request that makes the
+repository change.
 
 Before changing code, behavior, architecture, repository policy, documentation,
 or planned work:
@@ -36,31 +41,11 @@ investigation or resolution to this task; continue the assigned
 Promise/Oracle/Witness work.
 
 A change affecting claimed behavior repairs missing local Promise/Oracle/Witness
-lineage in its own closure; a Gap about unaffected behavior remains an observation.
+lineage in the same pull request; a Gap about unaffected behavior remains an
+observation.
 
-Git is the run's append-only event log. A run performs one closure on one pull
-request branch, bounded by an opening checkpoint commit and a closing checkpoint
-commit on that branch. Only opening and closing checkpoints define the run
-container; interior commit count and shape are not prescribed.
-
-Run reports — closer summary, validator docket, corrector summary — are pull
-request comments, never repository files. Agent transcripts are archived outside
-the repository; both checkpoint commits carry the archive URI in a
-`Bedrock-Transcript` trailer alongside their other trailers. The checkpoint
-commits are the only writers of the closure state in `situation/context.md`.
-
-A failed run is never resumed. The orchestrator retries an invoked agent that
-died by restarting that same agent with the same prompt, at most three times,
-and never adjudicates or finishes that agent's work itself. A run that still
-fails leaves its pull request open and its branch untouched: Bedrock never
-opens, closes, merges, or rebranches a pull request under any circumstance.
-Re-requesting Bedrock on the same pull request starts a new run; an opening
-checkpoint with no closing checkpoint marks a failed closure and is superseded
-by the next run's opening checkpoint.
-
-A record is immutable from the first closing checkpoint that follows its
-creation or change. Until then, on the open pull request, it may be corrected
-in place by a forward commit.
+A record is immutable once merged into the working trunk. Until then, on the
+open pull request, it may be corrected in place by a forward commit.
 Gaps permit append-only observations and separately assigned State/Resolution
 updates under `situation/gaps/AGENTS.md`; earlier observations remain unchanged.
 
@@ -99,6 +84,5 @@ This protocol block is supplied at user level, outside every repository, and
 is protocol-owned. A repository's root `AGENTS.md` holds only the repository
 block `bedrock-repository`, which carries all repository-specific orientation
 in the shape given by the repository block template published with the
-protocol release and reproduced in the closure automation. Agents edit only
-the repository block.
+protocol release. Agents edit only the repository block.
 </bedrock-protocol>

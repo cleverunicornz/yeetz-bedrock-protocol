@@ -33,8 +33,9 @@ detail. These rules follow the protocol block and supersede any
   or queued**, you must read `ci-runners`.
 - **When you branch, commit, push, or touch a pull request**, you must read
   `git-etiquette`. Your work autosaves as a pushed WIP commit whenever you
-  stop. Branches are never deleted. Pull requests stay open unless your task
-  explicitly authorizes merging that exact pull request.
+  stop. Remote branches are never deleted; local branches may be. Pull
+  requests stay open unless your task explicitly authorizes merging that
+  exact pull request.
 - **Web search and fetch use the Exa MCP tools.**
 - **Secret values stay unread and unprinted.** Consuming services validate
   them.

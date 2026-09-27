@@ -13,6 +13,10 @@ repository against the consumer's `situation/protocol-lock.json`. When the
 release has changed, it copies the protocol-owned files byte-for-byte, writes
 an explicit sync commit, and only then starts any agent work.
 
+The closure workflow is not running at this time. Agents do not request,
+open, or perform closures; repositories with `situation/` keep their records
+current in the pull request that makes each change.
+
 The protocol files explain, in each namespace directory, what that record
 class is and how to author one:
 

@@ -9,8 +9,8 @@ description: How agents use git and pull requests - working trunks and branch na
 
 - An owned repository's working trunk is `main`. A fork's working trunk is
   `internal/main`; its `main` tracks the upstream.
-- `main`, `master`, and `internal/main` are protected and change only
-  through pull requests.
+- The working trunks `main` and `internal/main` are always protected and
+  change only through pull requests. The organization uses no `master`.
 - Branches are cut from the working trunk (`origin/main`, or
   `origin/internal/main` in a fork).
 - In a fork every branch is named `internal/<name>` or `upstream/<name>`; the
