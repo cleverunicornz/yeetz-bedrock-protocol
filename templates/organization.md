@@ -36,6 +36,8 @@ detail. These rules follow the protocol block and supersede any
   stop. Remote branches are never deleted; local branches may be. Pull
   requests stay open unless your task explicitly authorizes merging that
   exact pull request.
+- **When you open a pull request**, assign it to the human you work for: the
+  GitHub login in `$CVU_HUMAN_GITHUB_LOGIN` (set in every repo pod).
 - **When you write integration tests or deployment manifests, or need a staging,
   test or production environment**, you must read `environments`. Budgets are
   set by a human and recorded in the repository's AGENTS.md; never choose them

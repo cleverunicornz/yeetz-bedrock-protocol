@@ -1,5 +1,5 @@
 {
-  "version": "1.12.4",
+  "version": "1.12.5",
   "description": "Bedrock protocol published files, root protocol block, repository block template, organization template, and skills.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
@@ -11,7 +11,7 @@
   },
   "organization": {
     "path": "templates/organization.md",
-    "sha256": "dea6c7b46ad98c61c8a7a6233e5ddae328c19ed10a5f6a3bc47709245a5c6689"
+    "sha256": "36b11cc5c1c87276e2fe1394452722f1ec292d052dea136bc83e48fdaf694a28"
   },
   "files": [
     {
