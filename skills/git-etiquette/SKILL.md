@@ -26,6 +26,9 @@ description: How agents use git and pull requests - working trunks and branch na
   untracked files, and skip detached HEADs. They are ordinary history; keep
   working on top of them. After a restart the worktree is recreated from
   `origin/<branch>`.
+- In a repo pod every commit carries `Lineage-*` trailers (human, pod,
+  harness, Paseo agent, session) added by the pod's git hooks; keep them. A
+  fork's `upstream/*` branches get none.
 - History moves forward only. Corrections are new commits; pushed commits
   stay as they are (no amend, rebase, reset, or force push of pushed work).
 - To take in trunk changes, merge the trunk into your branch.
@@ -34,6 +37,9 @@ description: How agents use git and pull requests - working trunks and branch na
 
 - Open pull requests early and keep the description current: what changed,
   why, how it was verified (CI run URLs).
+- End every pull request description with the line that `cvu-lineage
+  pr-footer` prints in a repo pod (`Lineage: human … · pod … · harness … ·
+  paseo-agent … · session …`), unchanged. Outside a repo pod, leave it out.
 - CI runs on the pull request; WIP commits carry `[skip ci]`, so push a
   normal commit (or re-run the workflow) when you need a fresh CI result.
 - An authorized merge uses a **merge commit**, never squash or rebase, so every

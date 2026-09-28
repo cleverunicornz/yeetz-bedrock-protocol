@@ -38,6 +38,12 @@ detail. These rules follow the protocol block and supersede any
   exact pull request.
 - **When you open a pull request**, assign it to the human you work for: the
   GitHub login in `$CVU_HUMAN_GITHUB_LOGIN` (set in every repo pod).
+- **When your pull request is ready to merge**, you must read
+  `skill-observation`: post the whole comment
+  `@unicornz-integrity skill observation requested`, wait for the observation
+  comment, adjudicate every observation with the human you work for, apply the
+  actioned ones as `skill-observation` describes, then leave the pull request
+  for merge.
 - **When you write integration tests or deployment manifests, or need a staging,
   test or production environment**, you must read `environments`. Budgets are
   set by a human and recorded in the repository's AGENTS.md; never choose them
