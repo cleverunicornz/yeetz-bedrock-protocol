@@ -36,6 +36,10 @@ detail. These rules follow the protocol block and supersede any
   stop. Remote branches are never deleted; local branches may be. Pull
   requests stay open unless your task explicitly authorizes merging that
   exact pull request.
+- **When you write integration tests or deployment manifests, or need a staging,
+  test or production environment**, you must read `environments`. Budgets are
+  set by a human and recorded in the repository's AGENTS.md; never choose them
+  yourself.
 - **When infrastructure is broken, missing or blocking you**, open an issue in
   `cleverunicornz/infra-v2` saying what you needed and what failed, and link it from your work.
   Do not work around the platform.

@@ -1,5 +1,5 @@
 {
-  "version": "1.12.3",
+  "version": "1.12.4",
   "description": "Bedrock protocol published files, root protocol block, repository block template, organization template, and skills.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
@@ -11,7 +11,7 @@
   },
   "organization": {
     "path": "templates/organization.md",
-    "sha256": "3e1bb93ccb0f248252fd93c8de6a4c04066c24527230a8429afb4efed7b217fa"
+    "sha256": "dea6c7b46ad98c61c8a7a6233e5ddae328c19ed10a5f6a3bc47709245a5c6689"
   },
   "files": [
     {
@@ -63,6 +63,10 @@
     {
       "path": "skills/ci-runners/SKILL.md",
       "sha256": "13ee00dca2a0a1e8933cf3a360d6c0c1a51db237f28570d58d4402572d61bb86"
+    },
+    {
+      "path": "skills/environments/SKILL.md",
+      "sha256": "f514e5e425adca2e63b10408634202b24158662035bd0bf9e3d17107a9e989c5"
     },
     {
       "path": "skills/git-etiquette/SKILL.md",
