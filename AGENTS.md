@@ -79,6 +79,11 @@ deliberate.
   published freely. The one exclusion is personally identifying information:
   never name the operator's machines, local folder paths, or usernames other
   than GitHub usernames.
+- Critical invariant: this repository is public, so secure material — our
+  own known vulnerabilities from the security vault, their details,
+  exploitability and affected code paths — is never represented in it, its
+  branches, issues, pull requests, reviews or comments. Public CVE and CWE
+  references are fine.
 - A skill is a directory `skills/<name>/` holding one `SKILL.md` with `name`
   and `description` front matter; the directory name equals `name`. Skills
   are installed at user level and never copied into repositories.
