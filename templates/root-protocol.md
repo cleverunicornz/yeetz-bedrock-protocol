@@ -34,6 +34,27 @@ The record classes are:
 - **Plans** group Candidates and Promises into work without restating them.
 - **References** retain supporting depth.
 
+The verbs are the acts that make or change those records:
+
+- **observe** — retain what an actual run showed as a Witness.
+- **surface** — record an absence, concern, or uncertainty as a Gap.
+- **propose** — derive possible responses from evidence as Candidates.
+- **challenge** — contest a record with counter-Witnesses or competing
+  Candidates.
+- **test** — judge a Promise by its Oracle and retain the result as a Witness.
+- **decide** — collapse a choice into a Decision.
+- **promote** — turn a Decision's selected Candidate into a Promise with its
+  Oracle.
+- **implement** — make an artifact deliver a Promise, then observe it as a
+  Witness.
+- **bound** — state a binding rule as an Invariant.
+- **plan** — group Candidates and Promises into a Plan.
+
+Record classes and verbs are fixed sets; adding, removing, or redefining one
+takes a protocol Decision. A procedure an agent follows — a skill — declares
+the one verb it performs; it implements that verb and introduces no new kind
+of record or act.
+
 Record concerns and uncertainties encountered during the work as Gaps, even
 when minor or tentative. Follow `situation/gaps/AGENTS.md` to relate them to
 existing Gaps and supporting records. Surfacing a Gap does not assign its

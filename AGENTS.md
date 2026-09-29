@@ -15,7 +15,8 @@ Agent instructions come from two levels, each with one source:
    repository runs under it, whatever its harness. Its `AGENTS.md` is composed
    from `templates/root-protocol.md` followed by `templates/organization.md` —
    never from a repository's root `AGENTS.md` — and the skills under
-   `skills/` are installed beside it.
+   `skills/` and the organization's records under `organization/situation/`
+   are installed beside it as `org/skills/` and `org/situation/`.
 2. **Repository level** — a repository's own root `AGENTS.md` holds only its
    repository block (`templates/repository-block.md`): that repository's
    situational state. `.agents/skills/` and `paseo.json` add repository
@@ -44,10 +45,12 @@ Its content classes are:
   the only content of a repository's root `AGENTS.md`;
 - `skills/<name>/SKILL.md`, the role and organization skills installed at
   user level beside the composed `AGENTS.md`;
+- `organization/situation/`, the organization circle: the organization's own
+  knowledge records, installed read-only at user level as `org/situation/`;
 - `migrations/`, one note per release transition.
 
-Organization-specific material lives only in `templates/organization.md` and
-`skills/`. This
+Organization-specific material lives only in `templates/organization.md`,
+`skills/`, and `organization/situation/`. This
 repository does not contain application code, product documentation,
 credentials, automation workflows, or target repository state. If a change
 requires private context to justify, it does not belong here.
@@ -55,9 +58,11 @@ requires private context to justify, it does not belong here.
 ## Bedrock exemption
 
 This repository does not adopt the Bedrock protocol itself. It has no
-protocol lock, no closure workflow, and no situation records. Applying the
-protocol to its own source would create circular authority; the exemption is
-deliberate.
+protocol lock, no closure workflow, and no situation records of its own.
+`situation/` holds the published namespace files, and
+`organization/situation/` is the organization circle's published record set;
+neither describes this repository. Applying the protocol to its own source
+would create circular authority; the exemption is deliberate.
 
 ## Authoring rules
 
@@ -71,10 +76,22 @@ deliberate.
   harnesses, models, or git and pull-request practice.
   `templates/organization.md` states organization operating rules and
   restates no protocol concept. Each fact lives in exactly one place:
-  `templates/organization.md` states the rule, a skill carries the procedure
-  and details and never restates the rule.
-- `templates/organization.md` and `skills/` state the organization's own
-  operating rules and procedures. This repository is public and that is intended: model
+  `templates/organization.md` states the rule and names the skill;
+  `organization/situation/` holds the knowledge as records; a skill carries
+  the procedure and points to those records, restating neither.
+- The record classes and verbs are defined once, in
+  `templates/root-protocol.md`. Adding, removing, or redefining either is a
+  protocol Decision, recorded in the release's migration note.
+- `organization/situation/` follows `situation/AGENTS.md` and the namespace
+  `AGENTS.md` files exactly as a repository's `situation/` does, with
+  identifiers scoped to the organization circle and no `AGENTS.md` of its own.
+  It is read where it is installed, so organization records, skills, and
+  `templates/organization.md` cite its records by installed path
+  (`org/situation/…`); `templates/organization.md` states that convention once.
+  Critical organization invariants appear in `templates/organization.md`.
+- `templates/organization.md`, `skills/`, and `organization/situation/` state
+  the organization's own operating rules, procedures, and knowledge. This
+  repository is public and that is intended: model
   names, repository names, runner labels, harnesses, and tools are all
   published freely. The one exclusion is personally identifying information:
   never name the operator's machines, local folder paths, or usernames other
@@ -84,9 +101,13 @@ deliberate.
   exploitability and affected code paths — is never represented in it, its
   branches, issues, pull requests, reviews or comments. Public CVE and CWE
   references are fine.
-- A skill is a directory `skills/<name>/` holding one `SKILL.md` with `name`
-  and `description` front matter; the directory name equals `name`. Skills
-  are installed at user level and never copied into repositories.
+- A skill is a directory `skills/<name>/` holding one `SKILL.md` with `name`,
+  `verb`, and `description` front matter; the directory name equals `name`.
+  `verb` is one verb from `templates/root-protocol.md`. `description` is the
+  trigger — when the skill applies — because harnesses keep it in the agent's
+  context; the body is the procedure (steps and checks) and pointers to
+  records. Skills are installed at user level and never copied into
+  repositories.
 - Reference discipline is law in every published file: repository files are
   referenced by repository-root-relative path; external public files by
   full public URL; external private files by declared coordinate
@@ -126,6 +147,7 @@ deliberate.
 `manifest.json` lists every published file with its SHA-256 digest relative
 to the repository root: the namespace files under `files`, the root protocol
 block under `root_protocol`, the repository block template under
-`repository_block`, the organization template under `organization`, and the
-skills under `skills`. Consumers verify digests before copying. The manifest is
+`repository_block`, the organization template under `organization`, the
+skills under `skills`, and the organization circle's records under
+`organization_situation`. Consumers verify digests before copying. The manifest is
 data, not an application; it contains no logic.
