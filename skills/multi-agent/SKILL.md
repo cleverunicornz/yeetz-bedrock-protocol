@@ -47,6 +47,9 @@ profile parameter; materialize the chosen profile into it:
 Use the profile for the role; pick a different model only when the requester
 asks for one.
 
+Before you create an agent for one of your board items, pre-fill its items
+and give it the delegation label (`board`).
+
 Title agents `[<profile>] <task>`. The first line of every brief is
 `You are the <role>. Read the <role> skill first.`, where `<role>` is the
 skill the profile follows. A self-contained assignment follows: goal,

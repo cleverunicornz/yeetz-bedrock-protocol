@@ -1,5 +1,5 @@
 {
-  "version": "1.16.0",
+  "version": "1.17.0",
   "description": "Bedrock protocol published files, root protocol block, repository block template, organization template, and skills.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
@@ -11,7 +11,7 @@
   },
   "organization": {
     "path": "templates/organization.md",
-    "sha256": "51c1450f1fcc810c67b723267042fd88d3dead40401df6ded8db675d7bf35922"
+    "sha256": "321e0415fd5442f3353c32bb1dfb2de0a03721dc236807c65211e78f068bac07"
   },
   "files": [
     {
@@ -61,6 +61,10 @@
       "sha256": "613e332b4fdf16cfac8718b8859371d8b456c7ef0a246e28f8084f13f170e672"
     },
     {
+      "path": "skills/board/SKILL.md",
+      "sha256": "56c182c219a3faf852d635cdb33c6e890074b38ef7bef0ab4210d40ce3a4463a"
+    },
+    {
       "path": "skills/ci-runners/SKILL.md",
       "sha256": "13ee00dca2a0a1e8933cf3a360d6c0c1a51db237f28570d58d4402572d61bb86"
     },
@@ -82,7 +86,7 @@
     },
     {
       "path": "skills/multi-agent/SKILL.md",
-      "sha256": "e892927b50dc46cbf68eb8ddff87b4094ce5431d67d22bcc74761ec429762e54"
+      "sha256": "9c7857f7084b1d8f5a0fb57d12ee21d6519c0e376dbe90001e2195bc2d276240"
     },
     {
       "path": "skills/orchestrator/SKILL.md",
