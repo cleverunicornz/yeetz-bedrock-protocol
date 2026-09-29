@@ -32,6 +32,11 @@ class is and how to author one:
 - **Plans** are thin containers grouping promises into a delivery effort.
 - **References** hold retained depth linked from records.
 
+The record classes are the nouns. The verbs — observe, surface, propose,
+challenge, test, decide, promote, implement, bound, plan — are the acts that
+make or change them; both sets are fixed and defined in
+`templates/root-protocol.md`, and every skill declares the verb it performs.
+
 Three templates complete an installation, each with one job:
 
 - `templates/root-protocol.md` — the Bedrock protocol and how agents engage
@@ -41,7 +46,9 @@ Three templates complete an installation, each with one job:
 - `templates/repository-block.md` — the required shape of the repository
   block, the only content of the adopter's root `AGENTS.md`.
 
-The role and organization skills live in `skills/`.
+The role and organization skills live in `skills/`. The organization's own
+knowledge records — the same schema as a repository's `situation/` — live in
+`organization/situation/`.
 
 ## Layers
 
@@ -50,7 +57,7 @@ instructions come from two levels:
 
 | Level | Content | Where it lives | How it ships |
 |---|---|---|---|
-| User | protocol block + organization layer: `AGENTS.md` composed from `templates/root-protocol.md` then `templates/organization.md`, plus the skills under `skills/` | the agent container image, one level above every repository | each container release (canary, then rollout) |
+| User | protocol block + organization layer: `AGENTS.md` composed from `templates/root-protocol.md` then `templates/organization.md`, plus the skills under `skills/` and the organization's records under `organization/situation/` (installed as `org/situation/`) | the agent container image, one level above every repository | each container release (canary, then rollout) |
 | Repository | the repository's root `AGENTS.md`, holding only its repository block (`templates/repository-block.md`) — that repository's situational state — plus `.agents/skills/` and `paseo.json` | the repository | the repository's own pull requests |
 
 **Composition rule:** the user-level `AGENTS.md` is exactly
@@ -65,7 +72,8 @@ and supersedes any such block a repository still carries.
 ## What this is not
 
 This repository contains no application code, no organization-specific
-information outside `templates/organization.md` and `skills/`, no
+information outside `templates/organization.md`, `skills/`, and
+`organization/situation/`, no
 credentials, no automation runtime, and no Bedrock closure of its own. It is exempt by design: the protocol source does not consume itself.
 
 ## Usage

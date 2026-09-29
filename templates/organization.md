@@ -5,6 +5,11 @@ what you do and the skill you must read before doing it; the skill holds the
 detail. These rules follow the protocol block and supersede any
 `bedrock-organization` block a repository still carries.
 
+The organization keeps its own knowledge records — the same schema as a
+repository's `situation/` — read-only in `org/situation/`, beside its skills in
+`org/skills/`. A path `org/…` names the installed organization layer:
+`/etc/cvu/org/…` in a container.
+
 ## Agents
 
 - **Paseo is the organization's agent runtime.** Every other agent — a
@@ -42,7 +47,8 @@ detail. These rules follow the protocol block and supersede any
   exact pull request.
 - **Pull requests, reviews, issues, projects and CI results go through the
   `github` MCP tools.** Before you read or change any of them, or wait for or
-  read CI, you must read `github`.
+  read CI, you must read `github`
+  (`org/situation/invariants/I-000001-github-through-mcp-tools.md`).
 - **When you open a pull request**, assign it to the human you work for: the
   GitHub login in `$CVU_HUMAN_GITHUB_LOGIN` (set in every repo pod).
 - **When your pull request is ready to merge**, you must read

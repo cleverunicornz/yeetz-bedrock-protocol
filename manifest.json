@@ -1,9 +1,9 @@
 {
-  "version": "1.17.1",
-  "description": "Bedrock protocol published files, root protocol block, repository block template, organization template, and skills.",
+  "version": "1.18.0",
+  "description": "Bedrock protocol published files, root protocol block, repository block template, organization template, skills, and organization situation records.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
-    "sha256": "aed76f348a9f1c67a72697e1bf007faec95d46eee9a2f3323db789ebc6e0330f"
+    "sha256": "38cc50b369a7d097ac4847f660ee506937f0d3d353e2d4d4ff6f33e4b11006fb"
   },
   "repository_block": {
     "path": "templates/repository-block.md",
@@ -11,7 +11,7 @@
   },
   "organization": {
     "path": "templates/organization.md",
-    "sha256": "321e0415fd5442f3353c32bb1dfb2de0a03721dc236807c65211e78f068bac07"
+    "sha256": "05f96134c25fb1dccabd2cd3d74357b2c77051495d81e9b00b0fd385e46f4ddd"
   },
   "files": [
     {
@@ -78,7 +78,7 @@
     },
     {
       "path": "skills/github/SKILL.md",
-      "sha256": "46bf027b61dbaf723e766c787a0a21862c3c5d23331a86e30826e3257a1174df"
+      "sha256": "91a1696522650f7410f280cab19afa1791b97013e99f99c95a9dbbc507b2ed4c"
     },
     {
       "path": "skills/implementer/SKILL.md",
@@ -107,6 +107,40 @@
     {
       "path": "skills/workbench/SKILL.md",
       "sha256": "485d1be588fa8f0eb131b6747db8bf60aa5df1c439aee7b08082385b2cf9c220"
+    }
+  ],
+  "organization_situation": [
+    {
+      "path": "organization/situation/context.md",
+      "sha256": "b3d67d7b5faee0318eaf5c79af13b5ab43ab7ea85e5ff6eb02c9224a20280b43"
+    },
+    {
+      "path": "organization/situation/decisions/D-000001-knowledge-in-records-skills-as-verbs.md",
+      "sha256": "80f6ddfb5cadf3e61e5644b583ec64808a94336fe3734a806d9d9474e24fa98b"
+    },
+    {
+      "path": "organization/situation/invariants/I-000001-github-through-mcp-tools.md",
+      "sha256": "65a812ddfaf7c9cc369aa7f2372b3b2dfe188909450bbdb64c5a0a342e7154af"
+    },
+    {
+      "path": "organization/situation/invariants/I-000002-ci-waited-in-background.md",
+      "sha256": "8961d330799ad1f9f4c5e810951ff2ce708b7e9563c70eb7258589faaf725d18"
+    },
+    {
+      "path": "organization/situation/invariants/I-000003-github-lists-read-to-end.md",
+      "sha256": "2f07c0ac13e4d4093cea097832e1dbbcbc09a192caeedc7d2f77db94cc7cc831"
+    },
+    {
+      "path": "organization/situation/references/I-000001/github-mcp-tools.md",
+      "sha256": "f17b930fb16a908de14f80270605f440f238f2872f671dce3b8f1311a356fcf6"
+    },
+    {
+      "path": "organization/situation/references/I-000002/github-ci-runs.md",
+      "sha256": "f71c99720efd46f5087e58c9a88013d46255411e702d0cf22bfa7cbbd2b4130e"
+    },
+    {
+      "path": "organization/situation/references/I-000003/github-mcp-results.md",
+      "sha256": "081d2199b91b01914c3fb7a0ea5ac3c2bcaf88e4516336f606fd5332078d95c4"
     }
   ]
 }
