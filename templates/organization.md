@@ -58,6 +58,11 @@ detail. These rules follow the protocol block and supersede any
   repository, public and private; the finding, its Candidate and the full
   Decision stay in the vault (a private repository may cite its opaque vault
   ID, a public one never does).
+- **When you work with secure material** (anything from the security vault:
+  our own known vulnerabilities, their details, exploitability, affected code
+  paths), use it freely and never represent it in a public repository — code,
+  comments, commits, branches, issues, pull requests, reviews or comments.
+  Public CVE and CWE references are fine anywhere.
 - **When infrastructure is broken, missing or blocking you**, open an issue in
   `cleverunicornz/infra-v2` saying what you needed and what failed, and link it from your work.
   Do not work around the platform.
