@@ -48,6 +48,13 @@ detail. These rules follow the protocol block and supersede any
   test or production environment**, you must read `environments`. Budgets are
   set by a human and recorded in the repository's AGENTS.md; never choose them
   yourself.
+- **Security findings stay in the security vault, never in a repository.** A
+  fix for one lands in one pull request together with its property-level
+  Promise and Oracle: the property the code keeps, never the attack, a payload,
+  reproduction steps, severity or "is vulnerable". This holds in every
+  repository, public and private; the finding, its Candidate and the full
+  Decision stay in the vault (a private repository may cite its opaque vault
+  ID, a public one never does).
 - **When infrastructure is broken, missing or blocking you**, open an issue in
   `cleverunicornz/infra-v2` saying what you needed and what failed, and link it from your work.
   Do not work around the platform.
