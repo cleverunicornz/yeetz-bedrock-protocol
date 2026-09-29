@@ -36,6 +36,9 @@ detail. These rules follow the protocol block and supersede any
   stop. Remote branches are never deleted; local branches may be. Pull
   requests stay open unless your task explicitly authorizes merging that
   exact pull request.
+- **Pull requests, reviews, issues, projects and CI results go through the
+  `github` MCP tools.** Before you read or change any of them, or wait for or
+  read CI, you must read `github`.
 - **When you open a pull request**, assign it to the human you work for: the
   GitHub login in `$CVU_HUMAN_GITHUB_LOGIN` (set in every repo pod).
 - **When your pull request is ready to merge**, you must read
