@@ -12,17 +12,21 @@ as one line each. It is an outline, not a book: it holds titles, short
 statements and pointers; the detail lives in files, commits, pull requests and
 records it points to.
 
-The board is your working memory for the session. Harness auto-memory is off;
-what the next session or another agent must know goes on the board (for this
-work) or into the repository's records (for good).
+The board is your working memory for the session and your only task list.
+Harness auto-memory and the harnesses' own to-do lists (Claude Code's task
+list, Codex's plan tool, NOOA's `self.todo`) are off: plan and track every
+step on the board, with states and notes. What the next session or another
+agent must know goes on the board (for this work) or into the repository's
+records (for good).
 
 ## Tools
 
 - **Claude Code and Codex:** the MCP tool `board` (one tool, `op` plus
   fields) and the resource `board://current`.
 - **NOOA:** `self.board` (`plan`, `add`, `update`, `state`, `note`, `link`,
-  `unlink`, `focus`, `prefill`, `propose`, `accept`, `decline`, `attach`,
-  `adopt`, `view`, `history`, `boards`, `board`).
+  `unlink`, `focus`, `prefill`, `propose`, `accept`, `decline`, `join` (the
+  `attach` op), `adopt`, `view`, `history`, `boards`, `board`); its view is
+  in your context every turn.
 - **Shell:** `cvu-board view`, `cvu-board add kind=gap title="..."`.
 
 Ids: `P-3` is yours; `a2/P-3` belongs to agent `a2` of your tree (the view
@@ -34,7 +38,9 @@ shows handles); `<session>/P-3` names any item of your repository's boards.
   a `promise` for each result you will deliver, each with an `oracle` (how it
   will be judged) before you start the work.
 - **While working:** set states as they change (`open`, `active`, `blocked`,
-  `done`); `focus` the item you are on; add a `gap` for what is missing or
+  `done`); `focus` the item you are on; break a promise into smaller items
+  (gaps, candidates, sub-promises) when you need a step list; add a `gap`
+  for what is missing or
   unclear, a `decision` when you choose between options (with `why`), a
   `candidate` for an idea not yet committed to, an `invariant` for a rule the
   work must keep, a `reference` for something found and cited.
@@ -83,8 +89,9 @@ joins its tree.
    (Paseo `create_agent` `labels`), and also put the line
    `board: <item>#<n>` in the brief. The child starts from its pre-filled
    items, never from an empty board.
-3. **A child** that does not see its items runs `attach` with the delegation
-   from its brief. It owns its pre-filled items and changes them directly.
+3. **A child** that does not see its items runs `attach` (NOOA: `join`) with
+   the delegation from its brief. It owns its pre-filled items and changes
+   them directly.
 4. **Items you do not own:** `propose` a change (title, statement, state,
    successor, note, refs) with a `reason`; the owner sees it and runs
    `accept` or `decline` (with a reason). Answer proposals to your items
