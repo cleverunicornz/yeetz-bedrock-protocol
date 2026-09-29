@@ -20,9 +20,13 @@ detail. These rules follow the protocol block and supersede any
 - **When a model refuses work on security grounds, or work is stuck or
   looping**, you must read `multi-agent`: it has the security fallback
   profiles and the committee.
+- **Every session keeps its board.** At the start set its plan and the
+  promises you will deliver, each with an oracle; keep states current; point,
+  never copy. Before you create a sub-agent for one of your items, pre-fill
+  its items and pass the delegation. You must read `board`.
 - **A Claude session stopped by a usage limit is never resumed.** Start a new
   session with the same role and assignment; it continues from the pushed
-  branch.
+  branch and adopts the previous session's board.
 - **Agents have full tool access.** The container is the boundary.
 
 ## Work
