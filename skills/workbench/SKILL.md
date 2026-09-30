@@ -1,6 +1,6 @@
 ---
 name: workbench
-description: Run heavy or interactive work on the repository's shared workbench - builds, clippy, filtered tests, lint, dev servers, docker compose stacks, Testcontainers, a Playwright browser, preview URLs, a desktop view. Covers when to use it, choosing each command's time (60 to 600 seconds), the workbench MCP tools for Claude Code and Codex, NOOA's tools and the HTTP fallback, sizes (normal and xl), and adding tools through the repository's devcontainer. Read it before compiling, testing, or starting servers.
+description: Run heavy or interactive work on the repository's shared workbench - builds, clippy, filtered tests, lint, dev servers, docker compose stacks, Testcontainers, a Playwright browser, preview URLs, a desktop view. Covers when to use it, commands that run until they end with calls that wait at most 600 seconds, reading the whole output, the workbench MCP tools for Claude Code and Codex, NOOA's tools and the HTTP fallback, sizes (normal and xl), and adding tools through the repository's devcontainer. Read it before compiling, testing, or starting servers.
 ---
 
 # workbench
@@ -16,14 +16,18 @@ repository work in their own workspaces on the same workbench.
 ## When
 
 - Reading, searching, editing, and git stay in the repo pod.
-- **You choose every command's time: 60 to 600 seconds.** Pick what the
-  command needs plus a margin: 60 for quick checks (`cargo clippy` on one
-  crate, `pnpm tsc --noEmit`, a filtered `cargo nextest run <filter>`,
-  `uv run pytest -k <expr>`, `ruff check`), more for builds and larger
-  suites. At that time the command and everything it started are killed;
-  other agents' commands, your services, and the workbench keep running.
-- Work longer than 600 seconds (full suites, release builds, benchmarks) goes
-  to CI as one job (`ci-runners`), not as many pieces.
+- **A command runs until it ends.** No command has a time limit unless you
+  set `deadline_seconds`; leave it out unless you want the command stopped at
+  that time. Only `cancel(run_id)` or your `deadline_seconds` stops a command.
+- **A call waits at most `wait_seconds`**: 120 by default, at most 600. When
+  the wait ends first, the answer says `running`, with the `run_id` and the
+  output so far, and the command goes on. Call `wait(run_id)` again as often
+  as the work needs. For long work (full suites, release builds, benchmarks)
+  `start` it and `wait` for it. CI stays the receipt for a pull request
+  (`ci-runners`).
+- A running command's `status` shows its last output and CPU use. After 10
+  minutes with neither it is flagged `stalled`: look at it and decide whether
+  to cancel; it is never stopped for that.
 - `cargo clippy -- -D warnings` is a compile sanity check: it must compile.
   Fix lints that are cheap and correct; leave code readable.
 
@@ -39,13 +43,23 @@ there.
 
 - `open(size?)`: opens the workbench (waits while it is queued or starting)
   and returns your workspace and ports. `size: "xl"` only for full stacks.
-- `run(cmd, timeout_seconds)`: `timeout_seconds` is required, an integer from
-  60 to 600. Returns `exit_code`, `timed_out`, `memory_exceeded`, parsed
-  compiler and test diagnostics, and the last 200 lines of output with a note
-  of what was cut; filter noisy commands with `| tail` or `| grep`.
-- `service_start(name, command)`, `service_logs(name, tail?)`,
-  `service_stop(name)`: long-lived processes (dev servers,
-  `docker compose up`).
+- `run(cmd, wait_seconds?, deadline_seconds?)`: runs the command and waits
+  up to `wait_seconds` (default 120, at most 600). Finished: `exit_code`,
+  `memory_exceeded`, whether your deadline or a cancel stopped it, parsed
+  compiler and test diagnostics, and its output. Still going: `running` and
+  its `run_id`.
+- `start(cmd, deadline_seconds?)`: starts a command and answers with its
+  `run_id` at once. `wait(run_id, wait_seconds?)` waits again and returns the
+  output since the previous wait. `status(run_id)`, `cancel(run_id)`, and
+  `runs()` list your workspace's runs.
+- **Output is never lost.** Every byte of a run's output is kept. An answer
+  carries at most 30,000 characters. A longer output comes as its start and
+  its end, with the cut positions stated. `output(run_id, start, length)`
+  reads any part by byte position.
+- `service_start(name, command)`, `service_stop(name)`: long-lived processes
+  (dev servers, `docker compose up`). `service_logs(name, tail?)` gives the
+  last lines. `service_logs(name, from)` gives the whole log from a byte
+  position, at most 30,000 characters a call, with the position to read next.
 - `url(port)`: the local address for the browser and the preview URL for
   people.
 - `desktop()`: a live desktop with a visible Chromium that people can watch.
@@ -53,35 +67,41 @@ there.
 - `playwright_browser_*`: the workspace's Playwright browser tools (navigate,
   snapshot, click, ...); add `visible: true` to drive the desktop's Chromium.
 
-**NOOA**: the same through `self.workbench`: `open(size=...)`, `run(cmd,
-timeout=...)`, `service_start/stop/logs`, `url(port)`, `browser(visible=...)`,
-`desktop()`, `status()`.
+**NOOA**: the same through `self.workbench`: `open(size=...)`,
+`run(cmd, wait_seconds=..., deadline_seconds=...)`, `start`, `wait`,
+`status(run_id)`, `cancel`, `output`, `runs`, `service_start/stop`,
+`service_logs(name, tail=..., from_=...)`, `url(port)`,
+`browser(visible=...)`, `desktop()`, `status()`. A result's `output` holds
+the whole output of the run so far.
 
 **Fallback for any harness without the MCP tools**: the workbench shim on
-`127.0.0.1:8099`; `cwd` is your worktree path; `timeout_s` follows the same
-60 to 600 rule:
+`127.0.0.1:8099`; `cwd` is your worktree path; the same waits and deadlines:
 
 ```sh
 W=127.0.0.1:8099; CWD=$(git rev-parse --show-toplevel)
 curl -s -XPOST $W/v1/open -d "{\"cwd\":\"$CWD\"}"                 # add ,"size":"xl" for xl
-curl -sN -XPOST $W/v1/run -d "{\"cwd\":\"$CWD\",\"cmd\":\"cargo nextest run parser\",\"timeout_s\":240}"
+curl -s -XPOST $W/v1/runs -d "{\"cwd\":\"$CWD\",\"cmd\":\"cargo nextest run parser\",\"wait_seconds\":120}"
+curl -s "$W/v1/runs/<run_id>/wait?cwd=$CWD&wait_seconds=600&from=<byte>"    # again while "running"
+curl -s "$W/v1/runs/<run_id>/output?cwd=$CWD&start=<byte>&length=<bytes>"
+curl -s -XDELETE $W/v1/runs/<run_id> -d "{\"cwd\":\"$CWD\"}"          # cancel
 curl -s -XPOST $W/v1/service -d "{\"cwd\":\"$CWD\",\"name\":\"web\",\"command\":\"pnpm dev --port \$PORT --host 127.0.0.1\"}"
-curl -s "$W/v1/service/logs?cwd=$CWD&name=web&tail=50"
+curl -s "$W/v1/service/logs?cwd=$CWD&name=web&tail=50"            # or &from=<byte>: the log from there
 curl -s -XDELETE $W/v1/service -d "{\"cwd\":\"$CWD\",\"name\":\"web\"}"
 curl -s "$W/v1/url?cwd=$CWD&port=<port>"
 curl -s -XPOST $W/v1/desktop -d "{\"cwd\":\"$CWD\"}"
 curl -s "$W/v1/status?cwd=$CWD"
 ```
 
-`run` streams NDJSON: `{"t":"o"|"e","d":...}` output, then `{"t":"exit",...}`
-(`exit_code`, `timed_out`, `memory_exceeded`), then
-`{"t":"summary","diagnostics":[...]}`.
+`POST /v1/runs` without `wait_seconds` answers with the `run_id` at once.
+With it, and on `/wait`, the answer is JSON: `state` (`running`, `done`, or
+`lost` when the workbench stopped under it), `run_id`, `output` (`text`,
+`from`, `to`, `cut`, `path`), and when done `exit` and `diagnostics`.
 
 - Ports: `$PORT` is the first port of your range; use anything in the range
   except the last three, which belong to the browser tools. Bind servers to
   `127.0.0.1` or `0.0.0.0`.
-- Services are exempt from the command time and live until stopped or the
-  workbench stops. Background processes started inside `run` end with it.
+- Services live until stopped or the workbench stops. Background processes
+  started inside a command end with that command.
 - The browser uses local addresses (`http://127.0.0.1:<port>`); the preview
   URL is for people.
 - After about 30 minutes without activity the workbench stops; workspaces and
