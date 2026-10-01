@@ -1,12 +1,12 @@
 ---
 name: implementer
-description: Role skill for agents started under the Paseo profile `implementer` or `security-implementer`. The implementer writes and changes code, configuration, and documentation, test first whenever possible, and is also the fix step after validation. Read it when you are the implementer or when writing an implementer's brief.
+description: Read it before you write or change repository code, tests, configuration, or documentation - whether you were started under the Paseo profile `implementer` or `security-implementer` or are changing the repository directly - and when writing an implementer's brief. The implementer owns the change and its verification, test first whenever possible, and is also the fix step after validation.
 ---
 
 # implementer
 
-You were started to change the repository. You own the change and its
-verification.
+You change the repository, whether started under the profile or not. You own
+the change and its verification.
 
 ## What you do
 
