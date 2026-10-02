@@ -444,6 +444,17 @@
         }
       ]
     },
+    "id_plan_member": {
+      "description": "A Plan member: a Candidate or a Promise, nothing else.",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/id_Candidate"
+        },
+        {
+          "$ref": "#/$defs/id_Promise"
+        }
+      ]
+    },
     "scope_ref": {
       "type": "string",
       "pattern": "^scope:[a-z][a-z0-9_-]*/.+$",
@@ -1022,14 +1033,7 @@
         "members": {
           "type": "array",
           "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/id_Candidate"
-              },
-              {
-                "$ref": "#/$defs/id_Promise"
-              }
-            ]
+            "$ref": "#/$defs/id_plan_member"
           }
         },
         "waits_on": {
@@ -1049,10 +1053,10 @@
         "type": "object",
         "properties": {
           "member": {
-            "$ref": "#/$defs/id_record"
+            "$ref": "#/$defs/id_plan_member"
           },
           "upon": {
-            "$ref": "#/$defs/id_record"
+            "$ref": "#/$defs/id_plan_member"
           }
         },
         "required": [
@@ -1236,7 +1240,8 @@
           ]
         },
         "from_candidate": {
-          "$ref": "#/$defs/id_Candidate"
+          "$ref": "#/$defs/id_Candidate",
+          "description": "With a Candidate, basis is the Decision whose standing outcome accepted it."
         },
         "addresses": {
           "type": "array",
@@ -1499,13 +1504,13 @@
         "add_members": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/id_record"
+            "$ref": "#/$defs/id_plan_member"
           }
         },
         "remove_members": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/id_record"
+            "$ref": "#/$defs/id_plan_member"
           }
         },
         "add_waits": {
@@ -1565,7 +1570,8 @@
       "type": "object",
       "properties": {
         "target_act": {
-          "$ref": "#/$defs/id_act"
+          "$ref": "#/$defs/id_act",
+          "description": "An act that made a record, or an amendment of one; the edit window runs from the act that made the record."
         },
         "changes": {
           "type": "object",

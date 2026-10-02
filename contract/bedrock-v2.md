@@ -70,7 +70,9 @@ Fields (limits in "Field limits" below; `?` marks optional):
 ### Plan: a group, not a noun
 
 A **Plan** (`PLAN` prefix) groups Candidates and Promises, nothing more: `title`, `members`, and optional, loose
-`waits_on` links between members (`member` waits upon `upon`). Order is never required up front. A Plan asserts
+`waits_on` links between members (`member` waits upon `upon`). Order is never required up front. Each member is
+named once; a `regroup` that adds another noun, removes what the Plan does not hold, or removes a member a `waits_on`
+link still names is refused (`bad_member`). A Plan asserts
 nothing and has no completion condition; its progress is read from its members' states. It is made by the
 structural act `group`, changed by `regroup`, and withdrawn by `revoke`. A Plan's states are `grouped`,
 `regrouped` and `revoked`.
@@ -212,7 +214,7 @@ Every act, verb or structural, is a node with these fields:
 | `formulate` | `responds_to` | `Candidate` | `authority` `orchestrator` `scout` `implementer` `advisor` `automation` | Evidence suggests a response. Walk the scope first: refine or supersede an existing Candidate rather than duplicate it. |
 | `evaluate` | `Candidate` | `findings`, `outcome` | `orchestrator` `scout` `advisor` | A Candidate needs investigation before deciding. Recorded once the investigation is done, with its outcome. |
 | `decide` | `considered` | `Decision`, `outcomes` | `authority` | A choice collapses: a Candidate accepted or declined, a Gap closed or kept, any recorded choice. |
-| `mint` | `basis`, `from_candidate`, `addresses` | `Promise` | `authority` `orchestrator` | A commitment is accepted. Direct: basis is the instruction's Reference. Via a Candidate: basis is the Decision that accepted it. |
+| `mint` | `basis`, `from_candidate`, `addresses` | `Promise` | `authority` `orchestrator` | A commitment is accepted. Direct: basis is the instruction's Reference. Via a Candidate: basis is the Decision that accepted it; citing any other Decision is refused (`wrong_basis`). |
 | `define` | `Promise` | `Oracle` | `authority` `orchestrator` | Best before `produce`. A retrospective Oracle is ordinary and honest about its time. |
 | `produce` | `Promise`, `evidence` | `Witness` | `implementer` | A real run observed the Promise's subject. |
 | `refine` | `target`, `evidence` | `Witness`, `sighting` | `implementer` `automation` | After an inconclusive verdict; or a further independent sighting of a Gap or Candidate. |
@@ -300,10 +302,15 @@ Notes:
 
 - **For 10 minutes after the act that made a record, its author may `amend` it.** The window runs from that act's
   `recorded_at`; amendments do not extend it. The author is the same `actor.agent`.
+- **An amendment of an amendment corrects the same record.** The tool follows the amended act back to the act that
+  made the record and measures the window, and the author, from that act. Only an act that made a record is
+  amended: amending an act that made none (`evaluate`, `judge`, `revoke`, `supersede`, `regroup`, `relate`, a
+  sighting) is refused (`not_amendable`). Worked examples: `contract/examples/14-amend-of-amend-window.yaml`,
+  `contract/examples/15-amend-needs-made-record.yaml`.
 - **The tool tells the author how long is left**, as `edit_window_closes_at` and seconds left, on the making act and
   on every amendment.
-- **After the window, only `supersede` or `revoke`.** An amendment after the window, or by anyone else, is refused
-  with the reason and the verbs that remain.
+- **After the window, only `supersede` or `revoke`.** An amendment after the window (`edit_window_closed`), or by
+  anyone else (`not_author`), is refused with the reason and the verbs that remain.
 - **Every amendment is itself an act** with its own envelope; nothing is overwritten without a trace.
 - **The same rule applies to an agent's board.** A lower layer may shorten the window, never lengthen it.
 

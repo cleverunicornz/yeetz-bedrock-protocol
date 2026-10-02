@@ -12,8 +12,9 @@ status: draft
 parameters:
   # The author may amend its own record for this long after the act that made
   # it; afterwards only supersede or revoke. Measured from the making act's
-  # recorded_at; amendments do not extend it. A lower layer may shorten it,
-  # never lengthen it.
+  # recorded_at; amendments do not extend it: an amendment of an amendment is
+  # followed back to the making act. An act that made no record is not
+  # amended. A lower layer may shorten it, never lengthen it.
   edit_window_seconds: 600
   # The tool returns these on the making act and on every amendment.
   edit_window_feedback: [edit_window_closes_at, edit_window_seconds_left]
@@ -108,7 +109,7 @@ group:
   Plan:
     prefix: PLAN
     members: [Candidate, Promise]
-    fields: {title: title, members: ids, waits_on: "[{member, upon}] optional, loose, never required"}
+    fields: {title: title, members: "Candidate and Promise ids, each once", waits_on: "[{member, upon}] between members; optional, loose, never required"}
     states: [grouped, regrouped, revoked]
     made_by: group
     completion: none; progress is read from member states; a Plan asserts nothing
@@ -197,6 +198,9 @@ refusals:
   already_judged: one judgment per (Witness, Oracle) pair
   edit_window_closed: after the edit window, only supersede or revoke
   not_author: only the author amends within the edit window
+  not_amendable: only an act that made a record is amended; an amendment of an amendment is followed back to it
+  wrong_basis: a Promise minted from a Candidate cites the Decision that accepted that Candidate
+  bad_member: a Plan holds only Candidates and Promises, each once; a regroup removes only what the Plan holds; a waits_on link names only members
 
 verbs:
   stipulate:
@@ -241,7 +245,7 @@ verbs:
     inputs: [basis, from_candidate, addresses]
     outputs: [Promise]
     roles: [authority, orchestrator]
-    when: A commitment is accepted, from an instruction or specification (direct) or from a Candidate accepted by a Decision.
+    when: A commitment is accepted, from an instruction or specification (direct) or from a Candidate, citing the Decision that accepted it.
   define:
     kind: act
     acts_on: [Oracle]
@@ -299,9 +303,9 @@ structural_acts:
   # optional scope, an amendment is a correction inside the edit window.
   store: {makes: Reference}
   group: {makes: Plan}
-  regroup: {changes: Plan, does: [add or remove members, add or remove waits_on links]}
+  regroup: {changes: Plan, does: [add or remove members, add or remove waits_on links], members: [Candidate, Promise], removes: only what the Plan holds}
   relate: {links: [scope, record], relations: [belongs_to, about], removable: true}
-  amend: {changes: the author's own act payload, within: edit_window_seconds}
+  amend: {changes: the author's own act payload, of: an act that made a record (an amendment of an amendment is followed back to it), within: edit_window_seconds of the making act}
 
 transitions:
   # from: [] means the record is made by the act. recompute: the state that

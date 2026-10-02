@@ -1,7 +1,8 @@
 # A Gap answered by two Candidates; one is evaluated (one act, recorded when
 # the investigation is done) and accepted, the other declined, by one Decision. The accepted Candidate is minted into a Promise.
-# The Witness is produced before the Oracle exists; defining the Oracle starts
-# assurance. A later Decision closes the Gap (outcome close; state decided).
+# The Witness is produced before the Oracle exists; defining the Oracle moves
+# nothing, and the holds judgment assures P-1. A later Decision closes the Gap
+# (outcome close; state decided).
 name: candidate-path
 defaults:
   protocol: 2.0.0-draft

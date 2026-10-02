@@ -21,7 +21,7 @@ import copy
 import json
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import jsonschema
@@ -417,7 +417,7 @@ def check_schema(schema: dict, contract: dict) -> None:
     # A Plan holds only its member nouns: every field naming a Plan member
     # admits exactly those ids.
     member = {"anyOf": [{"$ref": f"#/$defs/id_{n}"} for n in contract["group"]["Plan"]["members"]]}
-    if defs.get("id_plan_member") != member:
+    if defs.get("id_plan_member", {}).get("anyOf") != member["anyOf"]:
         fail(f"schema id_plan_member {defs.get('id_plan_member')} != {member}")
     regroup = defs["payload_regroup"]["properties"]
     waits = defs["waits"]["items"]["properties"]
@@ -552,6 +552,34 @@ class Projector:
         decided = [e for e in self.hist[rid] if e["verb"] == "decide" and self.stands(e)]
         return decided[-1]["outcome"] if decided else None
 
+    def add_member(self, members: list[str], m: str) -> None:
+        noun = noun_of(m, self.c)
+        if noun not in self.c["group"]["Plan"]["members"]:
+            raise Refused("bad_member", f"{m} cannot be a Plan member")
+        self.need(m, noun)
+        if m in members:
+            raise Refused("bad_member", f"{m} is already a member")
+        members.append(m)
+
+    def check_wait(self, members: list[str], w: dict) -> None:
+        if w["member"] not in members or w["upon"] not in members:
+            raise Refused("bad_member", f"waits_on {w} names a non-member")
+
+    def making_act(self, act: dict) -> dict:
+        """The act that made the record an act's edit window belongs to: the
+        act itself when it made a record, the end of its amend chain when it
+        is an amendment. Refused when that act made no record."""
+        target = act
+        while target["verb"] == "amend":
+            tid = target["payload"]["target_act"]
+            found = next((a for a in self.log if a["id"] == tid), None)
+            if found is None:
+                raise Refused("missing_input", f"{tid} is not a recorded act")
+            target = found
+        if not any(isinstance(target["payload"].get(k), dict) for k in MADE_KEYS):
+            raise Refused("not_amendable", f"{target['id']} ({target['verb']}) made no record to amend")
+        return target
+
     def apply(self, act: dict) -> None:
         saved = copy.deepcopy(
             (self.state, self.record, self.hist, self.author, self.subjects, self.judged, self.applied)
@@ -611,6 +639,12 @@ class Projector:
                 self.need(p["from_candidate"], "Candidate")
                 if self.latest_outcome(p["from_candidate"]) != "accept":
                     raise Refused("missing_input", "the Candidate was not accepted")
+                accepted_by = [
+                    e["rests_on"] for e in self.hist[p["from_candidate"]]
+                    if e["verb"] == "decide" and e["outcome"] == "accept" and self.stands(e)
+                ]
+                if basis["decision"] not in accepted_by:
+                    raise Refused("wrong_basis", f"{basis['decision']} did not accept {p['from_candidate']}")
             for g in p.get("addresses", []):
                 self.need(g, "Gap")
             self.create(p["promise"], "Promise", act)
@@ -680,27 +714,44 @@ class Projector:
             self.create(p["reference"], "Reference", act)
         elif v == "group":
             plan = p["plan"]
+            members: list[str] = []
             for m in plan["members"]:
-                if noun_of(m, self.c) not in self.c["group"]["Plan"]["members"]:
-                    raise Refused("bad_member", f"{m} cannot be a Plan member")
-                self.need(m, noun_of(m, self.c))
+                self.add_member(members, m)
+            for w in plan.get("waits_on", []):
+                self.check_wait(members, w)
             self.create(plan, "Plan", act)
         elif v == "regroup":
             plan = self.need(p["plan"], "Plan")
-            for m in p.get("add_members", []):
-                self.need(m, noun_of(m, self.c))
-                plan["members"].append(m)
+            members = plan["members"]
+            waits = plan.setdefault("waits_on", [])
+            # Removals first, then additions, so a member leaves with its
+            # links and arrives with them in one act.
+            for w in p.get("remove_waits", []):
+                if w not in waits:
+                    raise Refused("bad_member", f"{p['plan']} has no waits_on link {w}")
+                waits.remove(w)
             for m in p.get("remove_members", []):
-                plan["members"].remove(m)
+                if m not in members:
+                    raise Refused("bad_member", f"{m} is not a member of {p['plan']}")
+                if any(m in (w["member"], w["upon"]) for w in waits):
+                    raise Refused("bad_member", f"{m} is still named by a waits_on link of {p['plan']}")
+                members.remove(m)
+            for m in p.get("add_members", []):
+                self.add_member(members, m)
+            for w in p.get("add_waits", []):
+                self.check_wait(members, w)
+                if w in waits:
+                    raise Refused("bad_member", f"{p['plan']} already has waits_on link {w}")
+                waits.append(w)
             self.give(p["plan"], act, self.past[v])
         elif v == "relate":
             for r in (p["from"], p["to"]):
                 if not r.startswith("scope:"):
                     self.need(r, noun_of(r, self.c))
         elif v == "amend":
-            target = next((a for a in self.log if a["id"] == p["target_act"]), None)
-            if target is None:
-                raise Refused("missing_input", f"{p['target_act']} is not a recorded act")
+            # The window runs from the act that made the record; an amendment
+            # of an amendment corrects the same record and never extends it.
+            target = self.making_act(act)
             if target["actor"]["agent"] != act["actor"]["agent"]:
                 raise Refused("not_author", "only the author amends within the edit window")
             window = self.c["parameters"]["edit_window_seconds"]
@@ -765,6 +816,7 @@ def check_examples(schema: dict, contract: dict) -> tuple[set[tuple], set[str]]:
         name = path.name
         proj = Projector(contract)
         refused = None
+        crashed = False
         trace: dict[str, list[str]] = {}
         for i, raw_act in enumerate(ex["acts"]):
             act = merge(ex.get("defaults", {}), raw_act)
@@ -779,6 +831,20 @@ def check_examples(schema: dict, contract: dict) -> tuple[set[tuple], set[str]]:
             except Refused as r:
                 refused = (i, r)
                 break
+            except Exception as e:  # a defect in the example or the projector
+                fail(f"{name} act {i} ({act.get('id')}): projector raised {type(e).__name__}: {e}")
+                crashed = True
+                break
+            if "edit_window_closes_at" in act:
+                try:
+                    made = proj.making_act(act)
+                except Refused as r:
+                    fail(f"{name} act {i} ({act['id']}): carries edit_window_closes_at but {r}")
+                    continue
+                closes = when(made) + timedelta(seconds=contract["parameters"]["edit_window_seconds"])
+                if when({"recorded_at": act["edit_window_closes_at"]}) != closes:
+                    fail(f"{name} act {i} ({act['id']}): edit_window_closes_at {act['edit_window_closes_at']}"
+                         f" != {made['id']} recorded_at + window ({closes.isoformat()})")
             # Rule 5a: recomputation never creates work.
             if len(proj.log) != i + 1:
                 fail(f"{name} act {i}: the log holds {len(proj.log)} acts after {i + 1} were submitted")
@@ -789,6 +855,8 @@ def check_examples(schema: dict, contract: dict) -> tuple[set[tuple], set[str]]:
                 fail(f"{name} act {i} ({act['id']} {act['verb']}): changed {sorted(outside)} outside its one-step reach")
             for r in changed:
                 trace.setdefault(r, []).append(proj.state[r])
+        if crashed:
+            continue
         expect = ex["expect"]
         if "refused" in expect:
             want = expect["refused"]
