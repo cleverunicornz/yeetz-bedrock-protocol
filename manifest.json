@@ -1,6 +1,6 @@
 {
-  "version": "1.18.2",
-  "description": "Bedrock protocol published files, root protocol block, repository block template, organization template, skills, and organization situation records.",
+  "version": "2.0.0-draft",
+  "description": "Bedrock protocol published files, root protocol block, repository block template, organization template, skills, organization situation records, and the draft v2 contract.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
     "sha256": "38cc50b369a7d097ac4847f660ee506937f0d3d353e2d4d4ff6f33e4b11006fb"
@@ -141,6 +141,20 @@
     {
       "path": "organization/situation/references/I-000003/github-mcp-results.md",
       "sha256": "081d2199b91b01914c3fb7a0ea5ac3c2bcaf88e4516336f606fd5332078d95c4"
+    }
+  ],
+  "contract": [
+    {
+      "path": "contract/bedrock-v2.md",
+      "sha256": "26b97befbea81b9423eb78859fa6194b5e7a8cabf5eb16e41bc5e456a4e9467f"
+    },
+    {
+      "path": "contract/bedrock-v2.yaml",
+      "sha256": "e081fc33048afa7b422ec04723d02eceac3af7116cc8744d4f4a8068d7c9d7a3"
+    },
+    {
+      "path": "contract/bedrock-v2.schema.json",
+      "sha256": "1b15f731caf226eeec5a6f96f9bb043e3d9827de9a8f2feeb0c9fc3ef238484e"
     }
   ]
 }

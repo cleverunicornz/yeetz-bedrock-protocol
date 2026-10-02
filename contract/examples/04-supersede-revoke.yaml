@@ -1,0 +1,120 @@
+# Supersession and revocation across the nouns. Successors are made by their
+# own verb first; supersede links them. Witnesses are never superseded.
+name: supersede-revoke
+defaults:
+  protocol: 2.0.0-draft
+  level: repository
+  scope: example-repository
+  actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+  session: session:s-operator
+acts:
+  - {id: A-1, verb: stipulate, recorded_at: "2026-10-02T09:00:00Z",
+     payload: {invariant: {id: I-1, title: Releases are tagged, rule: Every release is an immutable tag., priority: standard}}}
+  - {id: A-2, verb: decide, recorded_at: "2026-10-02T09:01:00Z",
+     payload: {decision: {id: D-1, title: Releases are signed tags, statement: Release tags are signed., why: Unsigned tags cannot be attributed.}}}
+  - {id: A-3, verb: stipulate, recorded_at: "2026-10-02T09:02:00Z",
+     payload: {basis: [D-1], invariant: {id: I-2, title: Releases are signed tags, rule: Every release is an immutable signed tag., priority: critical}}}
+  - {id: A-4, verb: supersede, recorded_at: "2026-10-02T09:03:00Z",
+     payload: {target: I-1, successor: I-2, reason: Signing added., basis: [D-1]}}
+  - {id: A-5, verb: stipulate, recorded_at: "2026-10-02T09:04:00Z",
+     payload: {invariant: {id: I-3, title: Releases happen on Fridays, rule: Releases are cut on Fridays only., priority: standard}}}
+  - {id: A-6, verb: revoke, recorded_at: "2026-10-02T09:20:00Z",
+     payload: {target: I-3, reason: Stipulated by mistake; no such rule was agreed.}}
+  - {id: A-7, verb: decide, recorded_at: "2026-10-02T09:21:00Z",
+     payload: {decision: {id: D-2, title: Releases are signed with the release key, statement: Release tags are signed with the release key only., why: Personal keys rotate.}}}
+  - {id: A-8, verb: supersede, recorded_at: "2026-10-02T09:22:00Z",
+     payload: {target: D-1, successor: D-2, reason: Narrowed to the release key.}}
+  - {id: A-9, verb: decide, recorded_at: "2026-10-02T09:23:00Z",
+     payload: {decision: {id: D-3, title: Freeze releases this week, statement: No releases this week., why: Holiday.}}}
+  - {id: A-10, verb: revoke, recorded_at: "2026-10-02T09:40:00Z",
+     payload: {target: D-3, reason: The freeze was called off.}}
+  - {id: A-11, verb: store, recorded_at: "2026-10-02T10:00:00Z",
+     payload: {reference: {id: R-1, title: Release instruction v1, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "d111111111111111111111111111111111111111111111111111111111111111"},
+               location: {stored: {store: references, key: r/1.md, version: v1}}}}}
+  - {id: A-12, verb: store, recorded_at: "2026-10-02T10:01:00Z",
+     payload: {reference: {id: R-2, title: Release instruction v2, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "d222222222222222222222222222222222222222222222222222222222222222"},
+               location: {stored: {store: references, key: r/1.md, version: v2}}}}}
+  - {id: A-13, verb: supersede, recorded_at: "2026-10-02T10:02:00Z",
+     payload: {target: R-1, successor: R-2, reason: Corrected step order.}}
+  - {id: A-14, verb: store, recorded_at: "2026-10-02T10:03:00Z",
+     payload: {reference: {id: R-3, title: Wrong file, kind: repository_file, media_type: text/markdown,
+               location: {repository: example-repository, commit: "3333333", path: docs/old.md}}}}
+  - {id: A-15, verb: revoke, recorded_at: "2026-10-02T10:20:00Z",
+     payload: {target: R-3, reason: Stored the wrong file.}}
+  - {id: A-16, verb: mint, recorded_at: "2026-10-02T10:30:00Z",
+     payload: {basis: {instruction: R-2}, promise: {id: P-1, title: Releases are signed, statement: Every release tag verifies against a known key., scope: Release tags.}}}
+  - {id: A-17, verb: mint, recorded_at: "2026-10-02T10:31:00Z",
+     payload: {basis: {decision: D-2}, promise: {id: P-2, title: Releases verify against the release key, statement: Every release tag verifies against the release key., scope: Release tags.}}}
+  - {id: A-18, verb: supersede, recorded_at: "2026-10-02T10:32:00Z",
+     payload: {target: P-1, successor: P-2, reason: Narrowed by D-2., basis: [D-2]}}
+  - {id: A-19, verb: mint, recorded_at: "2026-10-02T10:33:00Z",
+     payload: {basis: {instruction: R-2}, promise: {id: P-3, title: Releases publish notes, statement: Every release publishes notes., scope: Releases.}}}
+  - {id: A-20, verb: revoke, recorded_at: "2026-10-02T10:50:00Z",
+     payload: {target: P-3, reason: Out of this work; recorded as a Gap instead.}}
+  - {id: A-21, verb: define, recorded_at: "2026-10-02T11:00:00Z",
+     payload: {oracle: {id: O-1, title: Tag verification v1, judges: P-2, inputs: git tag -v output., holds_when: Every tag verifies., fails_when: Any tag fails to verify., arrangement: deterministic}}}
+  - {id: A-22, verb: define, recorded_at: "2026-10-02T11:01:00Z",
+     payload: {oracle: {id: O-2, title: Tag verification v2, judges: P-2, inputs: git tag -v output and the release key fingerprint., holds_when: Every tag verifies with the release key fingerprint., fails_when: Any tag fails or verifies with another key., arrangement: deterministic}}}
+  - {id: A-23, verb: supersede, recorded_at: "2026-10-02T11:02:00Z",
+     payload: {target: O-1, successor: O-2, reason: The Oracle must check the key fingerprint.}}
+  - {id: A-24, verb: define, recorded_at: "2026-10-02T11:03:00Z",
+     payload: {oracle: {id: O-3, title: Duplicate oracle, judges: P-2, inputs: Same as O-2., holds_when: Same as O-2., fails_when: Same as O-2., arrangement: deterministic}}}
+  - {id: A-25, verb: revoke, recorded_at: "2026-10-02T11:20:00Z",
+     payload: {target: O-3, reason: Defined twice by mistake.}}
+  - {id: A-26, verb: store, recorded_at: "2026-10-02T12:00:00Z",
+     payload: {reference: {id: R-4, title: Tag verification output, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "d444444444444444444444444444444444444444444444444444444444444444"},
+               location: {stored: {store: references, key: r/4.md, version: v1}}}}}
+  - {id: A-27, verb: produce, recorded_at: "2026-10-02T12:01:00Z",
+     payload: {witness: {id: W-1, title: Tag verification of the wrong repository, observes: P-2, observed_at: "2026-10-02T11:59:00Z", coordinate: commit 4444444, result: All tags verified., evidence: [R-4]}}}
+  - {id: A-28, verb: revoke, recorded_at: "2026-10-02T12:30:00Z",
+     payload: {target: W-1, reason: The run checked another repository; the observation is not of P-2.}}
+  - {id: A-29, verb: declare, recorded_at: "2026-10-02T13:00:00Z",
+     payload: {gap: {id: G-1, title: Release notes missing, statement: Releases have no notes.}}}
+  - {id: A-30, verb: declare, recorded_at: "2026-10-02T13:01:00Z",
+     payload: {gap: {id: G-2, title: Release notes are missing for patch releases, statement: Patch releases have no notes; minor releases do.}}}
+  - {id: A-31, verb: supersede, recorded_at: "2026-10-02T13:02:00Z",
+     payload: {target: G-1, successor: G-2, reason: More accurate.}}
+  - {id: A-32, verb: declare, recorded_at: "2026-10-02T13:03:00Z",
+     payload: {gap: {id: G-3, title: Duplicate gap, statement: Same as G-2.}}}
+  - {id: A-33, verb: revoke, recorded_at: "2026-10-02T13:20:00Z",
+     payload: {target: G-3, reason: Declared twice by mistake.}}
+  - {id: A-34, verb: formulate, recorded_at: "2026-10-02T13:30:00Z",
+     payload: {responds_to: [G-2], candidate: {id: C-1, title: Generate notes from merge titles, hypothesis: Merge titles are enough for patch notes.}}}
+  - {id: A-35, verb: formulate, recorded_at: "2026-10-02T13:31:00Z",
+     payload: {responds_to: [G-2], candidate: {id: C-2, title: Generate notes from merge titles and labels, hypothesis: Titles plus labels group the notes usefully.}}}
+  - {id: A-36, verb: supersede, recorded_at: "2026-10-02T13:32:00Z",
+     payload: {target: C-1, successor: C-2, reason: Better grouping.}}
+  - {id: A-37, verb: formulate, recorded_at: "2026-10-02T13:33:00Z",
+     payload: {responds_to: [G-2], candidate: {id: C-3, title: Hand-written notes, hypothesis: Authors write notes.}}}
+  - {id: A-38, verb: revoke, recorded_at: "2026-10-02T13:50:00Z",
+     payload: {target: C-3, reason: Withdrawn by its author before any decision.}}
+  - {id: A-39, verb: decide, recorded_at: "2026-10-02T14:00:00Z",
+     payload: {considered: [G-2, C-2], outcomes: [{subject: G-2, outcome: keep}],
+               decision: {id: D-4, title: Keep the patch-notes Gap for now, statement: G-2 is kept; C-2 is left undecided., why: Patch releases are rare this quarter., revisit_when: More than two patch releases in a month.}}}
+expect:
+  states:
+    I-1: superseded
+    I-2: stipulated
+    I-3: revoked
+    D-1: superseded
+    D-2: decided
+    D-3: revoked
+    R-1: superseded
+    R-2: stored
+    R-3: revoked
+    P-1: superseded
+    P-2: asserted
+    P-3: revoked
+    O-1: superseded
+    O-2: defined
+    O-3: revoked
+    W-1: revoked
+    G-1: superseded
+    G-2: decided
+    G-3: revoked
+    C-1: superseded
+    C-2: formulated
+    C-3: revoked

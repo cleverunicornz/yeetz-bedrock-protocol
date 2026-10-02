@@ -50,6 +50,14 @@ The role and organization skills live in `skills/`. The organization's own
 knowledge records — the same schema as a repository's `situation/` — live in
 `organization/situation/`.
 
+## Bedrock v2 (draft)
+
+`contract/` holds the draft v2 contract: the same protocol restated as acts —
+nouns, verbs, states, an envelope with lineage on every act — in prose
+(`contract/bedrock-v2.md`) and machine-readable form
+(`contract/bedrock-v2.yaml`, `contract/bedrock-v2.schema.json`), with worked
+examples and a check that they agree. It is not in force; v1 above is.
+
 ## Layers
 
 This repository is the governance layer for the whole agent runtime. Agent

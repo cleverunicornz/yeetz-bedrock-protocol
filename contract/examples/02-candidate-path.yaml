@@ -1,0 +1,116 @@
+# A Gap answered by two Candidates; one is evaluated (one act, recorded when
+# the investigation is done) and accepted, the other declined, by one Decision. The accepted Candidate is minted into a Promise.
+# The Witness is produced before the Oracle exists; defining the Oracle moves
+# nothing, and the holds judgment assures P-1. A later Decision closes the Gap
+# (outcome close; state decided).
+name: candidate-path
+defaults:
+  protocol: 2.0.0-draft
+  level: repository
+  scope: example-repository
+  actor: {kind: agent, agent: agent-auto, role: automation, principal: key-automation}
+  session: session:s-auto
+acts:
+  - {id: A-1, verb: declare, recorded_at: "2026-10-02T09:00:00Z",
+     payload: {gap: {id: G-1, title: Nightly import runs past its window, statement: Three of the last seven imports ended after 06:00.}}}
+  - {id: A-2, verb: formulate, recorded_at: "2026-10-02T09:01:00Z",
+     payload: {responds_to: [G-1], candidate: {id: C-1, title: Import in parallel batches, hypothesis: Batching by source cuts the import below one hour.}}}
+  - {id: A-3, verb: formulate, recorded_at: "2026-10-02T09:02:00Z",
+     payload: {responds_to: [G-1], candidate: {id: C-2, title: Start the import earlier, hypothesis: Starting at 01:00 keeps it inside the window.}}}
+  - id: A-4
+    verb: store
+    recorded_at: "2026-10-02T10:40:00Z"
+    actor: {kind: agent, agent: agent-scout, role: scout, principal: key-repo}
+    session: session:s-scout
+    payload:
+      reference:
+        id: R-1
+        title: Batch import trial timings
+        kind: artifact
+        media_type: text/markdown
+        digest: {sha256: "aaaa111111111111111111111111111111111111111111111111111111111111"}
+        location: {stored: {store: references, key: r/1.md, version: v1}}
+  - id: A-5
+    verb: evaluate
+    recorded_at: "2026-10-02T10:41:00Z"
+    actor: {kind: agent, agent: agent-scout, role: scout, principal: key-repo}
+    session: session:s-scout
+    payload: {candidate: C-1, outcome: favourable, findings: [R-1]}
+  - id: A-6
+    verb: decide
+    recorded_at: "2026-10-02T11:00:00Z"
+    actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+    session: session:s-review
+    payload:
+      considered: [G-1, C-1, C-2]
+      outcomes:
+        - {subject: C-1, outcome: accept}
+        - {subject: C-2, outcome: decline}
+      decision:
+        id: D-1
+        title: Import in parallel batches
+        statement: Accept C-1; decline C-2.
+        why: The trial in R-1 ran in 41 minutes; an earlier start overlaps the backup.
+        rejected: [{alternative: Start the import earlier, why: It overlaps the 01:00 backup.}]
+  - id: A-7
+    verb: mint
+    recorded_at: "2026-10-02T11:10:00Z"
+    actor: {kind: agent, agent: agent-orch, role: orchestrator, principal: key-repo}
+    session: session:s-orch
+    payload:
+      basis: {decision: D-1}
+      from_candidate: C-1
+      addresses: [G-1]
+      promise: {id: P-1, title: Nightly import finishes within one hour, statement: The nightly import completes within 60 minutes of its start., scope: The nightly import job on production data volumes.}
+  - id: A-8
+    verb: store
+    recorded_at: "2026-10-03T07:00:00Z"
+    actor: {kind: tool, agent: import-job, principal: key-automation}
+    session: session:s-job
+    payload:
+      reference:
+        id: R-2
+        title: Import run log 2026-10-03
+        kind: artifact
+        media_type: text/markdown
+        digest: {sha256: "bbbb111111111111111111111111111111111111111111111111111111111111"}
+        location: {stored: {store: references, key: r/2.md, version: v1}}
+  - id: A-9
+    verb: produce
+    recorded_at: "2026-10-03T07:01:00Z"
+    actor: {kind: tool, agent: import-job, principal: key-automation}
+    session: session:s-job
+    payload:
+      witness: {id: W-1, title: Import run 2026-10-03, observes: P-1, observed_at: "2026-10-03T06:52:00Z", coordinate: release 4.2.0, result: "Started 02:00:04, finished 02:47:31.", evidence: [R-2]}
+  - id: A-10
+    verb: define
+    recorded_at: "2026-10-03T08:00:00Z"
+    actor: {kind: agent, agent: agent-orch, role: orchestrator, principal: key-repo}
+    session: session:s-orch
+    payload:
+      oracle: {id: O-1, title: Import duration from the run log, judges: P-1, inputs: The run log's start and finish times., holds_when: Finish minus start is at most 60 minutes., fails_when: Finish minus start exceeds 60 minutes., arrangement: agent}
+  - id: A-11
+    verb: judge
+    recorded_at: "2026-10-03T08:10:00Z"
+    actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}
+    session: session:s-val
+    payload: {promise: P-1, oracle: O-1, witness: W-1, verdict: holds, reason: 47 minutes 27 seconds.}
+  - id: A-12
+    verb: decide
+    recorded_at: "2026-10-03T09:00:00Z"
+    actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+    session: session:s-review
+    payload:
+      considered: [G-1, P-1]
+      outcomes: [{subject: G-1, outcome: close}]
+      decision: {id: D-2, title: Close the import-window Gap, statement: G-1 is closed by assured P-1., why: P-1 is assured on W-1.}
+expect:
+  states:
+    G-1: decided
+    C-1: decided
+    C-2: decided
+    D-1: decided
+    D-2: decided
+    P-1: assured
+    O-1: defined
+    W-1: judged

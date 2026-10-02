@@ -1,0 +1,129 @@
+# Rule 5 worked example (contract/bedrock-v2.md, section 6, "No recursive
+# invalidation"): an assured Promise, a later does_not_hold, a fix, a new
+# Witness, and holds again, with no loop.
+#   a. No state change requires or generates an act; every act below is one an
+#      agent chose to record.
+#   b. One judgment per (Witness, Oracle) pair: the last act, a rejudge of W-2
+#      against O-2 "because the fix landed", is refused.
+#   c. Superseding O-1 by O-2 leaves P-1 assured.
+#   d. Every act changes only the records in its one-step reach (check.py
+#      checks this after every act).
+#   e. The better observation after the inconclusive W-3 is W-4, made by
+#      refine and judged like any other; W-3 is not superseded.
+name: no-recursive-invalidation
+defaults:
+  protocol: 2.0.0-draft
+  level: repository
+  scope: example-repository
+  actor: {kind: agent, agent: agent-impl, role: implementer, principal: key-repo}
+  session: session:s-impl
+acts:
+  - id: A-1
+    verb: store
+    recorded_at: "2026-10-02T09:00:00Z"
+    actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+    session: session:s-operator
+    payload:
+      reference: {id: R-1, title: Accepted instruction - search answers fast, kind: artifact, media_type: text/markdown,
+                  digest: {sha256: "1011111111111111111111111111111111111111111111111111111111111111"},
+                  location: {stored: {store: references, key: r/1.md, version: v1}}}
+  - id: A-2
+    verb: mint
+    recorded_at: "2026-10-02T09:01:00Z"
+    actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+    session: session:s-operator
+    payload:
+      basis: {instruction: R-1}
+      promise: {id: P-1, title: Search answers within 300 ms, statement: The 95th percentile search latency is below 300 ms., scope: The search endpoint under the reference load.}
+  - id: A-3
+    verb: define
+    recorded_at: "2026-10-02T09:02:00Z"
+    actor: {kind: agent, agent: agent-orch, role: orchestrator, principal: key-repo}
+    session: session:s-orch
+    payload:
+      oracle: {id: O-1, title: Fixture latency run, judges: P-1, inputs: Latencies of 500 fixture queries., holds_when: The 95th percentile is below 300 ms., fails_when: The 95th percentile is 300 ms or more., arrangement: deterministic}
+  - {id: A-4, verb: store, recorded_at: "2026-10-02T10:00:00Z",
+     payload: {reference: {id: R-2, title: Latency run at aaaaaaa, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "1022222222222222222222222222222222222222222222222222222222222222"},
+               location: {stored: {store: references, key: r/2.md, version: v1}}}}}
+  - {id: A-5, verb: produce, recorded_at: "2026-10-02T10:01:00Z",
+     payload: {witness: {id: W-1, title: Latency run at aaaaaaa, observes: P-1, observed_at: "2026-10-02T09:58:00Z", coordinate: commit aaaaaaa, result: 95th percentile 212 ms over 500 fixture queries., evidence: [R-2]}}}
+  # 1. Assured.
+  - id: A-6
+    verb: judge
+    recorded_at: "2026-10-02T10:10:00Z"
+    actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}
+    session: session:s-val
+    payload: {promise: P-1, oracle: O-1, witness: W-1, verdict: holds, reason: 212 ms is below 300 ms.}
+  # 2. A stricter Oracle supersedes O-1. P-1 stays assured; no rejudge is required (c, a).
+  - id: A-7
+    verb: define
+    recorded_at: "2026-10-02T11:00:00Z"
+    actor: {kind: agent, agent: agent-orch, role: orchestrator, principal: key-repo}
+    session: session:s-orch
+    payload:
+      oracle: {id: O-2, title: Fixture and production-query latency run, judges: P-1, inputs: Latencies of 500 fixture queries and of the 50 slowest production queries., holds_when: Both 95th percentiles are below 300 ms., fails_when: Either 95th percentile is 300 ms or more., arrangement: deterministic}
+  - id: A-8
+    verb: supersede
+    recorded_at: "2026-10-02T11:01:00Z"
+    actor: {kind: agent, agent: agent-orch, role: orchestrator, principal: key-repo}
+    session: session:s-orch
+    payload: {target: O-1, successor: O-2, reason: Fixture queries alone miss the slow production queries.}
+  # 3. A later run fails under O-2. P-1 goes back to asserted; nothing else changes (a, d).
+  - {id: A-9, verb: store, recorded_at: "2026-10-03T10:00:00Z",
+     payload: {reference: {id: R-3, title: Latency run at bbbbbbb, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "1033333333333333333333333333333333333333333333333333333333333333"},
+               location: {stored: {store: references, key: r/3.md, version: v1}}}}}
+  - {id: A-10, verb: produce, recorded_at: "2026-10-03T10:01:00Z",
+     payload: {witness: {id: W-2, title: Latency run at bbbbbbb, observes: P-1, observed_at: "2026-10-03T09:58:00Z", coordinate: commit bbbbbbb, result: Fixture 95th percentile 215 ms; production-query 95th percentile 640 ms., evidence: [R-3]}}}
+  - id: A-11
+    verb: judge
+    recorded_at: "2026-10-03T10:10:00Z"
+    actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}
+    session: session:s-val
+    payload: {promise: P-1, oracle: O-2, witness: W-2, verdict: does_not_hold, reason: Production-query 95th percentile is 640 ms., failure_evidence: [R-3]}
+  # 4. The fix is domain work, not an act. A run after it is inconclusive (a
+  #    verdict on W-3); its refinement W-4 is judged like any other and holds (e).
+  - {id: A-12, verb: store, recorded_at: "2026-10-04T10:00:00Z",
+     payload: {reference: {id: R-4, title: Latency run at ccccccc, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "1044444444444444444444444444444444444444444444444444444444444444"},
+               location: {stored: {store: references, key: r/4.md, version: v1}}}}}
+  - {id: A-13, verb: produce, recorded_at: "2026-10-04T10:01:00Z",
+     payload: {witness: {id: W-3, title: Latency run at ccccccc after the index fix, observes: P-1, observed_at: "2026-10-04T09:58:00Z", coordinate: commit ccccccc, result: Fixture 95th percentile 190 ms; the production-query run stopped after 20 of 50 queries., evidence: [R-4]}}}
+  - id: A-14
+    verb: judge
+    recorded_at: "2026-10-04T10:10:00Z"
+    actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}
+    session: session:s-val
+    payload: {promise: P-1, oracle: O-2, witness: W-3, verdict: inconclusive, reason: Only 20 of the 50 production queries ran.}
+  - {id: A-15, verb: store, recorded_at: "2026-10-04T11:00:00Z",
+     payload: {reference: {id: R-5, title: Full latency run at ccccccc, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "1055555555555555555555555555555555555555555555555555555555555555"},
+               location: {stored: {store: references, key: r/5.md, version: v1}}}}}
+  - {id: A-16, verb: refine, recorded_at: "2026-10-04T11:01:00Z",
+     payload: {target: W-3, witness: {id: W-4, title: Full latency run at ccccccc, observes: P-1, observed_at: "2026-10-04T10:58:00Z", coordinate: commit ccccccc, result: Fixture 95th percentile 190 ms; production-query 95th percentile 260 ms over all 50., evidence: [R-5]}}}
+  - id: A-17
+    verb: judge
+    recorded_at: "2026-10-04T11:10:00Z"
+    actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}
+    session: session:s-val
+    payload: {promise: P-1, oracle: O-2, witness: W-4, verdict: holds, reason: Both 95th percentiles are below 300 ms.}
+  # 5. A rejudge of an already judged pair is not an act: refused (b). The loop never starts.
+  - id: A-18
+    verb: judge
+    recorded_at: "2026-10-04T11:20:00Z"
+    actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}
+    session: session:s-val
+    payload: {promise: P-1, oracle: O-2, witness: W-2, verdict: holds, reason: The fix landed.}
+expect:
+  refused: {act_index: 17, code: already_judged}
+  states:
+    P-1: assured
+    O-1: superseded
+    O-2: defined
+    W-1: judged
+    W-2: judged
+    W-3: judged
+    W-4: judged
+  trace:
+    P-1: [asserted, assured, asserted, assured]

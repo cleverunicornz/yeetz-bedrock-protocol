@@ -1,0 +1,28 @@
+# The author corrects its own record within the 10-minute edit window; the
+# tool refuses a correction after the window closes (supersede or revoke then).
+# The accepted amendment changes the projected record.
+name: edit-window
+defaults:
+  protocol: 2.0.0-draft
+  level: board
+  scope: session:s-impl
+  actor: {kind: agent, agent: agent-impl, role: implementer, principal: key-repo}
+  session: session:s-impl
+acts:
+  - {id: A-1, verb: store, recorded_at: "2026-10-02T15:00:00Z", edit_window_closes_at: "2026-10-02T15:10:00Z",
+     payload: {reference: {id: R-1, title: Task brief, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "e111111111111111111111111111111111111111111111111111111111111111"},
+               location: {stored: {store: references, key: r/1.md, version: v1}}}}}
+  - {id: A-2, verb: mint, recorded_at: "2026-10-02T15:01:00Z", edit_window_closes_at: "2026-10-02T15:11:00Z", tool_call: tool-call:tc-2,
+     payload: {basis: {instruction: R-1}, promise: {id: P-1, title: The parser accepts empty input, statement: Parsing an empty file returns an empty document., scope: The parser.}}}
+  - {id: A-3, verb: amend, recorded_at: "2026-10-02T15:06:00Z", tool_call: tool-call:tc-3,
+     payload: {target_act: A-2, changes: {promise: {statement: Parsing an empty file returns an empty document without error.}}}}
+  - {id: A-4, verb: amend, recorded_at: "2026-10-02T15:12:00Z", tool_call: tool-call:tc-4,
+     payload: {target_act: A-2, changes: {promise: {scope: The parser and the CLI.}}}}
+expect:
+  refused: {act_index: 3, code: edit_window_closed}
+  states:
+    P-1: asserted
+  records:
+    # The amendment within the window applies; the refused one changes nothing.
+    P-1: {statement: Parsing an empty file returns an empty document without error., scope: The parser.}

@@ -1,0 +1,18 @@
+# Act ids are unique in the log: a second act with an id already recorded is
+# refused, so an amendment can never resolve its target to the wrong act.
+name: duplicate-act-id
+defaults:
+  protocol: 2.0.0-draft
+  level: repository
+  scope: example-repository
+  actor: {kind: agent, agent: agent-auto, role: automation, principal: key-automation}
+  session: session:s-auto
+acts:
+  - {id: A-1, verb: declare, recorded_at: "2026-10-02T09:00:00Z",
+     payload: {gap: {id: G-1, title: Nightly import runs late, statement: Three of the last seven imports ended after 06:00.}}}
+  - {id: A-1, verb: declare, recorded_at: "2026-10-02T09:01:00Z",
+     payload: {gap: {id: G-2, title: Nightly export runs late, statement: Two of the last seven exports ended after 07:00.}}}
+expect:
+  refused: {act_index: 1, code: duplicate_act_id}
+  states:
+    G-1: declared

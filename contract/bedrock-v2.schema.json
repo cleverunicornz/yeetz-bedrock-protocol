@@ -1,0 +1,1624 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bedrock-v2.schema.json",
+  "title": "Bedrock v2 act (DRAFT)",
+  "description": "One act node: a verb or structural act with its lineage envelope and verb-specific payload. Records and their states are projected from acts. See contract/bedrock-v2.md.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/id_act"
+    },
+    "protocol": {
+      "const": "2.0.0-draft"
+    },
+    "verb": {
+      "$ref": "#/$defs/verb"
+    },
+    "level": {
+      "$ref": "#/$defs/level"
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "actor": {
+      "$ref": "#/$defs/actor"
+    },
+    "session": {
+      "$ref": "#/$defs/pointer"
+    },
+    "turn": {
+      "$ref": "#/$defs/pointer"
+    },
+    "tool_call": {
+      "$ref": "#/$defs/pointer"
+    },
+    "repository": {
+      "type": "string",
+      "minLength": 1
+    },
+    "batch": {
+      "type": "string",
+      "minLength": 1
+    },
+    "edit_window_closes_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "id",
+    "protocol",
+    "verb",
+    "level",
+    "scope",
+    "recorded_at",
+    "actor",
+    "session",
+    "payload"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "stipulate"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_stipulate"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "declare"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_declare"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "formulate"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_formulate"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "evaluate"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_evaluate"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "decide"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_decide"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "mint"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_mint"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "define"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_define"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "produce"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_produce"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "refine"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_refine"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "judge"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_judge"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "revoke"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_revoke"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "supersede"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_supersede"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "store"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_store"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "group"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_group"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "regroup"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_regroup"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "relate"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_relate"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verb": {
+            "const": "amend"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "#/$defs/payload_amend"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "description": "At most 256 characters; aim for one line."
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "description": "At most 1024 characters: statements, rules, hypotheses, why, scope, inputs, reasons, notes."
+    },
+    "result": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "description": "At most 512 characters: a Witness's observed result."
+    },
+    "pointer": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 400,
+      "description": "An opaque pointer: a session, turn or tool call in the transcript store, a path, a URN or a URL."
+    },
+    "level": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*$",
+      "examples": [
+        "board",
+        "repository",
+        "system",
+        "organisation",
+        "bedrock"
+      ],
+      "description": "Where the act applies. Initial values in examples; an organisation may add values."
+    },
+    "id_Invariant": {
+      "type": "string",
+      "pattern": "^I-[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "id_Gap": {
+      "type": "string",
+      "pattern": "^G-[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "id_Candidate": {
+      "type": "string",
+      "pattern": "^C-[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "id_Decision": {
+      "type": "string",
+      "pattern": "^D-[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "id_Promise": {
+      "type": "string",
+      "pattern": "^P-[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "id_Oracle": {
+      "type": "string",
+      "pattern": "^O-[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "id_Witness": {
+      "type": "string",
+      "pattern": "^W-[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "id_Reference": {
+      "type": "string",
+      "pattern": "^R-[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "id_Plan": {
+      "type": "string",
+      "pattern": "^PLAN-[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "id_act": {
+      "type": "string",
+      "pattern": "^A-[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "id_record": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/id_Invariant"
+        },
+        {
+          "$ref": "#/$defs/id_Gap"
+        },
+        {
+          "$ref": "#/$defs/id_Candidate"
+        },
+        {
+          "$ref": "#/$defs/id_Decision"
+        },
+        {
+          "$ref": "#/$defs/id_Promise"
+        },
+        {
+          "$ref": "#/$defs/id_Oracle"
+        },
+        {
+          "$ref": "#/$defs/id_Witness"
+        },
+        {
+          "$ref": "#/$defs/id_Reference"
+        }
+      ]
+    },
+    "id_plan_member": {
+      "description": "A Plan member: a Candidate or a Promise, nothing else.",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/id_Candidate"
+        },
+        {
+          "$ref": "#/$defs/id_Promise"
+        }
+      ]
+    },
+    "scope_ref": {
+      "type": "string",
+      "pattern": "^scope:[a-z][a-z0-9_-]*/.+$",
+      "description": "scope:<level>/<scope name>"
+    },
+    "state": {
+      "type": "object",
+      "description": "Projected state of a record, by noun: the past tense of the last standing verb applied to it (a Promise is asserted or assured). Derived from acts, never written.",
+      "properties": {
+        "Invariant": {
+          "enum": [
+            "stipulated",
+            "superseded",
+            "revoked"
+          ]
+        },
+        "Gap": {
+          "enum": [
+            "declared",
+            "decided",
+            "superseded",
+            "revoked"
+          ]
+        },
+        "Candidate": {
+          "enum": [
+            "formulated",
+            "evaluated",
+            "decided",
+            "superseded",
+            "revoked"
+          ]
+        },
+        "Decision": {
+          "enum": [
+            "decided",
+            "superseded",
+            "revoked"
+          ]
+        },
+        "Promise": {
+          "enum": [
+            "asserted",
+            "assured",
+            "superseded",
+            "revoked"
+          ]
+        },
+        "Oracle": {
+          "enum": [
+            "defined",
+            "superseded",
+            "revoked"
+          ]
+        },
+        "Witness": {
+          "enum": [
+            "produced",
+            "judged",
+            "revoked"
+          ]
+        },
+        "Reference": {
+          "enum": [
+            "stored",
+            "superseded",
+            "revoked"
+          ]
+        },
+        "Plan": {
+          "enum": [
+            "grouped",
+            "regrouped",
+            "revoked"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "actor": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "human",
+            "agent",
+            "tool"
+          ]
+        },
+        "agent": {
+          "$ref": "#/$defs/pointer"
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stamped by the runtime; never set by the agent; not enforced."
+        },
+        "principal": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stamped from the caller's key."
+        }
+      },
+      "required": [
+        "kind",
+        "agent"
+      ],
+      "additionalProperties": false
+    },
+    "invariant": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_Invariant"
+        },
+        "title": {
+          "$ref": "#/$defs/title"
+        },
+        "rule": {
+          "$ref": "#/$defs/text"
+        },
+        "priority": {
+          "enum": [
+            "critical",
+            "standard"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "rule",
+        "priority"
+      ],
+      "additionalProperties": false
+    },
+    "gap": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_Gap"
+        },
+        "title": {
+          "$ref": "#/$defs/title"
+        },
+        "statement": {
+          "$ref": "#/$defs/text"
+        },
+        "impact": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "statement"
+      ],
+      "additionalProperties": false
+    },
+    "candidate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_Candidate"
+        },
+        "title": {
+          "$ref": "#/$defs/title"
+        },
+        "hypothesis": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "hypothesis"
+      ],
+      "additionalProperties": false
+    },
+    "decision": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_Decision"
+        },
+        "title": {
+          "$ref": "#/$defs/title"
+        },
+        "statement": {
+          "$ref": "#/$defs/text"
+        },
+        "why": {
+          "$ref": "#/$defs/text"
+        },
+        "rejected": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "alternative": {
+                "$ref": "#/$defs/title"
+              },
+              "why": {
+                "$ref": "#/$defs/text"
+              }
+            },
+            "required": [
+              "alternative",
+              "why"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "revisit_when": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "statement",
+        "why"
+      ],
+      "additionalProperties": false
+    },
+    "promise": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_Promise"
+        },
+        "title": {
+          "$ref": "#/$defs/title"
+        },
+        "statement": {
+          "$ref": "#/$defs/text"
+        },
+        "scope": {
+          "$ref": "#/$defs/text"
+        },
+        "residual": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "statement",
+        "scope"
+      ],
+      "additionalProperties": false
+    },
+    "oracle": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_Oracle"
+        },
+        "title": {
+          "$ref": "#/$defs/title"
+        },
+        "judges": {
+          "$ref": "#/$defs/id_Promise"
+        },
+        "inputs": {
+          "$ref": "#/$defs/text"
+        },
+        "holds_when": {
+          "$ref": "#/$defs/text"
+        },
+        "fails_when": {
+          "$ref": "#/$defs/text"
+        },
+        "arrangement": {
+          "enum": [
+            "human",
+            "agent",
+            "deterministic",
+            "mixed"
+          ]
+        },
+        "executable": {
+          "$ref": "#/$defs/pointer"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "judges",
+        "inputs",
+        "holds_when",
+        "fails_when",
+        "arrangement"
+      ],
+      "additionalProperties": false
+    },
+    "witness": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_Witness"
+        },
+        "title": {
+          "$ref": "#/$defs/title"
+        },
+        "observes": {
+          "$ref": "#/$defs/id_Promise"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "coordinate": {
+          "$ref": "#/$defs/title"
+        },
+        "result": {
+          "$ref": "#/$defs/result"
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/id_Reference"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "observes",
+        "observed_at",
+        "coordinate",
+        "result",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "reference": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_Reference"
+        },
+        "title": {
+          "$ref": "#/$defs/title"
+        },
+        "kind": {
+          "enum": [
+            "artifact",
+            "repository_file",
+            "website"
+          ]
+        },
+        "media_type": {
+          "type": "string",
+          "pattern": "^[a-z]+/[A-Za-z0-9.+-]+$",
+          "description": "First slice: text/markdown for stored artifacts and extractions."
+        },
+        "digest": {
+          "type": "object",
+          "properties": {
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "sha256"
+          ],
+          "additionalProperties": false
+        },
+        "location": {
+          "type": "object"
+        },
+        "conversion": {
+          "type": "object",
+          "properties": {
+            "tool": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tool_version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "converted_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "from_media_type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "source": {
+              "$ref": "#/$defs/id_Reference",
+              "description": "Only where an original is kept; a website's source is its location url."
+            }
+          },
+          "required": [
+            "tool",
+            "tool_version",
+            "converted_at",
+            "from_media_type"
+          ],
+          "additionalProperties": false,
+          "description": "Required on a website Reference: tool, tool_version, converted_at, from_media_type."
+        },
+        "visibility": {
+          "type": "string",
+          "minLength": 1,
+          "default": "shared",
+          "description": "Organisation-defined value. Optional on a store act; always present on the stored Reference (the tool fills the default)."
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "kind",
+        "media_type",
+        "location"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "artifact"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "digest"
+            ],
+            "properties": {
+              "location": {
+                "type": "object",
+                "properties": {
+                  "stored": {
+                    "type": "object",
+                    "properties": {
+                      "store": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "key": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "version": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "store",
+                      "key",
+                      "version"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "stored"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "repository_file"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "location": {
+                "type": "object",
+                "properties": {
+                  "repository": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "commit": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{7,64}$"
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "repository",
+                  "commit",
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "website"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "digest",
+              "conversion"
+            ],
+            "properties": {
+              "location": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "retrieved_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "stored": {
+                    "type": "object",
+                    "properties": {
+                      "store": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "key": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "version": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "store",
+                      "key",
+                      "version"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "url",
+                  "retrieved_at",
+                  "stored"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stored_reference": {
+      "description": "A Reference as stored and projected: visibility is always present.",
+      "allOf": [
+        {
+          "$ref": "#/$defs/reference"
+        }
+      ],
+      "required": [
+        "visibility"
+      ]
+    },
+    "plan": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_Plan"
+        },
+        "title": {
+          "$ref": "#/$defs/title"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id_plan_member"
+          }
+        },
+        "waits_on": {
+          "$ref": "#/$defs/waits"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "members"
+      ],
+      "additionalProperties": false
+    },
+    "waits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "member": {
+            "$ref": "#/$defs/id_plan_member"
+          },
+          "upon": {
+            "$ref": "#/$defs/id_plan_member"
+          }
+        },
+        "required": [
+          "member",
+          "upon"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "payload_stipulate": {
+      "type": "object",
+      "properties": {
+        "invariant": {
+          "$ref": "#/$defs/invariant"
+        },
+        "basis": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id_record"
+          }
+        }
+      },
+      "required": [
+        "invariant"
+      ],
+      "additionalProperties": false
+    },
+    "payload_declare": {
+      "type": "object",
+      "properties": {
+        "gap": {
+          "$ref": "#/$defs/gap"
+        },
+        "arose_in": {
+          "$ref": "#/$defs/id_act"
+        },
+        "about": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id_record"
+          }
+        }
+      },
+      "required": [
+        "gap"
+      ],
+      "additionalProperties": false
+    },
+    "payload_formulate": {
+      "type": "object",
+      "properties": {
+        "candidate": {
+          "$ref": "#/$defs/candidate"
+        },
+        "responds_to": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id_record"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "candidate",
+        "responds_to"
+      ],
+      "additionalProperties": false
+    },
+    "payload_evaluate": {
+      "type": "object",
+      "properties": {
+        "candidate": {
+          "$ref": "#/$defs/id_Candidate"
+        },
+        "outcome": {
+          "enum": [
+            "favourable",
+            "unfavourable",
+            "mixed",
+            "inconclusive"
+          ]
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id_Reference"
+          }
+        },
+        "note": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "candidate",
+        "outcome"
+      ],
+      "additionalProperties": false
+    },
+    "payload_decide": {
+      "type": "object",
+      "properties": {
+        "decision": {
+          "$ref": "#/$defs/decision"
+        },
+        "considered": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id_record"
+          }
+        },
+        "outcomes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "subject": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/id_Candidate"
+                  },
+                  {
+                    "$ref": "#/$defs/id_Gap"
+                  }
+                ]
+              },
+              "outcome": {
+                "enum": [
+                  "accept",
+                  "decline",
+                  "close",
+                  "keep"
+                ],
+                "description": "What the decision concluded for the subject: accept or decline a Candidate; close or keep a Gap. The subject's state becomes decided."
+              }
+            },
+            "required": [
+              "subject",
+              "outcome"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "decision"
+      ],
+      "additionalProperties": false
+    },
+    "payload_mint": {
+      "type": "object",
+      "properties": {
+        "promise": {
+          "$ref": "#/$defs/promise"
+        },
+        "basis": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "decision": {
+                  "$ref": "#/$defs/id_Decision"
+                }
+              },
+              "required": [
+                "decision"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "instruction": {
+                  "$ref": "#/$defs/id_Reference"
+                }
+              },
+              "required": [
+                "instruction"
+              ],
+              "additionalProperties": false
+            }
+          ],
+          "description": "A Decision (the grounds, or the Decision that accepted from_candidate) or a Reference holding the accepted instruction or specification."
+        },
+        "from_candidate": {
+          "$ref": "#/$defs/id_Candidate",
+          "description": "With a Candidate, basis is the Decision whose standing outcome accepted it."
+        },
+        "addresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id_Gap"
+          }
+        }
+      },
+      "required": [
+        "promise",
+        "basis"
+      ],
+      "additionalProperties": false
+    },
+    "payload_define": {
+      "type": "object",
+      "properties": {
+        "oracle": {
+          "$ref": "#/$defs/oracle"
+        }
+      },
+      "required": [
+        "oracle"
+      ],
+      "additionalProperties": false
+    },
+    "payload_produce": {
+      "type": "object",
+      "properties": {
+        "witness": {
+          "$ref": "#/$defs/witness"
+        }
+      },
+      "required": [
+        "witness"
+      ],
+      "additionalProperties": false
+    },
+    "payload_refine": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id_Witness"
+            },
+            {
+              "$ref": "#/$defs/id_Gap"
+            },
+            {
+              "$ref": "#/$defs/id_Candidate"
+            }
+          ]
+        },
+        "witness": {
+          "$ref": "#/$defs/witness"
+        },
+        "sighting": {
+          "type": "object",
+          "properties": {
+            "note": {
+              "$ref": "#/$defs/text"
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id_Reference"
+              }
+            }
+          },
+          "required": [
+            "note"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "target"
+      ],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": [
+            "witness"
+          ]
+        },
+        {
+          "required": [
+            "sighting"
+          ]
+        }
+      ]
+    },
+    "payload_judge": {
+      "type": "object",
+      "properties": {
+        "promise": {
+          "$ref": "#/$defs/id_Promise"
+        },
+        "oracle": {
+          "$ref": "#/$defs/id_Oracle"
+        },
+        "witness": {
+          "$ref": "#/$defs/id_Witness"
+        },
+        "verdict": {
+          "enum": [
+            "holds",
+            "does_not_hold",
+            "inconclusive"
+          ],
+          "description": "The judgment's outcome. One judgment per (Witness, Oracle) pair."
+        },
+        "reason": {
+          "$ref": "#/$defs/text"
+        },
+        "failure_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id_Reference"
+          },
+          "minItems": 1
+        },
+        "legs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "leg": {
+                "$ref": "#/$defs/title"
+              },
+              "result": {
+                "enum": [
+                  "holds",
+                  "does_not_hold",
+                  "not_exercised"
+                ]
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/id_Reference"
+                }
+              }
+            },
+            "required": [
+              "leg",
+              "result"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "promise",
+        "oracle",
+        "witness",
+        "verdict",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "if": {
+        "properties": {
+          "verdict": {
+            "const": "does_not_hold"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "failure_evidence"
+        ]
+      }
+    },
+    "payload_revoke": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id_record"
+            },
+            {
+              "$ref": "#/$defs/id_Plan"
+            }
+          ]
+        },
+        "reason": {
+          "$ref": "#/$defs/text"
+        },
+        "basis": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id_record"
+          }
+        }
+      },
+      "required": [
+        "target",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "payload_supersede": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "$ref": "#/$defs/id_record"
+        },
+        "successor": {
+          "$ref": "#/$defs/id_record"
+        },
+        "reason": {
+          "$ref": "#/$defs/text"
+        },
+        "basis": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id_record"
+          }
+        }
+      },
+      "required": [
+        "target",
+        "successor",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "payload_store": {
+      "type": "object",
+      "properties": {
+        "reference": {
+          "$ref": "#/$defs/reference"
+        }
+      },
+      "required": [
+        "reference"
+      ],
+      "additionalProperties": false
+    },
+    "payload_group": {
+      "type": "object",
+      "properties": {
+        "plan": {
+          "$ref": "#/$defs/plan"
+        }
+      },
+      "required": [
+        "plan"
+      ],
+      "additionalProperties": false
+    },
+    "payload_regroup": {
+      "type": "object",
+      "properties": {
+        "plan": {
+          "$ref": "#/$defs/id_Plan"
+        },
+        "add_members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id_plan_member"
+          }
+        },
+        "remove_members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id_plan_member"
+          }
+        },
+        "add_waits": {
+          "$ref": "#/$defs/waits"
+        },
+        "remove_waits": {
+          "$ref": "#/$defs/waits"
+        }
+      },
+      "required": [
+        "plan"
+      ],
+      "additionalProperties": false,
+      "minProperties": 2
+    },
+    "payload_relate": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id_record"
+            },
+            {
+              "$ref": "#/$defs/scope_ref"
+            }
+          ]
+        },
+        "to": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id_record"
+            },
+            {
+              "$ref": "#/$defs/scope_ref"
+            }
+          ]
+        },
+        "relation": {
+          "enum": [
+            "belongs_to",
+            "about"
+          ]
+        },
+        "remove": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "from",
+        "to",
+        "relation"
+      ],
+      "additionalProperties": false
+    },
+    "payload_amend": {
+      "type": "object",
+      "properties": {
+        "target_act": {
+          "$ref": "#/$defs/id_act",
+          "description": "An act that made a record, or an amendment of one; the edit window runs from the act that made the record."
+        },
+        "changes": {
+          "type": "object",
+          "minProperties": 1,
+          "description": "Keyed by the record the making act made (for example promise), with the corrected fields; never its id."
+        }
+      },
+      "required": [
+        "target_act",
+        "changes"
+      ],
+      "additionalProperties": false
+    },
+    "verb": {
+      "enum": [
+        "stipulate",
+        "declare",
+        "formulate",
+        "evaluate",
+        "decide",
+        "mint",
+        "define",
+        "produce",
+        "refine",
+        "judge",
+        "revoke",
+        "supersede",
+        "store",
+        "group",
+        "regroup",
+        "relate",
+        "amend"
+      ]
+    }
+  }
+}

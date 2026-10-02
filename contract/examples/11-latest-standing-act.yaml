@@ -1,0 +1,98 @@
+# The latest standing act wins (contract/bedrock-v2.md, section 5). When the
+# record an act rests on is revoked or superseded, the states that rested on
+# it are recomputed from what remains, one step and no further:
+# - a Promise's state follows its latest standing judgment: revoking the
+#   Witness behind a does_not_hold restores the earlier holds; revoking the
+#   Witness behind that holds leaves the Promise asserted;
+# - a Candidate's or Gap's state follows its latest standing decide: when the
+#   Decision is superseded by one that does not decide them, or revoked, they
+#   return to evaluated, formulated or declared.
+name: latest-standing-act
+defaults:
+  protocol: 2.0.0-draft
+  level: repository
+  scope: example-repository
+  actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+  session: session:s-operator
+acts:
+  - {id: A-1, verb: store, recorded_at: "2026-10-02T09:00:00Z",
+     payload: {reference: {id: R-1, title: Accepted instruction - nightly backups restore, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "1111aaaa11111111111111111111111111111111111111111111111111111111"},
+               location: {stored: {store: references, key: r/1.md, version: v1}}}}}
+  - {id: A-2, verb: mint, recorded_at: "2026-10-02T09:01:00Z",
+     payload: {basis: {instruction: R-1}, promise: {id: P-1, title: The nightly backup restores, statement: The latest nightly backup restores into an empty database with matching row counts., scope: Nightly backups of the main database.}}}
+  - {id: A-3, verb: define, recorded_at: "2026-10-02T09:02:00Z",
+     payload: {oracle: {id: O-1, title: Restore and count, judges: P-1, inputs: Restore log and row counts., holds_when: Restore exits 0 and every table's row count matches., fails_when: Restore fails or any count differs., arrangement: deterministic}}}
+  - {id: A-4, verb: store, recorded_at: "2026-10-02T10:00:00Z",
+     actor: {kind: agent, agent: agent-impl, role: implementer, principal: key-repo}, session: session:s-impl,
+     payload: {reference: {id: R-2, title: Restore run 1, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "1111bbbb11111111111111111111111111111111111111111111111111111111"},
+               location: {stored: {store: references, key: r/2.md, version: v1}}}}}
+  - {id: A-5, verb: produce, recorded_at: "2026-10-02T10:01:00Z",
+     actor: {kind: agent, agent: agent-impl, role: implementer, principal: key-repo}, session: session:s-impl,
+     payload: {witness: {id: W-1, title: Restore run 1, observes: P-1, observed_at: "2026-10-02T09:58:00Z", coordinate: backup 2026-10-02, result: Restore exited 0; all 41 row counts match., evidence: [R-2]}}}
+  - {id: A-6, verb: judge, recorded_at: "2026-10-02T10:10:00Z",
+     actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}, session: session:s-val,
+     payload: {promise: P-1, oracle: O-1, witness: W-1, verdict: holds, reason: Exit 0 and all counts match.}}
+  - {id: A-7, verb: store, recorded_at: "2026-10-03T10:00:00Z",
+     actor: {kind: agent, agent: agent-impl, role: implementer, principal: key-repo}, session: session:s-impl,
+     payload: {reference: {id: R-3, title: Restore run 2, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "1111cccc11111111111111111111111111111111111111111111111111111111"},
+               location: {stored: {store: references, key: r/3.md, version: v1}}}}}
+  - {id: A-8, verb: produce, recorded_at: "2026-10-03T10:01:00Z",
+     actor: {kind: agent, agent: agent-impl, role: implementer, principal: key-repo}, session: session:s-impl,
+     payload: {witness: {id: W-2, title: Restore run 2, observes: P-1, observed_at: "2026-10-03T09:58:00Z", coordinate: backup 2026-10-03, result: Restore exited 0; table events has 12 fewer rows., evidence: [R-3]}}}
+  - {id: A-9, verb: judge, recorded_at: "2026-10-03T10:10:00Z",
+     actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}, session: session:s-val,
+     payload: {promise: P-1, oracle: O-1, witness: W-2, verdict: does_not_hold, reason: The events table differs by 12 rows., failure_evidence: [R-3]}}
+  # W-2 restored a staging backup, not a nightly one: revoking it unseats the
+  # does_not_hold, and W-1's holds is the latest standing judgment again.
+  - {id: A-10, verb: revoke, recorded_at: "2026-10-03T12:00:00Z",
+     payload: {target: W-2, reason: The run restored a staging backup; it is not an observation of P-1.}}
+  # W-1 used a stale count file: revoking it leaves no standing judgment.
+  - {id: A-11, verb: revoke, recorded_at: "2026-10-03T12:30:00Z",
+     payload: {target: W-1, reason: The row counts were compared with a stale count file.}}
+  - {id: A-12, verb: declare, recorded_at: "2026-10-04T09:00:00Z",
+     payload: {gap: {id: G-1, title: Restores are slow, statement: A full restore takes four hours.}}}
+  - {id: A-13, verb: formulate, recorded_at: "2026-10-04T09:01:00Z",
+     payload: {responds_to: [G-1], candidate: {id: C-1, title: Parallel restore, hypothesis: Restoring tables in parallel cuts the restore below one hour.}}}
+  - {id: A-14, verb: formulate, recorded_at: "2026-10-04T09:02:00Z",
+     payload: {responds_to: [G-1], candidate: {id: C-2, title: Smaller backups, hypothesis: Dropping the audit tables from backups halves the restore.}}}
+  - {id: A-15, verb: evaluate, recorded_at: "2026-10-04T10:00:00Z",
+     actor: {kind: agent, agent: agent-scout, role: scout, principal: key-repo}, session: session:s-scout,
+     payload: {candidate: C-1, outcome: favourable, note: A trial restore with eight workers took 52 minutes.}}
+  - {id: A-16, verb: decide, recorded_at: "2026-10-04T11:00:00Z",
+     payload: {considered: [G-1, C-1, C-2],
+               outcomes: [{subject: C-1, outcome: accept}, {subject: C-2, outcome: decline}, {subject: G-1, outcome: close}],
+               decision: {id: D-1, title: Restore in parallel, statement: Accept C-1; decline C-2; close G-1., why: The trial took 52 minutes; audit tables must be kept.}}}
+  # D-2 replaces D-1 and decides nothing yet: C-1, C-2 and G-1 return to the
+  # states their remaining standing acts give.
+  - {id: A-17, verb: decide, recorded_at: "2026-10-04T12:00:00Z",
+     payload: {considered: [D-1], decision: {id: D-2, title: Reopen the restore choice, statement: D-1 is replaced; the choice waits for a second trial., why: The trial ran on a quiet host.}}}
+  - {id: A-18, verb: supersede, recorded_at: "2026-10-04T12:01:00Z",
+     payload: {target: D-1, successor: D-2, reason: The choice waits for a second trial.}}
+  - {id: A-19, verb: decide, recorded_at: "2026-10-05T11:00:00Z",
+     payload: {considered: [G-1, C-1, C-2],
+               outcomes: [{subject: C-1, outcome: accept}, {subject: C-2, outcome: decline}, {subject: G-1, outcome: keep}],
+               decision: {id: D-3, title: Restore in parallel and keep watching, statement: Accept C-1; decline C-2; keep G-1., why: The second trial took 58 minutes.}}}
+  # D-3 is revoked: its subjects return to the states their other standing
+  # acts give. Nothing else changes; no act follows by itself.
+  - {id: A-20, verb: revoke, recorded_at: "2026-10-05T12:00:00Z",
+     payload: {target: D-3, reason: Recorded before the operator's review.}}
+expect:
+  states:
+    P-1: asserted
+    W-1: revoked
+    W-2: revoked
+    O-1: defined
+    D-1: superseded
+    D-2: decided
+    D-3: revoked
+    C-1: evaluated
+    C-2: formulated
+    G-1: declared
+  trace:
+    P-1: [asserted, assured, asserted, assured, asserted]
+    C-1: [formulated, evaluated, decided, evaluated, decided, evaluated]
+    C-2: [formulated, decided, formulated, decided, formulated]
+    G-1: [declared, decided, declared, decided, declared]

@@ -1,0 +1,27 @@
+# The edit window runs from the act that made the record. An amendment of an
+# amendment is followed back to that act, so a chain of amendments never
+# extends the window: A-4 is refused (edit_window_closed) although it comes
+# eight minutes after A-3. The tool returns the making act's closing time on
+# every amendment.
+name: amend-of-amend-window
+defaults:
+  protocol: 2.0.0-draft
+  level: board
+  scope: session:s-impl
+  actor: {kind: agent, agent: agent-impl, role: implementer, principal: key-repo}
+  session: session:s-impl
+acts:
+  - {id: A-1, verb: store, recorded_at: "2026-10-02T15:00:00Z", edit_window_closes_at: "2026-10-02T15:10:00Z",
+     payload: {reference: {id: R-1, title: Task brief, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "a311111111111111111111111111111111111111111111111111111111111111"},
+               location: {stored: {store: references, key: r/1.md, version: v1}}}}}
+  - {id: A-2, verb: mint, recorded_at: "2026-10-02T15:01:00Z", edit_window_closes_at: "2026-10-02T15:11:00Z",
+     payload: {basis: {instruction: R-1}, promise: {id: P-1, title: The parser accepts empty input, statement: Parsing an empty file returns an empty document., scope: The parser.}}}
+  - {id: A-3, verb: amend, recorded_at: "2026-10-02T15:09:00Z", edit_window_closes_at: "2026-10-02T15:11:00Z",
+     payload: {target_act: A-2, changes: {promise: {statement: Parsing an empty file returns an empty document without error.}}}}
+  - {id: A-4, verb: amend, recorded_at: "2026-10-02T15:17:00Z",
+     payload: {target_act: A-3, changes: {promise: {scope: The parser and the CLI.}}}}
+expect:
+  refused: {act_index: 3, code: edit_window_closed}
+  states:
+    P-1: asserted

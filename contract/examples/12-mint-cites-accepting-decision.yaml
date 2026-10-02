@@ -1,0 +1,51 @@
+# A Promise minted from a Candidate cites the Decision that accepted that
+# Candidate. D-2 decided only C-2, so a mint of C-1 citing D-2 is refused
+# (wrong_basis), even though C-1 stands accepted by D-1.
+name: mint-cites-accepting-decision
+defaults:
+  protocol: 2.0.0-draft
+  level: repository
+  scope: example-repository
+  actor: {kind: agent, agent: agent-auto, role: automation, principal: key-automation}
+  session: session:s-auto
+acts:
+  - {id: A-1, verb: declare, recorded_at: "2026-10-02T09:00:00Z",
+     payload: {gap: {id: G-1, title: Nightly import runs past its window, statement: Three of the last seven imports ended after 06:00.}}}
+  - {id: A-2, verb: formulate, recorded_at: "2026-10-02T09:01:00Z",
+     payload: {responds_to: [G-1], candidate: {id: C-1, title: Import in parallel batches, hypothesis: Batching by source cuts the import below one hour.}}}
+  - {id: A-3, verb: formulate, recorded_at: "2026-10-02T09:02:00Z",
+     payload: {responds_to: [G-1], candidate: {id: C-2, title: Start the import earlier, hypothesis: Starting at 01:00 keeps it inside the window.}}}
+  - id: A-4
+    verb: decide
+    recorded_at: "2026-10-02T11:00:00Z"
+    actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+    session: session:s-review
+    payload:
+      considered: [G-1, C-1]
+      outcomes: [{subject: C-1, outcome: accept}]
+      decision: {id: D-1, title: Import in parallel batches, statement: Accept C-1., why: The batch trial ran in 41 minutes.}
+  - id: A-5
+    verb: decide
+    recorded_at: "2026-10-02T11:05:00Z"
+    actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+    session: session:s-review
+    payload:
+      considered: [G-1, C-2]
+      outcomes: [{subject: C-2, outcome: decline}]
+      decision: {id: D-2, title: Keep the import start time, statement: Decline C-2., why: An earlier start overlaps the 01:00 backup.}
+  - id: A-6
+    verb: mint
+    recorded_at: "2026-10-02T11:10:00Z"
+    actor: {kind: agent, agent: agent-orch, role: orchestrator, principal: key-repo}
+    session: session:s-orch
+    payload:
+      basis: {decision: D-2}
+      from_candidate: C-1
+      addresses: [G-1]
+      promise: {id: P-1, title: The nightly import ends before 06:00, statement: Every nightly import ends before 06:00 UTC., scope: The nightly import job.}
+expect:
+  refused: {act_index: 5, code: wrong_basis}
+  states:
+    C-1: decided
+    C-2: decided
+    G-1: declared

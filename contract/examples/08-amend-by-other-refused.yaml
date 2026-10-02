@@ -1,0 +1,22 @@
+# Only the author amends a record within its edit window; another agent
+# supersedes, revokes, refines, or declares a Gap instead.
+name: amend-by-other-refused
+defaults:
+  protocol: 2.0.0-draft
+  level: repository
+  scope: example-repository
+  actor: {kind: agent, agent: agent-auto-1, role: automation, principal: key-automation}
+  session: session:s-auto-1
+acts:
+  - {id: A-1, verb: declare, recorded_at: "2026-10-02T09:00:00Z",
+     payload: {gap: {id: G-1, title: Flaky test in the parser suite, statement: test_empty fails about one run in twenty.}}}
+  - id: A-2
+    verb: amend
+    recorded_at: "2026-10-02T09:02:00Z"
+    actor: {kind: agent, agent: agent-auto-2, role: automation, principal: key-automation}
+    session: session:s-auto-2
+    payload: {target_act: A-1, changes: {gap: {statement: test_empty fails about one run in ten.}}}
+expect:
+  refused: {act_index: 1, code: not_author}
+  states:
+    G-1: declared
