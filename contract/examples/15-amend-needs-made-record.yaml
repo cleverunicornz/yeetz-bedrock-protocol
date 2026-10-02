@@ -1,0 +1,36 @@
+# Only an act that made a record is amended. An evaluate gives the Candidate
+# its state but makes no record, so amending it is refused (not_amendable),
+# even by its author inside ten minutes; a corrected evaluation is a new
+# evaluate.
+name: amend-needs-made-record
+defaults:
+  protocol: 2.0.0-draft
+  level: repository
+  scope: example-repository
+  actor: {kind: agent, agent: agent-scout, role: scout, principal: key-repo}
+  session: session:s-scout
+acts:
+  - id: A-1
+    verb: declare
+    recorded_at: "2026-10-02T09:00:00Z"
+    actor: {kind: agent, agent: agent-auto, role: automation, principal: key-automation}
+    session: session:s-auto
+    payload: {gap: {id: G-1, title: Nightly import runs past its window, statement: Three of the last seven imports ended after 06:00.}}
+  - id: A-2
+    verb: formulate
+    recorded_at: "2026-10-02T09:01:00Z"
+    actor: {kind: agent, agent: agent-auto, role: automation, principal: key-automation}
+    session: session:s-auto
+    payload: {responds_to: [G-1], candidate: {id: C-1, title: Import in parallel batches, hypothesis: Batching by source cuts the import below one hour.}}
+  - {id: A-3, verb: store, recorded_at: "2026-10-02T10:40:00Z",
+     payload: {reference: {id: R-1, title: Batch import trial timings, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "a411111111111111111111111111111111111111111111111111111111111111"},
+               location: {stored: {store: references, key: r/1.md, version: v1}}}}}
+  - {id: A-4, verb: evaluate, recorded_at: "2026-10-02T10:41:00Z",
+     payload: {candidate: C-1, outcome: favourable, findings: [R-1]}}
+  - {id: A-5, verb: amend, recorded_at: "2026-10-02T10:43:00Z",
+     payload: {target_act: A-4, changes: {outcome: mixed}}}
+expect:
+  refused: {act_index: 4, code: not_amendable}
+  states:
+    C-1: evaluated

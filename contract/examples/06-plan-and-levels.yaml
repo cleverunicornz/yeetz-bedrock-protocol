@@ -30,3 +30,5 @@ expect:
     PLAN-1: revoked
     P-1: asserted
     P-2: asserted
+  plans:
+    PLAN-1: {members: [P-1, P-2], waits_on: [{member: P-2, upon: P-1}]}

@@ -414,6 +414,22 @@ def check_schema(schema: dict, contract: dict) -> None:
     for noun, spec in contract["nouns"].items():
         if spec["prefix"] and not re.match(defs[f"id_{noun}"]["pattern"], f"{spec['prefix']}-1"):
             fail(f"schema id pattern for {noun} does not admit {spec['prefix']}-1")
+    # A Plan holds only its member nouns: every field naming a Plan member
+    # admits exactly those ids.
+    member = {"anyOf": [{"$ref": f"#/$defs/id_{n}"} for n in contract["group"]["Plan"]["members"]]}
+    if defs.get("id_plan_member") != member:
+        fail(f"schema id_plan_member {defs.get('id_plan_member')} != {member}")
+    regroup = defs["payload_regroup"]["properties"]
+    waits = defs["waits"]["items"]["properties"]
+    for where, sub in (
+        ("plan.members", defs["plan"]["properties"]["members"]["items"]),
+        ("payload_regroup.add_members", regroup["add_members"]["items"]),
+        ("payload_regroup.remove_members", regroup["remove_members"]["items"]),
+        ("waits.member", waits["member"]),
+        ("waits.upon", waits["upon"]),
+    ):
+        if sub != {"$ref": "#/$defs/id_plan_member"}:
+            fail(f"schema {where} admits {sub}, not only Plan members")
     out = contract["outcomes"]
     if defs["payload_judge"]["properties"]["verdict"]["enum"] != out["judge"]:
         fail("schema judge verdicts != contract judge outcomes")
@@ -790,6 +806,11 @@ def check_examples(schema: dict, contract: dict) -> tuple[set[tuple], set[str]]:
                 fail(f"{name}: {rid} expected {st}, projected {proj.state.get(rid)}")
             if st in REMOVED_STATE_WORDS:
                 fail(f"{name}: {rid} expects removed state word {st}")
+        for pid, want_plan in expect.get("plans", {}).items():
+            got = proj.record.get(pid, {})
+            got_plan = {"members": got.get("members"), "waits_on": got.get("waits_on", [])}
+            if got_plan != want_plan:
+                fail(f"{name}: {pid} holds {got_plan}, expected {want_plan}")
         for rid, want_trace in expect.get("trace", {}).items():
             if trace.get(rid) != want_trace:
                 fail(f"{name}: {rid} passed through {trace.get(rid)}, expected {want_trace}")

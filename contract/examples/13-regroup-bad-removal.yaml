@@ -1,0 +1,32 @@
+# A regroup removes only what the Plan holds. The first regroup removes the
+# waits_on link and then its member; a second removal of the same member is
+# refused (bad_member), and the Plan keeps what the first regroup left.
+name: regroup-bad-removal
+defaults:
+  protocol: 2.0.0-draft
+  level: board
+  scope: session:s-orch
+  actor: {kind: agent, agent: agent-orch, role: orchestrator, principal: key-repo}
+  session: session:s-orch
+acts:
+  - {id: A-1, verb: store, recorded_at: "2026-10-02T15:00:00Z",
+     payload: {reference: {id: R-1, title: Release brief, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "a211111111111111111111111111111111111111111111111111111111111111"},
+               location: {stored: {store: references, key: r/1.md, version: v1}}}}}
+  - {id: A-2, verb: mint, recorded_at: "2026-10-02T15:01:00Z",
+     payload: {basis: {instruction: R-1}, promise: {id: P-1, title: The changelog lists every merged change, statement: The changelog names every pull request merged since the last tag., scope: The release notes.}}}
+  - {id: A-3, verb: mint, recorded_at: "2026-10-02T15:02:00Z",
+     payload: {basis: {instruction: R-1}, promise: {id: P-2, title: The release tag is signed, statement: The release tag carries a valid signature., scope: The release tag.}}}
+  - {id: A-4, verb: group, recorded_at: "2026-10-02T15:03:00Z",
+     payload: {plan: {id: PLAN-1, title: Release, members: [P-1, P-2], waits_on: [{member: P-2, upon: P-1}]}}}
+  - {id: A-5, verb: regroup, recorded_at: "2026-10-02T15:20:00Z",
+     payload: {plan: PLAN-1, remove_waits: [{member: P-2, upon: P-1}], remove_members: [P-1]}}
+  - {id: A-6, verb: regroup, recorded_at: "2026-10-02T15:21:00Z",
+     payload: {plan: PLAN-1, remove_members: [P-1]}}
+expect:
+  refused: {act_index: 5, code: bad_member}
+  states:
+    PLAN-1: regrouped
+    P-1: asserted
+  plans:
+    PLAN-1: {members: [P-2], waits_on: []}
