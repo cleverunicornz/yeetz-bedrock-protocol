@@ -1,6 +1,6 @@
 {
   "version": "2.0.0-draft",
-  "description": "Bedrock protocol published files, root protocol block, repository block template, organization template, skills, organization situation records, and the draft v2 contract.",
+  "description": "Bedrock protocol published files, root protocol block, repository block template, organization template, skills, organization situation records, the draft v2 contract, the draft v2 verb skills and the draft v2 role table.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
     "sha256": "38cc50b369a7d097ac4847f660ee506937f0d3d353e2d4d4ff6f33e4b11006fb"
@@ -156,5 +156,63 @@
       "path": "contract/bedrock-v2.schema.json",
       "sha256": "1b15f731caf226eeec5a6f96f9bb043e3d9827de9a8f2feeb0c9fc3ef238484e"
     }
-  ]
+  ],
+  "verb_skills": [
+    {
+      "path": "contract/skills/assure/SKILL.md",
+      "sha256": "42bf28733dfb38e8939ea6b0ec5430ef2422b09cae4e196a140228a04b1a343f"
+    },
+    {
+      "path": "contract/skills/decide/SKILL.md",
+      "sha256": "2896bc97622ec69b5c70864c89d4623ddb6cd47360373ab8b470674b8aafccd1"
+    },
+    {
+      "path": "contract/skills/declare/SKILL.md",
+      "sha256": "71dee2a65663c596ca2fab4c891aa77fdebe0c9312b89633176c675dfe9d910b"
+    },
+    {
+      "path": "contract/skills/define/SKILL.md",
+      "sha256": "8b180de0c42d898b88ff82cd36afe48061937b41bc9ad33c2cc710b64b347391"
+    },
+    {
+      "path": "contract/skills/evaluate/SKILL.md",
+      "sha256": "0173c4d393e2c334a2ed3f082e423c0be200be7178b9ddf40264dcf0d77ecb07"
+    },
+    {
+      "path": "contract/skills/formulate/SKILL.md",
+      "sha256": "f33c5d0413fd2b71ce8c0c31ccf0ed415f550ff80bc3da8b414599e8b1fa7324"
+    },
+    {
+      "path": "contract/skills/judge/SKILL.md",
+      "sha256": "849e588556626f04914eaf13aad776d4edd439cc39d04268087a5eab0358fde8"
+    },
+    {
+      "path": "contract/skills/mint/SKILL.md",
+      "sha256": "c20d1f8a703c7c71911887ed6173ecba9c4a1d76422b64b1d068b0e5b4b78ff5"
+    },
+    {
+      "path": "contract/skills/produce/SKILL.md",
+      "sha256": "4fb1208519ba3896ab616ae841eb23e18833fb7bbbeb510f51463bf4ecde8e2e"
+    },
+    {
+      "path": "contract/skills/refine/SKILL.md",
+      "sha256": "13e2cd8bca09c592fecd9fc674d41994bc44301c670aa1976b9a2a710f12ce44"
+    },
+    {
+      "path": "contract/skills/revoke/SKILL.md",
+      "sha256": "b8f884010ffe9ef37fcd14d5b9bbd2facd0a2f5373b1e216edb2f2e4becbd282"
+    },
+    {
+      "path": "contract/skills/stipulate/SKILL.md",
+      "sha256": "d1ad1fbd4fd6640c428a6fcace8d7b322136f78c8ebbe1eaf8b6c1083d7701ce"
+    },
+    {
+      "path": "contract/skills/supersede/SKILL.md",
+      "sha256": "ca08e417d66075e085bf7c7880d7f3818dc011733889b801c3cec8527b214580"
+    }
+  ],
+  "roles": {
+    "path": "contract/roles.md",
+    "sha256": "3c83b976dccec34995d6ba7a7cd7c7c79607760b678be1b1131c3e0f6d9149e4"
+  }
 }

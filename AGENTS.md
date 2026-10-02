@@ -54,7 +54,11 @@ Its content classes are:
   `contract` manifest key and not in force; beside them, unpublished,
   `contract/examples/` (worked act sequences) and `contract/check.py`, the
   check that the four agree. Run it before changing any of them:
-  `uv run --no-project --with pyyaml --with jsonschema python contract/check.py`.
+  `uv run --no-project --with pyyaml --with jsonschema python contract/check.py`;
+- `contract/skills/<verb>/SKILL.md`, the draft v2 verb skills, one per verb,
+  and `contract/roles.md`, the draft v2 role to verbs table, published under
+  the `verb_skills` and `roles` manifest keys, not in force, and checked
+  against the contract by `contract/check.py`.
 
 Organization-specific material lives only in `templates/organization.md`,
 `skills/`, and `organization/situation/`. This
@@ -108,6 +112,16 @@ would create circular authority; the exemption is deliberate.
   exploitability and affected code paths — is never represented in it, its
   branches, issues, pull requests, reviews or comments. Public CVE and CWE
   references are fine.
+- A v2 verb skill is a directory `contract/skills/<verb>/` holding one
+  `SKILL.md` with `name`, `verb` and `description` front matter, all three
+  naming the verb; there is exactly one per contract verb. It states the
+  verb's meaning only: what it does, its inputs, outputs, outcomes and
+  refusals, and the roles that hold it, as `contract/bedrock-v2.yaml` states
+  them. It never names a runtime, harness, model, tool, host, or version
+  control and review practice; those are organisation policy, layered on the
+  verb skills, which add and specialise and never redefine a verb.
+  `contract/roles.md` states the contract's role table and points to every
+  verb skill. `contract/check.py` enforces all of this.
 - A skill is a directory `skills/<name>/` holding one `SKILL.md` with `name`,
   `verb`, and `description` front matter; the directory name equals `name`.
   `verb` is one verb from `templates/root-protocol.md`. `description` is the
@@ -156,5 +170,7 @@ to the repository root: the namespace files under `files`, the root protocol
 block under `root_protocol`, the repository block template under
 `repository_block`, the organization template under `organization`, the
 skills under `skills`, the organization circle's records under
-`organization_situation`, and the draft v2 contract under `contract`. Consumers verify digests before copying. The manifest is
+`organization_situation`, the draft v2 contract under `contract`, the draft v2
+verb skills under `verb_skills`, and the draft v2 role table under `roles`.
+Consumers verify digests before copying. The manifest is
 data, not an application; it contains no logic.
