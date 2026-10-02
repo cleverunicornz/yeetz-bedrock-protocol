@@ -1066,7 +1066,26 @@ def check_skills(contract: dict) -> None:
         for code in named:
             if code not in refusals:
                 fail(f"{rel}: names refusal `{code}`, which the contract does not list")
+        check_identifiers(rel, text, contract)
         check_mechanics(rel, text)
+
+
+def contract_identifiers(node) -> set[str]:
+    """Every key and string value of the contract, recursively."""
+    if isinstance(node, dict):
+        return set(map(str, node)) | {i for v in node.values() for i in contract_identifiers(v)}
+    if isinstance(node, list):
+        return {i for v in node for i in contract_identifiers(v)}
+    return {node} if isinstance(node, str) else set()
+
+
+def check_identifiers(rel: str, text: str, contract: dict) -> None:
+    """A backticked snake_case name anywhere in the text (a refusal code, a field, a rule) is the contract's
+    or its schema's."""
+    known = contract_identifiers(contract) | contract_identifiers(json.loads(SCHEMA.read_text()))
+    for name in sorted(set(re.findall(r"`([a-z]+(?:_[a-z]+)+)`", text))):
+        if name not in known:
+            fail(f"{rel}: names `{name}`, which the contract does not define")
 
 
 def check_roles(contract: dict) -> None:
@@ -1085,9 +1104,11 @@ def check_roles(contract: dict) -> None:
     want = {v: s["roles"] for v, s in contract["verbs"].items()}
     if list(got) != list(want) or any(sorted(got[v]) != sorted(want[v]) for v in want):
         fail(f"{rel}: verb table {got} != contract verbs' roles {want}")
+    skill = {words(r[0])[0]: words(r[2]) for r in rows if words(r[0]) and len(r) > 2}
     for v in contract["verbs"]:
-        if f"contract/skills/{v}/SKILL.md" not in text:
-            fail(f"{rel}: does not point to contract/skills/{v}/SKILL.md")
+        if skill.get(v) != [f"contract/skills/{v}/SKILL.md"]:
+            fail(f"{rel}: the row of `{v}` does not point to contract/skills/{v}/SKILL.md")
+    check_identifiers(rel, text, contract)
     check_mechanics(rel, text)
 
 

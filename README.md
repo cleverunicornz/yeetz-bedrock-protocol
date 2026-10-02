@@ -64,8 +64,9 @@ inputs, outputs and refusals, and which roles perform it), and the role to
 verbs table in `contract/roles.md`. They carry the meaning only. How an
 organisation's agents run each verb — runtimes, tools, version control and
 review practice — is that organisation's policy, layered on top. The skills
-are installed under a root of their own, apart from any organisation's
-skills, and `contract/check.py` checks them against the contract.
+are meant to be installed under a root of their own, apart from any
+organisation's skills, once v2 is released; `contract/check.py` checks them
+against the contract.
 
 ## Layers
 
