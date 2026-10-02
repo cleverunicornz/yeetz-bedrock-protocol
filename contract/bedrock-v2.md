@@ -229,7 +229,8 @@ Notes:
 
 - A Promise is **assuring** once it has both an Oracle in force and a live Witness: `produce` moves it when the
   Oracle already exists, `define` when the Witness already exists. `refine` never moves it, because refining needs
-  a live Witness of the same Promise, which already made it assuring.
+  a live Witness of the same Promise, which already made it assuring. Revoking that Witness later does not move
+  the Promise back (see open question 10).
 - **Decision outcomes.** For a Candidate: `accept` (to `accepted`), `decline` (to `declined`), `defer` and
   `investigate` (recorded, no state change). For a Gap: `close` (to `closed`), `tolerate` (to `tolerated`),
   `keep_open` (recorded, no state change). An accepted Candidate stays a Candidate after minting.
@@ -392,3 +393,6 @@ Every noun is queryable by its states and its relations; the rest follow from th
 8. **Plan completion.** A Plan has no completion statement; progress is read from members. Whether a Plan needs one
    is open.
 9. **Roles.** The seven Bedrock roles and their verb sets are a first cut, to be tuned from the drift measures.
+10. **Backward moves.** No transition moves a Promise back from `assuring` (for example when its only Witness is
+    revoked) or a Gap back from `addressing` (when its only Candidate is declined). Whether states should be
+    recomputed from the live records instead of only moving forward is open.

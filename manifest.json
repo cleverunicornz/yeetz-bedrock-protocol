@@ -146,7 +146,7 @@
   "contract": [
     {
       "path": "contract/bedrock-v2.md",
-      "sha256": "bd2fba551cf22f71bf0cdc95aeeb59938291d64036a09ffef223fdfd6f92325b"
+      "sha256": "2384c5f12310482a61462d98e6bd8be0b8085b3f400e807fec42e8469c433727"
     },
     {
       "path": "contract/bedrock-v2.yaml",
