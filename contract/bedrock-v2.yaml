@@ -18,14 +18,18 @@ parameters:
   # The tool returns these on the making act and on every amendment.
   edit_window_feedback: [edit_window_closes_at, edit_window_seconds_left]
 
-# Field limits, in characters (the enforcement unit). "title" is about 120
-# characters; "text" about 200 tokens; "result" about 100 tokens. An
-# oversized write is refused with the field, its size and the limit; nothing
-# is cut silently. A lower layer may tighten a limit, never loosen it.
+# Field limits, in characters (the enforcement unit). For a title, aim for
+# one line. An oversized write is refused with the field, its size and the
+# limit; nothing is cut silently. A lower layer may tighten a limit, never
+# loosen it.
 limits:
-  title: 120
-  text: 800
-  result: 400
+  title: 256
+  text: 1024
+  result: 512
+limit_fields:
+  title: [title]
+  text: [statement, rule, hypothesis, why, scope, inputs, reason, note]
+  result: [result]
 
 levels:
   # Level is a property of every act and record: where it applies. No forced
@@ -53,37 +57,37 @@ layers:
 nouns:
   Invariant:
     prefix: I
-    states: [in_force, superseded, revoked]
+    states: [stipulated, superseded, revoked]
     made_by: stipulate
     fields: {title: title, rule: text, priority: [critical, standard]}
     links: {basis: [Decision, Reference, Witness, Invariant]}
   Gap:
     prefix: G
-    states: [open, addressing, closed, tolerated, superseded, revoked]
+    states: [declared, decided, superseded, revoked]
     made_by: declare
     fields: {title: title, statement: text, impact: "text?"}
     links: {arose_in: act, about: any}
   Candidate:
     prefix: C
-    states: [formulated, evaluating, evaluated, accepted, declined, superseded, revoked]
+    states: [formulated, evaluated, decided, superseded, revoked]
     made_by: formulate
     fields: {title: title, hypothesis: text}
     links: {responds_to: [Gap, Witness, Decision, Reference, Candidate]}
   Decision:
     prefix: D
-    states: [in_force, superseded, revoked]
+    states: [decided, superseded, revoked]
     made_by: decide
     fields: {title: title, statement: text, why: text, rejected: "[{alternative: title, why: text}]?", revisit_when: "text?"}
     links: {considered: any, outcomes: [Candidate, Gap]}
   Promise:
     prefix: P
-    states: [asserted, assuring, assured, superseded, revoked]
+    states: [asserted, assured, superseded, revoked]
     made_by: mint
     fields: {title: title, statement: text, scope: text, residual: "text?"}
     links: {basis: [Decision, Reference], from_candidate: Candidate, addresses: Gap}
   Oracle:
     prefix: O
-    states: [in_force, superseded, revoked]
+    states: [defined, superseded, revoked]
     made_by: define
     fields: {title: title, inputs: text, holds_when: text, fails_when: text, arrangement: [human, agent, deterministic, mixed], executable: "pointer?"}
     links: {judges: Promise}
@@ -95,7 +99,7 @@ nouns:
     links: {observes: Promise, evidence: Reference, refines: Witness}
   Reference:
     prefix: R
-    states: [current, superseded, revoked]
+    states: [stored, superseded, revoked]
     made_by: store
     fields: {title: title, kind: [artifact, repository_file, website], media_type: string, digest: "sha256?", location: by kind, conversion: "provenance?", visibility: string}
     links: {}
@@ -105,9 +109,94 @@ group:
     prefix: PLAN
     members: [Candidate, Promise]
     fields: {title: title, members: ids, waits_on: "[{member, upon}] optional, loose, never required"}
-    states: [open, retired]
+    states: [grouped, regrouped, revoked]
     made_by: group
-    completion: derived from member states; a Plan asserts nothing
+    completion: none; progress is read from member states; a Plan asserts nothing
+
+state_rule:
+  # Review 1, rules 2 and 4. A record's state is the past tense of the last
+  # standing verb applied to it; its first state is the past tense of the verb
+  # that makes its noun. The one exception is the Promise. Every noun may also
+  # be superseded or revoked; a Witness is only revoked. What a judge, decide
+  # or evaluate concluded is the act's outcome, never a state word.
+  rule: the state is the past tense of the last standing verb applied to the record
+  past_tense:
+    stipulate: stipulated
+    declare: declared
+    formulate: formulated
+    evaluate: evaluated
+    decide: decided
+    define: defined
+    produce: produced
+    judge: judged
+    assure: assured
+    revoke: revoked
+    supersede: superseded
+    store: stored
+    group: grouped
+    regroup: regrouped
+  # mint gives the Promise exception; refine makes a Witness (produced) or adds
+  # a sighting; relate and amend give no state.
+  no_state: [mint, refine, relate, amend]
+  exception:
+    Promise: [asserted, assured]
+  promise: asserted when minted; assured while its latest standing holds-or-does_not_hold judgment is holds; asserted otherwise
+  never_superseded: [Witness]
+  standing: >-
+    An act stands unless the record it rests on is superseded or revoked. A
+    judgment rests on its Witness (only a revoked Witness, never a superseded
+    Oracle or Reference, unseats it); a decide's outcome on a subject rests on
+    its Decision. Revoke and supersede acts always stand.
+
+recomputation:
+  # Review 1, rules 4 and 5a. When an act stops standing, the states that
+  # rested on it are recomputed from what remains. Recomputing never creates
+  # work: no act is required or generated by a state change.
+  from: the latest standing act
+  generates_acts: false
+
+no_recursive_invalidation:
+  # Review 1, rule 5; worked example contract/examples/10-no-recursive-invalidation.yaml.
+  a: Recomputing a state never creates work. No act is ever required or generated automatically by a state change; agents decide what to do next.
+  b: One judgment per (Witness, Oracle) pair. A rejudge happens only when the Witness or the Oracle is new; judging the same pair again is not an act and is refused.
+  c: Only a does_not_hold verdict, or revoking the Witness behind the assurance, removes assurance. Superseding the Oracle or a Reference does not; the Promise stays assured until a newer judgment says otherwise.
+  d: Changes go one step and never cascade. Revoking a Witness changes that Witness and its Promise's state, nothing else. No revocation or supersession causes another.
+  e: Witnesses are never superseded. A better observation is a new Witness made by refine, judged like any other.
+
+one_step:
+  # Rule 5d: the only records whose state an act may change.
+  stipulate: [made]
+  declare: [made]
+  formulate: [made]
+  evaluate: [candidate]
+  decide: [made, subjects]
+  mint: [made]
+  define: [made]
+  produce: [made]
+  refine: [made]
+  judge: [witness, promise]
+  revoke: [target, promise_of_witness, subjects_of_decision]
+  supersede: [target, subjects_of_decision]
+  store: [made]
+  group: [made]
+  regroup: [plan]
+  relate: []
+  amend: []
+
+outcomes:
+  # What an act concluded; recorded on the act, never a state.
+  evaluate: [favourable, unfavourable, mixed, inconclusive]
+  decide:
+    Candidate: [accept, decline]
+    Gap: [close, keep]
+  judge: [holds, does_not_hold, inconclusive]
+
+refusals:
+  # Refusals the worked examples exercise. A refused act is not recorded.
+  oracle_not_in_force: a judgment applies the Promise's Oracle that is neither superseded nor revoked
+  already_judged: one judgment per (Witness, Oracle) pair
+  edit_window_closed: after the edit window, only supersede or revoke
+  not_author: only the author amends within the edit window
 
 verbs:
   stipulate:
@@ -126,7 +215,7 @@ verbs:
     when: An absence, concern or uncertainty is met, at its actual certainty. Never assigns its resolution.
   formulate:
     kind: act
-    acts_on: [Candidate, Gap]
+    acts_on: [Candidate]
     inputs: [responds_to]
     outputs: [Candidate]
     roles: [authority, orchestrator, scout, implementer, advisor, automation]
@@ -137,31 +226,32 @@ verbs:
     inputs: [Candidate]
     outputs: [findings, outcome]
     roles: [orchestrator, scout, advisor]
-    when: A Candidate needs investigation before decide. May be recorded as begun, then completed.
+    outcome_subject: Candidate
+    when: A Candidate needs investigation before decide. Recorded once the investigation is done; work in progress shows on the agent's board.
   decide:
     kind: act
     acts_on: [Decision, Candidate, Gap]
     inputs: [considered]
     outputs: [Decision, outcomes]
     roles: [authority]
-    when: A choice collapses. Records the disposition and grounds; never mints implicitly.
+    when: A choice collapses. Records each subject's outcome and the grounds; never mints implicitly.
   mint:
     kind: act
-    acts_on: [Promise, Gap]
+    acts_on: [Promise]
     inputs: [basis, from_candidate, addresses]
     outputs: [Promise]
     roles: [authority, orchestrator]
     when: A commitment is accepted, from an instruction or specification (direct) or from a Candidate accepted by a Decision.
   define:
     kind: act
-    acts_on: [Oracle, Promise]
+    acts_on: [Oracle]
     inputs: [Promise]
     outputs: [Oracle]
     roles: [authority, orchestrator]
     when: A Promise needs its judgment rule; best before produce; a retrospective Oracle is honest about its time.
   produce:
     kind: act
-    acts_on: [Witness, Promise]
+    acts_on: [Witness]
     inputs: [Promise, evidence]
     outputs: [Witness]
     roles: [implementer]
@@ -175,25 +265,26 @@ verbs:
     when: Add without changing a claim - a better Witness after an inconclusive verdict, or a further sighting on a Gap or Candidate.
   judge:
     kind: act
-    acts_on: [Witness]
+    acts_on: [Witness, Promise]
     inputs: [Promise, Oracle, Witness]
     outputs: [verdict]
     roles: [validator]
-    when: A Witness of a Promise exists and the Promise has an Oracle in force.
+    outcome_subject: Promise
+    when: A Witness of a Promise exists, the Promise has an Oracle neither superseded nor revoked, and that (Witness, Oracle) pair is not yet judged.
   assure:
     kind: transition
     acts_on: [Promise]
     inputs: [judge]
     outputs: [assured]
     roles: []
-    when: Not performed. Recorded as the state change of a judge act whose verdict is holds, against the Oracle in force, while the Promise is assuring.
+    when: Not performed. The Promise becomes assured when its latest standing judgment is holds; recorded as the state change of that judge act, or of the revoke after which it is again the latest standing judgment.
   revoke:
     kind: act
-    acts_on: [Invariant, Gap, Candidate, Decision, Promise, Oracle, Witness, Reference]
+    acts_on: [Invariant, Gap, Candidate, Decision, Promise, Oracle, Witness, Reference, Plan]
     inputs: [target, basis]
     outputs: [revoked]
     roles: [authority, orchestrator, automation]
-    when: A record is withdrawn with a reason after its edit window; history stays.
+    when: A record (or a Plan) is withdrawn with a reason after its edit window; history stays. Changes the record and the states that rested on it, one step.
   supersede:
     kind: act
     acts_on: [Invariant, Gap, Candidate, Decision, Promise, Oracle, Reference]
@@ -208,57 +299,57 @@ structural_acts:
   # optional scope, an amendment is a correction inside the edit window.
   store: {makes: Reference}
   group: {makes: Plan}
-  regroup: {changes: Plan, does: [add or remove members, add or remove waits_on links, retire]}
+  regroup: {changes: Plan, does: [add or remove members, add or remove waits_on links]}
   relate: {links: [scope, record], relations: [belongs_to, about], removable: true}
   amend: {changes: the author's own act payload, within: edit_window_seconds}
 
-decision_outcomes:
-  # Outcome -> resulting state of the subject (null: recorded, no state change)
-  Candidate: {accept: accepted, decline: declined, defer: null, investigate: null}
-  Gap: {close: closed, tolerate: tolerated, keep_open: null}
-
 transitions:
-  # from: [] means the record is made by the act.
-  - {noun: Invariant, from: [], to: in_force, by: [stipulate]}
-  - {noun: Invariant, from: [in_force], to: superseded, by: [supersede]}
-  - {noun: Invariant, from: [in_force], to: revoked, by: [revoke]}
-  - {noun: Gap, from: [], to: open, by: [declare]}
-  - {noun: Gap, from: [open], to: addressing, by: [formulate, mint]}
-  - {noun: Gap, from: [open, addressing], to: closed, by: [decide]}
-  - {noun: Gap, from: [open, addressing], to: tolerated, by: [decide]}
-  - {noun: Gap, from: [open, addressing], to: superseded, by: [supersede]}
-  - {noun: Gap, from: [open, addressing], to: revoked, by: [revoke]}
+  # from: [] means the record is made by the act. recompute: the state that
+  # remains when the act a state rested on is revoked or superseded.
+  - {noun: Invariant, from: [], to: stipulated, by: [stipulate]}
+  - {noun: Invariant, from: [stipulated], to: superseded, by: [supersede]}
+  - {noun: Invariant, from: [stipulated], to: revoked, by: [revoke]}
+  - {noun: Gap, from: [], to: declared, by: [declare]}
+  - {noun: Gap, from: [declared], to: decided, by: [decide]}
+  - {noun: Gap, from: [decided], to: declared, by: [revoke, supersede], recompute: true}
+  - {noun: Gap, from: [declared, decided], to: superseded, by: [supersede]}
+  - {noun: Gap, from: [declared, decided], to: revoked, by: [revoke]}
   - {noun: Candidate, from: [], to: formulated, by: [formulate]}
-  - {noun: Candidate, from: [formulated, evaluated], to: evaluating, by: [evaluate]}
-  - {noun: Candidate, from: [formulated, evaluating, evaluated], to: evaluated, by: [evaluate]}
-  - {noun: Candidate, from: [formulated, evaluating, evaluated], to: accepted, by: [decide]}
-  - {noun: Candidate, from: [formulated, evaluating, evaluated], to: declined, by: [decide]}
-  - {noun: Candidate, from: [formulated, evaluating, evaluated], to: superseded, by: [supersede]}
-  - {noun: Candidate, from: [formulated, evaluating, evaluated], to: revoked, by: [revoke]}
-  - {noun: Decision, from: [], to: in_force, by: [decide]}
-  - {noun: Decision, from: [in_force], to: superseded, by: [supersede]}
-  - {noun: Decision, from: [in_force], to: revoked, by: [revoke]}
+  - {noun: Candidate, from: [formulated], to: evaluated, by: [evaluate]}
+  - {noun: Candidate, from: [formulated, evaluated], to: decided, by: [decide]}
+  - {noun: Candidate, from: [decided], to: evaluated, by: [revoke, supersede], recompute: true}
+  - {noun: Candidate, from: [decided], to: formulated, by: [revoke, supersede], recompute: true}
+  - {noun: Candidate, from: [formulated, evaluated, decided], to: superseded, by: [supersede]}
+  - {noun: Candidate, from: [formulated, evaluated, decided], to: revoked, by: [revoke]}
+  - {noun: Decision, from: [], to: decided, by: [decide]}
+  - {noun: Decision, from: [decided], to: superseded, by: [supersede]}
+  - {noun: Decision, from: [decided], to: revoked, by: [revoke]}
   - {noun: Promise, from: [], to: asserted, by: [mint]}
-  - {noun: Promise, from: [asserted], to: assuring, by: [define, produce]}
-  - {noun: Promise, from: [assuring], to: assured, by: [assure]}
-  - {noun: Promise, from: [asserted, assuring, assured], to: superseded, by: [supersede]}
-  - {noun: Promise, from: [asserted, assuring, assured], to: revoked, by: [revoke]}
-  - {noun: Oracle, from: [], to: in_force, by: [define]}
-  - {noun: Oracle, from: [in_force], to: superseded, by: [supersede]}
-  - {noun: Oracle, from: [in_force], to: revoked, by: [revoke]}
+  - {noun: Promise, from: [asserted], to: assured, by: [assure]}
+  - {noun: Promise, from: [assured], to: asserted, by: [judge]}
+  - {noun: Promise, from: [assured], to: asserted, by: [revoke], recompute: true}
+  - {noun: Promise, from: [asserted], to: assured, by: [revoke], recompute: true}
+  - {noun: Promise, from: [asserted, assured], to: superseded, by: [supersede]}
+  - {noun: Promise, from: [asserted, assured], to: revoked, by: [revoke]}
+  - {noun: Oracle, from: [], to: defined, by: [define]}
+  - {noun: Oracle, from: [defined], to: superseded, by: [supersede]}
+  - {noun: Oracle, from: [defined], to: revoked, by: [revoke]}
   - {noun: Witness, from: [], to: produced, by: [produce, refine]}
   - {noun: Witness, from: [produced], to: judged, by: [judge]}
   - {noun: Witness, from: [produced, judged], to: revoked, by: [revoke]}
-  - {noun: Reference, from: [], to: current, by: [store]}
-  - {noun: Reference, from: [current], to: superseded, by: [supersede]}
-  - {noun: Reference, from: [current], to: revoked, by: [revoke]}
+  - {noun: Reference, from: [], to: stored, by: [store]}
+  - {noun: Reference, from: [stored], to: superseded, by: [supersede]}
+  - {noun: Reference, from: [stored], to: revoked, by: [revoke]}
+  - {noun: Plan, from: [], to: grouped, by: [group]}
+  - {noun: Plan, from: [grouped], to: regrouped, by: [regroup]}
+  - {noun: Plan, from: [grouped, regrouped], to: revoked, by: [revoke]}
 
 judge_rule:
-  input: the Promise as stated, its Oracle in force, one Witness of that Promise
+  input: the Promise as stated, its Oracle neither superseded nor revoked, one Witness of that Promise, a (Witness, Oracle) pair not yet judged
   verdicts:
-    holds: the Witness shows the Promise holds within its scope
-    does_not_hold: a demonstrated failure within scope, cited as failure_evidence
-    inconclusive: a verdict on the Witness, not the Promise; leads to refine
+    holds: the Witness shows the Promise holds within its scope; if it is the latest standing verdict, the Promise is assured
+    does_not_hold: a demonstrated failure within scope, cited as failure_evidence; an assured Promise goes back to asserted
+    inconclusive: a verdict on the Witness, not the Promise; the Promise's state is unchanged; refine may follow
   positive_space_only: true
   gaps: declared as separate declare acts with arose_in = the judge act; binding as findings, closed only by decide, never gating
   hypothetical_failure: a Gap, never does_not_hold
@@ -307,7 +398,7 @@ drift_signals:
   - verb performed by a role that does not hold it
   - judging rounds per Promise
   - Gaps declared per judgment
-  - Gaps never dispositioned by decide
+  - Gaps never decided
   - a judge act by the producer of the judged Witness above board level
   - amendments per act and acts amended near the window's end
   - sessions with acts but no board, or a board that does not match the session's brief
@@ -321,22 +412,22 @@ queries:
     answers: A record's links in and out, each with the act that made it.
   binds:
     params: [scope]
-    answers: Invariants in force for the scope and every scope it is related to by belongs_to.
+    answers: Invariants stipulated (neither superseded nor revoked) for the scope and every scope it is related to by belongs_to.
   open_work:
     params: [scope]
-    answers: Gaps open or addressing, Candidates undecided, Promises asserted or assuring, Witnesses produced and not judged.
+    answers: Gaps declared or last decided keep, Candidates formulated or evaluated, Promises asserted, Witnesses produced.
   assured_by:
     params: [promise]
-    answers: The judge act, Oracle and Witness that assured the Promise, and judge acts since.
+    answers: The standing judge act, Oracle and Witness behind an assured Promise, and judge acts since.
   unjudged_witnesses:
     params: [scope]
-    answers: Witnesses still produced, with their Promise.
+    answers: Witnesses in state produced, with their Promise.
   gaps_without_candidate:
     params: [scope]
-    answers: Gaps open with no Candidate responding and no Promise addressing.
-  contradicted:
+    answers: Gaps declared or last decided keep, with no Candidate responding and no Promise addressing (a relation query).
+  assured_under_earlier_oracle:
     params: [scope]
-    answers: Assured Promises with a later does_not_hold judgment under the Oracle in force.
+    answers: Assured Promises whose standing holds judgment applied an Oracle since superseded.
   plan_view:
     params: [plan]
     answers: Members, their states and their waits_on links.

@@ -343,20 +343,20 @@
     "title": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 120,
-      "description": "About 120 characters."
+      "maxLength": 256,
+      "description": "At most 256 characters; aim for one line."
     },
     "text": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 800,
-      "description": "About 200 tokens."
+      "maxLength": 1024,
+      "description": "At most 1024 characters: statements, rules, hypotheses, why, scope, inputs, reasons, notes."
     },
     "result": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 400,
-      "description": "About 100 tokens."
+      "maxLength": 512,
+      "description": "At most 512 characters: a Witness's observed result."
     },
     "pointer": {
       "type": "string",
@@ -451,21 +451,19 @@
     },
     "state": {
       "type": "object",
-      "description": "Projected state of a record, by noun; states are derived from acts, never written.",
+      "description": "Projected state of a record, by noun: the past tense of the last standing verb applied to it (a Promise is asserted or assured). Derived from acts, never written.",
       "properties": {
         "Invariant": {
           "enum": [
-            "in_force",
+            "stipulated",
             "superseded",
             "revoked"
           ]
         },
         "Gap": {
           "enum": [
-            "open",
-            "addressing",
-            "closed",
-            "tolerated",
+            "declared",
+            "decided",
             "superseded",
             "revoked"
           ]
@@ -473,17 +471,15 @@
         "Candidate": {
           "enum": [
             "formulated",
-            "evaluating",
             "evaluated",
-            "accepted",
-            "declined",
+            "decided",
             "superseded",
             "revoked"
           ]
         },
         "Decision": {
           "enum": [
-            "in_force",
+            "decided",
             "superseded",
             "revoked"
           ]
@@ -491,7 +487,6 @@
         "Promise": {
           "enum": [
             "asserted",
-            "assuring",
             "assured",
             "superseded",
             "revoked"
@@ -499,7 +494,7 @@
         },
         "Oracle": {
           "enum": [
-            "in_force",
+            "defined",
             "superseded",
             "revoked"
           ]
@@ -513,8 +508,15 @@
         },
         "Reference": {
           "enum": [
-            "current",
+            "stored",
             "superseded",
+            "revoked"
+          ]
+        },
+        "Plan": {
+          "enum": [
+            "grouped",
+            "regrouped",
             "revoked"
           ]
         }
@@ -1125,15 +1127,6 @@
         "candidate": {
           "$ref": "#/$defs/id_Candidate"
         },
-        "phase": {
-          "enum": [
-            "begun",
-            "completed"
-          ]
-        },
-        "completes": {
-          "$ref": "#/$defs/id_act"
-        },
         "outcome": {
           "enum": [
             "favourable",
@@ -1154,21 +1147,9 @@
       },
       "required": [
         "candidate",
-        "phase"
+        "outcome"
       ],
-      "additionalProperties": false,
-      "if": {
-        "properties": {
-          "phase": {
-            "const": "completed"
-          }
-        }
-      },
-      "then": {
-        "required": [
-          "outcome"
-        ]
-      }
+      "additionalProperties": false
     },
     "payload_decide": {
       "type": "object",
@@ -1201,12 +1182,10 @@
                 "enum": [
                   "accept",
                   "decline",
-                  "defer",
-                  "investigate",
                   "close",
-                  "tolerate",
-                  "keep_open"
-                ]
+                  "keep"
+                ],
+                "description": "What the decision concluded for the subject: accept or decline a Candidate; close or keep a Gap. The subject's state becomes decided."
               }
             },
             "required": [
@@ -1368,7 +1347,8 @@
             "holds",
             "does_not_hold",
             "inconclusive"
-          ]
+          ],
+          "description": "The judgment's outcome. One judgment per (Witness, Oracle) pair."
         },
         "reason": {
           "$ref": "#/$defs/text"
@@ -1435,7 +1415,14 @@
       "type": "object",
       "properties": {
         "target": {
-          "$ref": "#/$defs/id_record"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id_record"
+            },
+            {
+              "$ref": "#/$defs/id_Plan"
+            }
+          ]
         },
         "reason": {
           "$ref": "#/$defs/text"
@@ -1526,9 +1513,6 @@
         },
         "remove_waits": {
           "$ref": "#/$defs/waits"
-        },
-        "retire": {
-          "type": "boolean"
         }
       },
       "required": [

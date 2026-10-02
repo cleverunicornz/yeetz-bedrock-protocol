@@ -117,11 +117,11 @@ acts:
         conversion: {tool: web-extractor, tool_version: "1.4.0", converted_at: "2026-10-02T15:31:52Z", from_media_type: text/html}
 expect:
   states:
-    R-1: current
-    R-2: current
-    R-3: current
-    G-1: addressing
-    G-2: open
+    R-1: stored
+    R-2: stored
+    R-3: stored
+    G-1: declared
+    G-2: declared
     P-1: assured
-    O-1: in_force
+    O-1: defined
     W-1: judged

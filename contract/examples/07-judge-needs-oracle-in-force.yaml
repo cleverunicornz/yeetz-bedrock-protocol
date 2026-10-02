@@ -1,5 +1,5 @@
-# Judging against a superseded Oracle is refused: a judgment applies the
-# Promise's Oracle in force.
+# Judging against a superseded Oracle is refused: a judgment applies a
+# Promise's Oracle that is neither superseded nor revoked.
 name: judge-needs-oracle-in-force
 defaults:
   protocol: 2.0.0-draft
@@ -35,5 +35,5 @@ acts:
 expect:
   refused: {act_index: 7, code: oracle_not_in_force}
   states:
-    P-1: assuring
+    P-1: asserted
     W-1: produced

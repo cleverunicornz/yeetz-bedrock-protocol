@@ -146,15 +146,15 @@
   "contract": [
     {
       "path": "contract/bedrock-v2.md",
-      "sha256": "2384c5f12310482a61462d98e6bd8be0b8085b3f400e807fec42e8469c433727"
+      "sha256": "a9722d6db6630f73772b013ff2323ebad24d26cf650b4f0a94c5d57588ae3640"
     },
     {
       "path": "contract/bedrock-v2.yaml",
-      "sha256": "6e83d05cf4b157d02ad5ac34ccafc6a024b28ecb254580df70c57e27a98005fb"
+      "sha256": "882e7d58b29f4485eb8dff6447c8d8ff98c7f9c4df64d6bd37c2876fb09bcf3d"
     },
     {
       "path": "contract/bedrock-v2.schema.json",
-      "sha256": "bea4bef160124dc9123ee30dc50fcceb2819f4078a26d823b77b62aa1e9bbff5"
+      "sha256": "1e259f18c02093f9404f55ae314f92c8762f188de4f9a25ff34ccc06f09ca2b0"
     }
   ]
 }

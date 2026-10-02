@@ -92,28 +92,28 @@ acts:
   - {id: A-38, verb: revoke, recorded_at: "2026-10-02T13:50:00Z",
      payload: {target: C-3, reason: Withdrawn by its author before any decision.}}
   - {id: A-39, verb: decide, recorded_at: "2026-10-02T14:00:00Z",
-     payload: {considered: [G-2], outcomes: [{subject: G-2, outcome: tolerate}, {subject: C-2, outcome: defer}],
-               decision: {id: D-4, title: Tolerate missing patch notes for now, statement: G-2 is tolerated; C-2 is deferred., why: Patch releases are rare this quarter., revisit_when: More than two patch releases in a month.}}}
+     payload: {considered: [G-2, C-2], outcomes: [{subject: G-2, outcome: keep}],
+               decision: {id: D-4, title: Keep the patch-notes Gap for now, statement: G-2 is kept; C-2 is left undecided., why: Patch releases are rare this quarter., revisit_when: More than two patch releases in a month.}}}
 expect:
   states:
     I-1: superseded
-    I-2: in_force
+    I-2: stipulated
     I-3: revoked
     D-1: superseded
-    D-2: in_force
+    D-2: decided
     D-3: revoked
     R-1: superseded
-    R-2: current
+    R-2: stored
     R-3: revoked
     P-1: superseded
-    P-2: assuring
+    P-2: asserted
     P-3: revoked
     O-1: superseded
-    O-2: in_force
+    O-2: defined
     O-3: revoked
     W-1: revoked
     G-1: superseded
-    G-2: tolerated
+    G-2: decided
     G-3: revoked
     C-1: superseded
     C-2: formulated

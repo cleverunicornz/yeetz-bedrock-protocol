@@ -19,4 +19,4 @@ acts:
 expect:
   refused: {act_index: 1, code: not_author}
   states:
-    G-1: open
+    G-1: declared

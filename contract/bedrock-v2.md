@@ -40,14 +40,14 @@ repository's.
 
 | Noun | Id prefix | States | Made by | What it is |
 |---|---|---|---|---|
-| **Invariant** | `I` | `in_force` `superseded` `revoked` | `stipulate` | A binding rule in a scope. |
-| **Gap** | `G` | `open` `addressing` `closed` `tolerated` `superseded` `revoked` | `declare` | An absence, concern or uncertainty, at its actual certainty. |
-| **Candidate** | `C` | `formulated` `evaluating` `evaluated` `accepted` `declined` `superseded` `revoked` | `formulate` | A brief hypothesis: a possible response, derived from evidence, not a commitment. |
-| **Decision** | `D` | `in_force` `superseded` `revoked` | `decide` | A collapsed choice with its grounds. |
-| **Promise** | `P` | `asserted` `assuring` `assured` `superseded` `revoked` | `mint` | A falsifiable commitment: "we want this to be true". |
-| **Oracle** | `O` | `in_force` `superseded` `revoked` | `define` | How one Promise is judged: inputs, holds-when, fails-when, arrangement. |
+| **Invariant** | `I` | `stipulated` `superseded` `revoked` | `stipulate` | A binding rule in a scope. |
+| **Gap** | `G` | `declared` `decided` `superseded` `revoked` | `declare` | An absence, concern or uncertainty, at its actual certainty. |
+| **Candidate** | `C` | `formulated` `evaluated` `decided` `superseded` `revoked` | `formulate` | A brief hypothesis: a possible response, derived from evidence, not a commitment. |
+| **Decision** | `D` | `decided` `superseded` `revoked` | `decide` | A collapsed choice with its grounds. |
+| **Promise** | `P` | `asserted` `assured` `superseded` `revoked` | `mint` | A falsifiable commitment: "we want this to be true". |
+| **Oracle** | `O` | `defined` `superseded` `revoked` | `define` | How one Promise is judged: inputs, holds-when, fails-when, arrangement. |
 | **Witness** | `W` | `produced` `judged` `revoked` | `produce` | One observation from one real run, retained before and independent of any verdict. |
-| **Reference** | `R` | `current` `superseded` `revoked` | `store` | Pinned supporting depth: a stored artifact, a repository file at a commit, or a website extraction. |
+| **Reference** | `R` | `stored` `superseded` `revoked` | `store` | Pinned supporting depth: a stored artifact, a repository file at a commit, or a website extraction. |
 
 Fields (limits in "Field limits" below; `?` marks optional):
 
@@ -71,20 +71,56 @@ Fields (limits in "Field limits" below; `?` marks optional):
 
 A **Plan** (`PLAN` prefix) groups Candidates and Promises, nothing more: `title`, `members`, and optional, loose
 `waits_on` links between members (`member` waits upon `upon`). Order is never required up front. A Plan asserts
-nothing; its progress is read from its members' states. It is made by the structural act `group`, changed and
-retired by `regroup`, and is `open` or `retired`.
+nothing and has no completion condition; its progress is read from its members' states. It is made by the
+structural act `group`, changed by `regroup`, and withdrawn by `revoke`. A Plan's states are `grouped`,
+`regrouped` and `revoked`.
+
+### States: one rule
+
+- **A record's state is the past tense of the last verb applied to it.** No other state words exist.
+  - Invariant: `stipulated`.
+  - Gap: `declared`, then `decided`.
+  - Candidate: `formulated`, then `evaluated`, then `decided`.
+  - Decision: `decided`.
+  - Oracle: `defined`.
+  - Witness: `produced`, then `judged`.
+  - Reference: `stored`.
+- **The one exception is the Promise:** `asserted` (by `mint`), then `assured` (a judgment held).
+- **Every noun may also be `superseded` or `revoked`**, except that a Witness is never superseded (section 6,
+  rule e).
+- **A record's first state is the past tense of the verb that makes its noun.** A Witness made by `refine` is
+  therefore `produced`. `refine` on a Gap or Candidate adds a sighting and gives no state; `relate` and `amend`
+  give none either.
+- **A state changes only when an act is done.** No act has phases. Work in progress shows on the agent's board,
+  not in a record's state.
+- **The latest standing act wins** (section 5): a state comes from the last act that still stands.
+
+### Outcomes
+
+What a judgment, a decision or an evaluation concluded is the act's **outcome**, recorded on the act. An outcome is
+never a state word.
+
+| Act | Subject | Outcomes |
+|---|---|---|
+| `evaluate` | Candidate | `favourable` `unfavourable` `mixed` `inconclusive` |
+| `decide` | Candidate | `accept` `decline` |
+| `decide` | Gap | `close` `keep` |
+| `judge` | Promise | `holds` `does_not_hold` `inconclusive` |
+
+A `decide` act with either outcome leaves its subject `decided`. A `judge` act leaves its Witness `judged`; its
+outcome (the `verdict`) decides whether the Promise is `assured`.
 
 ### Field limits
 
-| Field | Limit | Used for |
-|---|---|---|
-| `title` | 120 characters | every record's title, a Witness coordinate, a rejected alternative |
-| `text` | 800 characters (about 200 tokens) | statements, rules, hypotheses, why, scope, inputs, reasons, notes |
-| `result` | 400 characters (about 100 tokens) | a Witness's observed result |
+| Kind | Limit | Fields | Also |
+|---|---|---|---|
+| `title` | 256 characters | `title` | A Witness coordinate and a rejected alternative. Aim for one line. |
+| `text` | 1024 characters | `statement` `rule` `hypothesis` `why` `scope` `inputs` `reason` `note` | Holds-when, fails-when, impact, residual and revisit-when. |
+| `result` | 512 characters | `result` | A Witness's observed result. |
 
-Limits are counted in characters. An oversized write is refused with the field, its size and the limit; nothing
-is cut silently. Point, never copy: write the detail into a Reference and link it. A lower layer may tighten a
-limit, never loosen it.
+Limits are counted in characters. For a title, aim for one line. An oversized write is refused with the field, its
+size and the limit; nothing is cut silently. Point, never copy: write the detail into a Reference and link it. A
+lower layer may tighten a limit, never loosen it.
 
 ## 4. Verbs
 
@@ -94,23 +130,24 @@ limit, never loosen it.
 |---|---|---|---|---|
 | 1 | `stipulate` | act | `Invariant` | State a binding rule in a scope. A Decision is optional basis; an axiom needs none. |
 | 2 | `declare` | act | `Gap` | Record an absence, concern or uncertainty. Assigns nothing. |
-| 3 | `formulate` | act | `Candidate` `Gap` | Derive a possible response from evidence; a Gap it responds to becomes `addressing`. |
+| 3 | `formulate` | act | `Candidate` | Derive a possible response from evidence. |
 | 4 | `evaluate` | act | `Candidate` | Investigate a Candidate; findings are References; the outcome feeds `decide`. |
-| 5 | `decide` | act | `Decision` `Candidate` `Gap` | Collapse a choice: record the disposition of each subject and the grounds. Never mints. |
-| 6 | `mint` | act | `Promise` `Gap` | Make a commitment from an accepted instruction (direct) or an accepted Candidate (via its Decision). |
-| 7 | `define` | act | `Oracle` `Promise` | Make the judgment rule for one Promise. |
-| 8 | `produce` | act | `Witness` `Promise` | Retain an observation of a real run, with no verdict. |
+| 5 | `decide` | act | `Decision` `Candidate` `Gap` | Collapse a choice: record each subject's outcome and the grounds. Never mints. |
+| 6 | `mint` | act | `Promise` | Make a commitment from an accepted instruction (direct) or an accepted Candidate (via its Decision). |
+| 7 | `define` | act | `Oracle` | Make the judgment rule for one Promise. |
+| 8 | `produce` | act | `Witness` | Retain an observation of a real run, with no verdict. |
 | 9 | `refine` | act | `Witness` `Gap` `Candidate` | Add without changing a claim: a better Witness after an inconclusive verdict, or a sighting on a Gap or Candidate. |
-| 10 | `judge` | act | `Witness` | Apply the Promise's Oracle in force to one Witness: `holds`, `does_not_hold` or `inconclusive`. |
-| 11 | `assure` | transition | `Promise` | The Promise becomes `assured`. Not performed by anyone: the state change of a qualifying judgment. |
-| 12 | `revoke` | act | `Invariant` `Gap` `Candidate` `Decision` `Promise` `Oracle` `Witness` `Reference` | Withdraw a record, with a reason. History stays. |
+| 10 | `judge` | act | `Witness` `Promise` | Apply the Promise's Oracle to one Witness, once per (Witness, Oracle) pair: `holds`, `does_not_hold` or `inconclusive`. |
+| 11 | `assure` | transition | `Promise` | The Promise becomes `assured`. Not performed by anyone: the state change when a `holds` judgment becomes the latest standing one. |
+| 12 | `revoke` | act | `Invariant` `Gap` `Candidate` `Decision` `Promise` `Oracle` `Witness` `Reference` `Plan` | Withdraw a record or a Plan, with a reason. History stays. |
 | 13 | `supersede` | act | `Invariant` `Gap` `Candidate` `Decision` `Promise` `Oracle` `Reference` | Replace a record by a successor of the same noun. History stays. |
 
 ### Where the draft list and the rulings pulled apart, and how this draft resolves it
 
 1. **`assure` is one of the thirteen, but it is a state transition, not an act.** It keeps its name and its place
    in the list, with kind `transition`. No one performs it and it has no act node of its own; it is recorded as the
-   state change of the `judge` act whose verdict is `holds` (section 6). The twelve other verbs are performed acts.
+   state change of the `judge` act whose verdict is `holds` (section 6), or of the `revoke` after which a `holds`
+   judgment is again the latest standing one (section 5). The twelve other verbs are performed acts.
 2. **`refine` is wider than "a better Witness".** Automation must add evidence to an existing Candidate instead of
    writing a duplicate, and a Gap collects further observations. Both are refinement: they add, and change no claim.
    On a Witness, `refine` makes a new Witness linked to the earlier one (a Witness is immutable); on a Gap or
@@ -120,7 +157,7 @@ limit, never loosen it.
    depth and asserts nothing; a Plan only groups. "Only a verb makes something true" holds.
 4. **Witnesses are never superseded.** An observation happened; replacing it would rewrite history. An inadequate
    Witness is refined; a misattributed one is revoked with its reason.
-5. **A Gap is closed only by `decide`.** A judge's declared Gap is binding as a finding and the implementer cannot
+5. **A Gap is decided only by `decide`** (outcome `close` or `keep`). A judge's declared Gap is binding as a finding and the implementer cannot
    dismiss it. `revoke` remains available on a Gap (a mistaken declaration); a Gap revoked by someone other than its
    declarer is a drift signal, not an error.
 6. **v1's `challenge`, `test`, `promote`, `implement`, `bound`, `observe`, `surface`, `propose` and `plan`** map
@@ -133,7 +170,7 @@ limit, never loosen it.
 |---|---|---|
 | `store` | Reference | The tool stores the content (or pins the coordinate) and returns a Reference. |
 | `group` | Plan | Make a Plan with its first members. |
-| `regroup` | Plan | Add or remove members or `waits_on` links, or retire the Plan. |
+| `regroup` | Plan | Add or remove members or `waits_on` links. |
 | `relate` | an optional link | Add or remove `belongs_to` (scope to scope) or `about` (record to record). Never required up front. |
 | `amend` | the author's own act | Correct one's own record within the edit window. |
 
@@ -173,13 +210,13 @@ Every act, verb or structural, is a node with these fields:
 | `stipulate` | `basis` (optional) | `Invariant` | `authority` | A binding rule is needed in a scope. |
 | `declare` | `about`, `arose_in` (optional) | `Gap` | `authority` `orchestrator` `scout` `implementer` `validator` `advisor` `automation` | Whenever an absence, concern or uncertainty is met, even minor or tentative. |
 | `formulate` | `responds_to` | `Candidate` | `authority` `orchestrator` `scout` `implementer` `advisor` `automation` | Evidence suggests a response. Walk the scope first: refine or supersede an existing Candidate rather than duplicate it. |
-| `evaluate` | `Candidate` | `findings`, `outcome` | `orchestrator` `scout` `advisor` | A Candidate needs investigation before deciding. May be recorded `begun`, then `completed` (outcome `favourable`, `unfavourable`, `mixed`, `inconclusive`). |
-| `decide` | `considered` | `Decision`, `outcomes` | `authority` | A choice collapses: an accept or decline press, a Gap closed or tolerated, any recorded choice. |
+| `evaluate` | `Candidate` | `findings`, `outcome` | `orchestrator` `scout` `advisor` | A Candidate needs investigation before deciding. Recorded once the investigation is done, with its outcome. |
+| `decide` | `considered` | `Decision`, `outcomes` | `authority` | A choice collapses: a Candidate accepted or declined, a Gap closed or kept, any recorded choice. |
 | `mint` | `basis`, `from_candidate`, `addresses` | `Promise` | `authority` `orchestrator` | A commitment is accepted. Direct: basis is the instruction's Reference. Via a Candidate: basis is the Decision that accepted it. |
 | `define` | `Promise` | `Oracle` | `authority` `orchestrator` | Best before `produce`. A retrospective Oracle is ordinary and honest about its time. |
 | `produce` | `Promise`, `evidence` | `Witness` | `implementer` | A real run observed the Promise's subject. |
 | `refine` | `target`, `evidence` | `Witness`, `sighting` | `implementer` `automation` | After an inconclusive verdict; or a further independent sighting of a Gap or Candidate. |
-| `judge` | `Promise`, `Oracle`, `Witness` | `verdict` | `validator` | A Witness of the Promise exists and the Promise has an Oracle in force. |
+| `judge` | `Promise`, `Oracle`, `Witness` | `verdict` | `validator` | A Witness of the Promise exists, the Promise has an Oracle neither superseded nor revoked, and that (Witness, Oracle) pair is not yet judged. |
 | `revoke` | `target`, `basis` | `revoked` | `authority` `orchestrator` `automation` | After the edit window, to withdraw a record with its reason. |
 | `supersede` | `target`, `successor`, `basis` | `superseded` | `authority` `orchestrator` `automation` | After the edit window, to replace a record by a successor made first by its own verb. |
 
@@ -187,58 +224,77 @@ Every row also carries the envelope: actor, time, level, scope, session, and tur
 
 ### Transitions
 
-`—` in From means the act makes the record.
+`—` in From means the act makes the record. A `recomputed` row is the state that remains when the act a state rested
+on is revoked or superseded (below).
 
-| Noun | From | To | By |
-|---|---|---|---|
-| Invariant | — | `in_force` | `stipulate` |
-| Invariant | `in_force` | `superseded` | `supersede` |
-| Invariant | `in_force` | `revoked` | `revoke` |
-| Gap | — | `open` | `declare` |
-| Gap | `open` | `addressing` | `formulate` `mint` |
-| Gap | `open` `addressing` | `closed` | `decide` |
-| Gap | `open` `addressing` | `tolerated` | `decide` |
-| Gap | `open` `addressing` | `superseded` | `supersede` |
-| Gap | `open` `addressing` | `revoked` | `revoke` |
-| Candidate | — | `formulated` | `formulate` |
-| Candidate | `formulated` `evaluated` | `evaluating` | `evaluate` |
-| Candidate | `formulated` `evaluating` `evaluated` | `evaluated` | `evaluate` |
-| Candidate | `formulated` `evaluating` `evaluated` | `accepted` | `decide` |
-| Candidate | `formulated` `evaluating` `evaluated` | `declined` | `decide` |
-| Candidate | `formulated` `evaluating` `evaluated` | `superseded` | `supersede` |
-| Candidate | `formulated` `evaluating` `evaluated` | `revoked` | `revoke` |
-| Decision | — | `in_force` | `decide` |
-| Decision | `in_force` | `superseded` | `supersede` |
-| Decision | `in_force` | `revoked` | `revoke` |
-| Promise | — | `asserted` | `mint` |
-| Promise | `asserted` | `assuring` | `define` `produce` |
-| Promise | `assuring` | `assured` | `assure` |
-| Promise | `asserted` `assuring` `assured` | `superseded` | `supersede` |
-| Promise | `asserted` `assuring` `assured` | `revoked` | `revoke` |
-| Oracle | — | `in_force` | `define` |
-| Oracle | `in_force` | `superseded` | `supersede` |
-| Oracle | `in_force` | `revoked` | `revoke` |
-| Witness | — | `produced` | `produce` `refine` |
-| Witness | `produced` | `judged` | `judge` |
-| Witness | `produced` `judged` | `revoked` | `revoke` |
-| Reference | — | `current` | `store` |
-| Reference | `current` | `superseded` | `supersede` |
-| Reference | `current` | `revoked` | `revoke` |
+| Noun | From | To | By | Note |
+|---|---|---|---|---|
+| Invariant | — | `stipulated` | `stipulate` | |
+| Invariant | `stipulated` | `superseded` | `supersede` | |
+| Invariant | `stipulated` | `revoked` | `revoke` | |
+| Gap | — | `declared` | `declare` | |
+| Gap | `declared` | `decided` | `decide` | |
+| Gap | `decided` | `declared` | `revoke` `supersede` | recomputed |
+| Gap | `declared` `decided` | `superseded` | `supersede` | |
+| Gap | `declared` `decided` | `revoked` | `revoke` | |
+| Candidate | — | `formulated` | `formulate` | |
+| Candidate | `formulated` | `evaluated` | `evaluate` | |
+| Candidate | `formulated` `evaluated` | `decided` | `decide` | |
+| Candidate | `decided` | `evaluated` | `revoke` `supersede` | recomputed |
+| Candidate | `decided` | `formulated` | `revoke` `supersede` | recomputed |
+| Candidate | `formulated` `evaluated` `decided` | `superseded` | `supersede` | |
+| Candidate | `formulated` `evaluated` `decided` | `revoked` | `revoke` | |
+| Decision | — | `decided` | `decide` | |
+| Decision | `decided` | `superseded` | `supersede` | |
+| Decision | `decided` | `revoked` | `revoke` | |
+| Promise | — | `asserted` | `mint` | |
+| Promise | `asserted` | `assured` | `assure` | |
+| Promise | `assured` | `asserted` | `judge` | |
+| Promise | `assured` | `asserted` | `revoke` | recomputed |
+| Promise | `asserted` | `assured` | `revoke` | recomputed |
+| Promise | `asserted` `assured` | `superseded` | `supersede` | |
+| Promise | `asserted` `assured` | `revoked` | `revoke` | |
+| Oracle | — | `defined` | `define` | |
+| Oracle | `defined` | `superseded` | `supersede` | |
+| Oracle | `defined` | `revoked` | `revoke` | |
+| Witness | — | `produced` | `produce` `refine` | |
+| Witness | `produced` | `judged` | `judge` | |
+| Witness | `produced` `judged` | `revoked` | `revoke` | |
+| Reference | — | `stored` | `store` | |
+| Reference | `stored` | `superseded` | `supersede` | |
+| Reference | `stored` | `revoked` | `revoke` | |
+| Plan | — | `grouped` | `group` | |
+| Plan | `grouped` | `regrouped` | `regroup` | |
+| Plan | `grouped` `regrouped` | `revoked` | `revoke` | |
 
 Notes:
 
-- A Promise is **assuring** once it has both an Oracle in force and a live Witness: `produce` moves it when the
-  Oracle already exists, `define` when the Witness already exists. `refine` never moves it, because refining needs
-  a live Witness of the same Promise, which already made it assuring. Revoking that Witness later does not move
-  the Promise back (see open question 10).
-- **Decision outcomes.** For a Candidate: `accept` (to `accepted`), `decline` (to `declined`), `defer` and
-  `investigate` (recorded, no state change). For a Gap: `close` (to `closed`), `tolerate` (to `tolerated`),
-  `keep_open` (recorded, no state change). An accepted Candidate stays a Candidate after minting.
-- **Superseding or revoking an assured Promise, an in-force Decision or an Invariant cites a Decision as basis**
+- **A Promise is `assured` while its latest standing judgment is `holds`**, and `asserted` otherwise; `inconclusive`
+  judgments do not count, being verdicts on the Witness. `define` and `produce` never move a Promise. `holds`
+  moves it by the `assure` transition; a later `does_not_hold` moves it back by `judge`.
+- **An act a table does not allow is refused**, with the reason. Evaluating a `decided` Candidate, for example, is
+  refused; a later Decision may decide it again.
+- **A Candidate decided `accept` stays a Candidate after minting.** Minting from a Candidate needs its latest
+  standing outcome to be `accept`.
+- **Superseding or revoking an assured Promise, a Decision or an Invariant cites a Decision as basis**
   (guidance). An assured Promise is invariant behaviour: changing it is a superseding Promise, minted with its own
   Oracle and new Witnesses.
-- **Automation agents** revoke or supersede only Candidates still undecided (guidance). Indexes hide superseded and
-  revoked records; lineage keeps them.
+- **Automation agents** revoke or supersede only Candidates not yet `decided` (guidance). Indexes hide superseded
+  and revoked records; lineage keeps them.
+
+### The latest standing act wins
+
+- **A state comes from the last act that still stands.** An act stands unless the record it rests on is superseded
+  or revoked. A judgment rests on its Witness; a `decide` outcome on a subject rests on its Decision. Every other
+  act rests on nothing. `revoke` and `supersede` acts always stand: revoking a successor does not restore what it
+  superseded. So an assured Promise goes back to `asserted` when a later judgment says `does_not_hold`: that
+  judgment is now the latest.
+- **When an act stops standing, the states that rested on it are recomputed from what remains** (the `recomputed`
+  rows above). An assured Promise goes back to `asserted` when the Witness behind its assurance is revoked, unless
+  an earlier `holds` judgment still stands and is again the latest. A Candidate or Gap whose Decision is revoked, or
+  superseded by one that does not decide it, is again `evaluated`, `formulated` or `declared`.
+- **Recomputation goes one step and creates no work** (section 6, rules a and d).
+- Worked example: `contract/examples/11-latest-standing-act.yaml`.
 
 ### The edit window
 
@@ -253,25 +309,63 @@ Notes:
 
 ## 6. Judging and assurance
 
-- **A Promise is asserted when minted** ("we want this to be true"), **assuring** when an Oracle in force and a
-  live Witness exist, and **assured** when a judge finds that a Witness proves it.
-- **Judge is the same at every level.** Input: the Promise as stated, its Oracle in force, one Witness of that
-  Promise. Output: a verdict, with a reason.
-  - `holds`: the Witness shows the Promise holds within its scope. If the Promise is assuring, this act's state
-    change is `assure`.
+- **A Promise is asserted when minted** ("we want this to be true") and **assured** while its latest standing
+  judgment finds that a Witness proves it.
+- **Judge is the same at every level.** Input: the Promise as stated, its Oracle (neither superseded nor revoked),
+  one Witness of that Promise, and a (Witness, Oracle) pair not yet judged. Output: an outcome, the `verdict`, with
+  a reason.
+  - `holds`: the Witness shows the Promise holds within its scope. The Promise is `assured` (the `assure`
+    transition).
   - `does_not_hold`: a demonstrated failure within scope, shown by a concrete probe and cited as
-    `failure_evidence`. A hypothetical failure is never `does_not_hold`.
-  - `inconclusive`: a verdict on the Witness, not on the Promise. It leads to `refine`.
+    `failure_evidence`. A hypothetical failure is never `does_not_hold`. An assured Promise goes back to
+    `asserted`.
+  - `inconclusive`: a verdict on the Witness, not on the Promise; the Promise's state is unchanged. `refine` may
+    follow.
 - **Positive space only.** The judge decides the Promise as stated, within its scope. It does not widen the scope,
   add requirements, or try to prove a negative.
 - **Gaps are declared, never gating.** Conditions under which the Promise might not hold are declared as Gaps by
   separate `declare` acts with `arose_in` set to the judge act. Such a Gap is binding as a finding: recorded,
-  visible, and closed only by `decide`. It never blocks assurance, and it is not a Promise anyone asserted. Turning
+  visible, and decided only by `decide`. It never blocks assurance, and it is not a Promise anyone asserted. Turning
   it into work takes `formulate`, `decide` and `mint`, which belong to other roles.
 - **A judge holds `judge` and `declare` only.** It is free to be rigorous inside its scope, and it does not rule
   outside it.
-- **Contradiction.** A later `does_not_hold` on an assured Promise under the Oracle in force leaves it `assured`
-  and lists it in the `contradicted` query (section 10). See open question 5.
+
+### No recursive invalidation
+
+Agents have been seen trapped in a loop: rejudge, then a new Witness, then rejudge. These rules keep it from
+starting.
+
+a. **Recomputing a state never creates work.** No act is ever required or generated automatically by a state
+   change; agents decide what to do next.
+
+b. **One judgment per (Witness, Oracle) pair.** A rejudge happens only when the Witness or the Oracle is new.
+   Judging the same pair again is not an act: the tool refuses it (`already_judged`).
+
+c. **Only a `does_not_hold` verdict, or revoking the Witness behind the assurance, removes assurance.** Superseding
+   the Oracle or a Reference does not: the Promise stays assured until a newer judgment says otherwise. The query
+   `assured_under_earlier_oracle` lists such Promises.
+
+d. **Changes go one step and never cascade.** Revoking a Witness changes that Witness and its Promise's state,
+   nothing else. No revocation or supersession causes another.
+
+e. **Witnesses are never superseded.** A better observation is a new Witness made by `refine`, and that new Witness
+   is judged like any other.
+
+Worked example, `contract/examples/10-no-recursive-invalidation.yaml`:
+
+1. Promise P-1 is minted and Oracle O-1 defined. Witness W-1, a run at the first commit, is judged against O-1:
+   `holds`. P-1 is `assured`.
+2. O-2, a stricter Oracle, is defined and supersedes O-1. P-1 stays `assured` and nobody has to rejudge (c, a).
+3. W-2, a later run, is judged against O-2: `does_not_hold`, with its failure evidence. P-1 is `asserted`. W-1 and
+   its judgment stay as they were; no other record changes and no act is generated (a, d).
+4. The fix is domain work, not an act. W-3, a run after the fix, is judged against O-2: `inconclusive`, a verdict
+   on W-3 that leaves P-1 `asserted`. W-4, made by `refine` of W-3, is judged against O-2 like any other Witness:
+   `holds`. P-1 is `assured` again (e).
+5. An agent then tries to judge W-2 against O-2 again "because the fix landed". The tool refuses it:
+   `already_judged` (b). The pair was judged once; the fix is shown by W-4. The loop never starts.
+
+`contract/check.py` replays the example and checks that P-1 passes `asserted`, `assured`, `asserted`, `assured`,
+that every act changes only the records in its one-step reach, and that no act is ever generated.
 
 ## 7. Roles and drift
 
@@ -296,7 +390,7 @@ Notes:
   - a verb performed by a role that does not hold it (for example a validator deciding);
   - judging rounds per Promise;
   - Gaps declared per judgment;
-  - Gaps never dispositioned by `decide`;
+  - Gaps never decided;
   - above board level, a judge act by the producer of the judged Witness;
   - amendments per act, and acts amended near the end of their window;
   - sessions with acts but no board, or a board that does not match the session's brief.
@@ -347,10 +441,12 @@ Layers are where rules come from; levels are where records apply. They are separ
   conversions; a kept original is its own Reference, named as the conversion's `source`.
 - **Every conversion records what made it:** `tool`, `tool_version`, `converted_at`, `from_media_type`, and the
   `source` Reference where one is kept. A website Reference always carries one.
-- **References are immutable.** A change is a new Reference that supersedes the old one.
+- **References are immutable.** A change is a new Reference that supersedes the old one. Superseding a Reference
+  never removes assurance (section 6, rule c).
 - **References are depth, not law.** They never override a record that links them.
 - **Visibility** is an organisation-defined value on each Reference, default `shared`; Bedrock only guarantees it is
-  there.
+  there. References attached at a private scope, such as an operator's console, are visible only there; organisation
+  policy sets this.
 
 ## 10. Queries
 
@@ -362,37 +458,35 @@ Every noun is queryable by its states and its relations; the rest follow from th
 |---|---|
 | `by_state` | Records of one noun in the given states, optionally at a level or scope. |
 | `relations` | A record's links in and out, each with the act that made it. |
-| `binds` | Invariants in force for a scope and every scope it belongs to. |
-| `open_work` | Gaps open or addressing, Candidates undecided, Promises asserted or assuring, Witnesses not yet judged. |
-| `assured_by` | The judge act, Oracle and Witness that assured a Promise, and judge acts since. |
-| `unjudged_witnesses` | Witnesses still `produced`, with their Promise. |
-| `gaps_without_candidate` | Open Gaps with no Candidate responding and no Promise addressing. |
-| `contradicted` | Assured Promises with a later `does_not_hold` under the Oracle in force. |
+| `binds` | Invariants `stipulated` (neither superseded nor revoked) for a scope and every scope it belongs to. |
+| `open_work` | Gaps `declared` or last decided `keep`, Candidates `formulated` or `evaluated`, Promises `asserted`, Witnesses `produced`. |
+| `assured_by` | The standing judge act, Oracle and Witness behind an assured Promise, and judge acts since. |
+| `unjudged_witnesses` | Witnesses in state `produced`, with their Promise. |
+| `gaps_without_candidate` | Gaps `declared` or last decided `keep`, with no Candidate responding and no Promise addressing (a relation query). |
+| `assured_under_earlier_oracle` | Assured Promises whose standing `holds` judgment applied an Oracle since superseded. |
 | `plan_view` | A Plan's members, their states and their `waits_on` links. |
 | `how_did_we_get_here` | The path of acts backward from a record: Decisions, Candidates, Gaps, instructions, judgments. |
 | `what_changed_since` | Acts recorded after a cursor within the reader's reach; each agent keeps its own last-seen cursor. |
 | `transcript_behind` | An act's session, turn and tool-call pointers, for the transcript store to resolve. |
 | `drift` | The drift signals of section 7, counted. |
 
-## 11. Open questions
+## 11. Questions closed in review 1
 
-1. **Where Bedrock-level records live.** This draft assumes Bedrock's own small store, beside this repository; the
-   repository keeps no `situation/` of its own today.
-2. **Visibility of References attached at a private scope** (for example an operator's own workspace): an organisation value is
-   provided; whether those References are shared or restricted is not decided.
-3. **Identity.** Prefix plus a token unique per organisation store is assumed; how imported v1 records keep their
-   original coordinates (and v1's reused ids) is for the import design.
-4. **Two-phase acts.** Only `evaluate` has `begun` and `completed`. Whether `judge` needs the same, for long
-   judgments, is open.
-5. **Contradiction.** Should a later `does_not_hold` on an assured Promise move it back to `assuring`, or stay a
-   query as drafted?
-6. **Who may shorten the window and tighten limits.** Drafted as organisation-layer specialisations; the operator
-   may prefer Bedrock-only.
-7. **Derived links** (labels, similarity, links made by models used as functions) are not acts: they make nothing
-   true and are stored apart with function, version and confidence. Their shape is not specified here.
-8. **Plan completion.** A Plan has no completion statement; progress is read from members. Whether a Plan needs one
-   is open.
-9. **Roles.** The seven Bedrock roles and their verb sets are a first cut, to be tuned from the drift measures.
-10. **Backward moves.** No transition moves a Promise back from `assuring` (for example when its only Witness is
-    revoked) or a Gap back from `addressing` (when its only Candidate is declined). Whether states should be
-    recomputed from the live records instead of only moving forward is open.
+1. **Where Bedrock-level records live.** Bedrock has its own database.
+2. **Visibility of References attached at a private scope.** References attached at an operator's console are
+   visible only at the console; organisation policy sets this (section 9).
+3. **Identity.** Yes, as drafted: a prefix plus a token unique per organisation store. How imported v1 records keep
+   their original coordinates (and v1's reused ids) is settled in the import design.
+4. **Two-phase acts.** No. No act has phases, `evaluate` included; a state changes only when an act is done, and
+   work in progress shows on the agent's board.
+5. **Contradiction.** Answered by the latest-standing-act rule (section 5): a later `does_not_hold` moves an
+   assured Promise back to `asserted`.
+6. **Who may shorten the window and tighten limits.** Yes, the organisation layer (section 8).
+7. **Derived links** (labels, similarity, links made by models used as functions). Yes: they are not acts, make
+   nothing true, and are stored apart with function, version and confidence. Their shape comes with the scoring
+   work.
+8. **Plan completion.** No. A Plan has no completion condition; progress is read from its members.
+9. **Roles.** Yes: the seven Bedrock roles and their verb sets are a first cut, tuned from the drift measures.
+10. **Backward moves.** Answered by the latest-standing-act rule (section 5): states are recomputed from the acts
+    that still stand. An assured Promise goes back to `asserted` when the Witness behind its assurance is revoked;
+    recomputation goes one step and never cascades (section 6, rule d).

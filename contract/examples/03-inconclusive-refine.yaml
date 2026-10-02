@@ -100,5 +100,7 @@ expect:
     W-1: judged
     W-2: judged
     W-3: judged
-    G-1: addressing
+    G-1: declared
     C-1: formulated
+  trace:
+    P-1: [asserted, assured]

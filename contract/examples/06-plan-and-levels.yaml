@@ -1,5 +1,6 @@
 # A Plan groups Promises with an optional waits-on link; a board stands alone
-# and is later related to a repository scope; the Plan is retired.
+# and is later related to a repository scope; the Plan is withdrawn by revoke
+# when the scouting is done (a Plan has no completion condition).
 name: plan-and-levels
 defaults:
   protocol: 2.0.0-draft
@@ -22,10 +23,10 @@ acts:
      payload: {plan: PLAN-1, add_members: [P-2], add_waits: [{member: P-2, upon: P-1}]}}
   - {id: A-6, verb: relate, recorded_at: "2026-10-02T15:05:00Z",
      payload: {from: "scope:board/session:s-scout", to: "scope:repository/example-repository", relation: belongs_to}}
-  - {id: A-7, verb: regroup, recorded_at: "2026-10-02T18:00:00Z",
-     payload: {plan: PLAN-1, retire: true}}
+  - {id: A-7, verb: revoke, recorded_at: "2026-10-02T18:00:00Z",
+     payload: {target: PLAN-1, reason: The scouting is done; both reports are delivered.}}
 expect:
   states:
-    PLAN-1: retired
+    PLAN-1: revoked
     P-1: asserted
     P-2: asserted
