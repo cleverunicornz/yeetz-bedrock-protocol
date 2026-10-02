@@ -1,0 +1,104 @@
+# Judging rounds: an inconclusive verdict (about the Witness) leads to refine;
+# a refined Witness shows a demonstrated in-scope failure (does_not_hold); the
+# judge declares a Gap outside scope; automation agents add sightings to the
+# Gap and to a Candidate instead of writing duplicates; a later Witness holds.
+name: inconclusive-refine
+defaults:
+  protocol: 2.0.0-draft
+  level: repository
+  scope: example-repository
+  actor: {kind: agent, agent: agent-impl, role: implementer, principal: key-repo}
+  session: session:s-impl
+acts:
+  - id: A-1
+    verb: store
+    recorded_at: "2026-10-02T12:00:00Z"
+    payload:
+      reference: {id: R-1, title: Specification of the login rate limit, kind: artifact, media_type: text/markdown,
+                  digest: {sha256: "c111111111111111111111111111111111111111111111111111111111111111"},
+                  location: {stored: {store: references, key: r/1.md, version: v1}}}
+  - id: A-2
+    verb: mint
+    recorded_at: "2026-10-02T12:01:00Z"
+    actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+    session: session:s-operator
+    payload:
+      basis: {instruction: R-1}
+      promise: {id: P-1, title: Login attempts are limited per account, statement: The sixth failed login for one account within a minute is refused with 429., scope: The login endpoint.}
+  - id: A-3
+    verb: define
+    recorded_at: "2026-10-02T12:02:00Z"
+    actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+    session: session:s-operator
+    payload:
+      oracle: {id: O-1, title: Six failed logins probe, judges: P-1, inputs: Responses to six failed logins for one account within a minute., holds_when: Attempts one to five answer 401 and the sixth answers 429., fails_when: The sixth attempt answers anything other than 429., arrangement: mixed}
+  - {id: A-4, verb: store, recorded_at: "2026-10-02T13:00:00Z",
+     payload: {reference: {id: R-2, title: Probe output round 1, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "c222222222222222222222222222222222222222222222222222222222222222"},
+               location: {stored: {store: references, key: r/2.md, version: v1}}}}}
+  - {id: A-5, verb: produce, recorded_at: "2026-10-02T13:01:00Z",
+     payload: {witness: {id: W-1, title: Probe round 1, observes: P-1, observed_at: "2026-10-02T12:59:00Z", coordinate: commit 1111111, result: Only four attempts were sent before the session expired., evidence: [R-2]}}}
+  - id: A-6
+    verb: judge
+    recorded_at: "2026-10-02T13:10:00Z"
+    actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}
+    session: session:s-val
+    payload: {promise: P-1, oracle: O-1, witness: W-1, verdict: inconclusive, reason: W-1 sent four attempts; the Oracle needs six.}
+  - {id: A-7, verb: store, recorded_at: "2026-10-02T13:30:00Z",
+     payload: {reference: {id: R-3, title: Probe output round 2, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "c333333333333333333333333333333333333333333333333333333333333333"},
+               location: {stored: {store: references, key: r/3.md, version: v1}}}}}
+  - {id: A-8, verb: refine, recorded_at: "2026-10-02T13:31:00Z",
+     payload: {target: W-1, witness: {id: W-2, title: Probe round 2 with six attempts, observes: P-1, observed_at: "2026-10-02T13:29:00Z", coordinate: commit 1111111, result: The sixth attempt answered 401., evidence: [R-3]}}}
+  - id: A-9
+    verb: judge
+    recorded_at: "2026-10-02T13:40:00Z"
+    actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}
+    session: session:s-val
+    payload: {promise: P-1, oracle: O-1, witness: W-2, verdict: does_not_hold, reason: "The sixth attempt answered 401, not 429.", failure_evidence: [R-3]}
+  - id: A-10
+    verb: declare
+    recorded_at: "2026-10-02T13:41:00Z"
+    actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}
+    session: session:s-val
+    payload:
+      arose_in: A-9
+      gap: {id: G-1, title: Limit state is lost on a cache restart, statement: The counter lives in a cache; a restart would reset it. Not observed; outside the Promise's scope.}
+  - id: A-11
+    verb: formulate
+    recorded_at: "2026-10-02T14:00:00Z"
+    actor: {kind: agent, agent: agent-auto-1, role: automation, principal: key-automation}
+    session: session:s-auto-1
+    payload: {responds_to: [G-1], candidate: {id: C-1, title: Persist limit counters, hypothesis: Keeping counters in the database survives a cache restart.}}
+  - id: A-12
+    verb: refine
+    recorded_at: "2026-10-02T16:00:00Z"
+    actor: {kind: agent, agent: agent-auto-2, role: automation, principal: key-automation}
+    session: session:s-auto-2
+    payload: {target: G-1, sighting: {note: Seen again in a second session reviewing the login service.}}
+  - id: A-13
+    verb: refine
+    recorded_at: "2026-10-02T16:01:00Z"
+    actor: {kind: agent, agent: agent-auto-2, role: automation, principal: key-automation}
+    session: session:s-auto-2
+    payload: {target: C-1, sighting: {note: Independent sighting; the same remedy suggested from a second review.}}
+  - {id: A-14, verb: store, recorded_at: "2026-10-02T17:00:00Z",
+     payload: {reference: {id: R-4, title: Probe output round 3, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "c444444444444444444444444444444444444444444444444444444444444444"},
+               location: {stored: {store: references, key: r/4.md, version: v1}}}}}
+  - {id: A-15, verb: produce, recorded_at: "2026-10-02T17:01:00Z",
+     payload: {witness: {id: W-3, title: Probe round 3 after the fix, observes: P-1, observed_at: "2026-10-02T16:58:00Z", coordinate: commit 2222222, result: Attempts 1-5 answered 401; the sixth answered 429., evidence: [R-4]}}}
+  - id: A-16
+    verb: judge
+    recorded_at: "2026-10-02T17:10:00Z"
+    actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}
+    session: session:s-val
+    payload: {promise: P-1, oracle: O-1, witness: W-3, verdict: holds, reason: Six attempts; the sixth answered 429.}
+expect:
+  states:
+    P-1: assured
+    W-1: judged
+    W-2: judged
+    W-3: judged
+    G-1: addressing
+    C-1: formulated

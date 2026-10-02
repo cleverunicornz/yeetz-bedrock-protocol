@@ -47,7 +47,14 @@ Its content classes are:
   user level beside the composed `AGENTS.md`;
 - `organization/situation/`, the organization circle: the organization's own
   knowledge records, installed read-only at user level as `org/situation/`;
-- `migrations/`, one note per release transition.
+- `migrations/`, one note per release transition;
+- `contract/`, the draft Bedrock v2 contract: `contract/bedrock-v2.md` (prose),
+  `contract/bedrock-v2.yaml` (machine-readable), and
+  `contract/bedrock-v2.schema.json` (one act node), published under the
+  `contract` manifest key and not in force; beside them, unpublished,
+  `contract/examples/` (worked act sequences) and `contract/check.py`, the
+  check that the four agree. Run it before changing any of them:
+  `uv run --no-project --with pyyaml --with jsonschema python contract/check.py`.
 
 Organization-specific material lives only in `templates/organization.md`,
 `skills/`, and `organization/situation/`. This
@@ -148,6 +155,6 @@ would create circular authority; the exemption is deliberate.
 to the repository root: the namespace files under `files`, the root protocol
 block under `root_protocol`, the repository block template under
 `repository_block`, the organization template under `organization`, the
-skills under `skills`, and the organization circle's records under
-`organization_situation`. Consumers verify digests before copying. The manifest is
+skills under `skills`, the organization circle's records under
+`organization_situation`, and the draft v2 contract under `contract`. Consumers verify digests before copying. The manifest is
 data, not an application; it contains no logic.

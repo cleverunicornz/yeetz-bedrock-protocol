@@ -1,0 +1,39 @@
+# Judging against a superseded Oracle is refused: a judgment applies the
+# Promise's Oracle in force.
+name: judge-needs-oracle-in-force
+defaults:
+  protocol: 2.0.0-draft
+  level: repository
+  scope: example-repository
+  actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+  session: session:s-operator
+acts:
+  - {id: A-1, verb: store, recorded_at: "2026-10-02T09:00:00Z",
+     payload: {reference: {id: R-1, title: Instruction, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "0711111111111111111111111111111111111111111111111111111111111111"},
+               location: {stored: {store: references, key: r/1.md, version: v1}}}}}
+  - {id: A-2, verb: mint, recorded_at: "2026-10-02T09:01:00Z",
+     payload: {basis: {instruction: R-1}, promise: {id: P-1, title: Backups restore, statement: The latest backup restores into an empty database., scope: Nightly backups.}}}
+  - {id: A-3, verb: define, recorded_at: "2026-10-02T09:02:00Z",
+     payload: {oracle: {id: O-1, title: Restore check v1, judges: P-1, inputs: Restore log., holds_when: Restore exits 0., fails_when: Restore exits non-zero., arrangement: deterministic}}}
+  - {id: A-4, verb: define, recorded_at: "2026-10-02T09:03:00Z",
+     payload: {oracle: {id: O-2, title: Restore check v2, judges: P-1, inputs: Restore log and row counts., holds_when: Restore exits 0 and row counts match., fails_when: Restore fails or counts differ., arrangement: deterministic}}}
+  - {id: A-5, verb: supersede, recorded_at: "2026-10-02T09:04:00Z",
+     payload: {target: O-1, successor: O-2, reason: Exit status alone does not show the data restored.}}
+  - {id: A-6, verb: store, recorded_at: "2026-10-02T10:00:00Z",
+     payload: {reference: {id: R-2, title: Restore log, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "0722222222222222222222222222222222222222222222222222222222222222"},
+               location: {stored: {store: references, key: r/2.md, version: v1}}}}}
+  - {id: A-7, verb: produce, recorded_at: "2026-10-02T10:01:00Z",
+     payload: {witness: {id: W-1, title: Restore run, observes: P-1, observed_at: "2026-10-02T09:58:00Z", coordinate: backup 2026-10-02, result: Restore exited 0., evidence: [R-2]}}}
+  - id: A-8
+    verb: judge
+    recorded_at: "2026-10-02T10:10:00Z"
+    actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}
+    session: session:s-val
+    payload: {promise: P-1, oracle: O-1, witness: W-1, verdict: holds, reason: Exit 0.}
+expect:
+  refused: {act_index: 7, code: oracle_not_in_force}
+  states:
+    P-1: assuring
+    W-1: produced

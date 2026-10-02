@@ -1,0 +1,31 @@
+# A Plan groups Promises with an optional waits-on link; a board stands alone
+# and is later related to a repository scope; the Plan is retired.
+name: plan-and-levels
+defaults:
+  protocol: 2.0.0-draft
+  level: board
+  scope: session:s-scout
+  actor: {kind: agent, agent: agent-scout, role: scout, principal: key-repo}
+  session: session:s-scout
+acts:
+  - {id: A-1, verb: store, recorded_at: "2026-10-02T15:00:00Z",
+     payload: {reference: {id: R-1, title: Scout brief, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "f111111111111111111111111111111111111111111111111111111111111111"},
+               location: {stored: {store: references, key: r/1.md, version: v1}}}}}
+  - {id: A-2, verb: mint, recorded_at: "2026-10-02T15:01:00Z",
+     payload: {basis: {instruction: R-1}, promise: {id: P-1, title: List the stores the board writes, statement: "The report names every table the board writes, each with a source path.", scope: The board service source.}}}
+  - {id: A-3, verb: mint, recorded_at: "2026-10-02T15:02:00Z",
+     payload: {basis: {instruction: R-1}, promise: {id: P-2, title: Map the board hooks, statement: The report names every hook that reads or writes the board., scope: The agent image hooks.}}}
+  - {id: A-4, verb: group, recorded_at: "2026-10-02T15:03:00Z",
+     payload: {plan: {id: PLAN-1, title: Board scouting, members: [P-1], waits_on: []}}}
+  - {id: A-5, verb: regroup, recorded_at: "2026-10-02T15:04:00Z",
+     payload: {plan: PLAN-1, add_members: [P-2], add_waits: [{member: P-2, upon: P-1}]}}
+  - {id: A-6, verb: relate, recorded_at: "2026-10-02T15:05:00Z",
+     payload: {from: "scope:board/session:s-scout", to: "scope:repository/example-repository", relation: belongs_to}}
+  - {id: A-7, verb: regroup, recorded_at: "2026-10-02T18:00:00Z",
+     payload: {plan: PLAN-1, retire: true}}
+expect:
+  states:
+    PLAN-1: retired
+    P-1: asserted
+    P-2: asserted

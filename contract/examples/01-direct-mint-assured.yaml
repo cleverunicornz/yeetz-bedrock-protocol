@@ -1,0 +1,127 @@
+# A Promise minted directly from an accepted instruction (no Candidate, no
+# Decision), defined, produced, judged, and assured. The judge declares a Gap
+# while judging; the Gap is recorded and does not gate assurance.
+name: direct-mint-assured
+defaults:
+  protocol: 2.0.0-draft
+  level: repository
+  scope: example-repository
+  actor: {kind: agent, agent: agent-impl, role: implementer, principal: key-repo}
+  session: session:s-impl
+acts:
+  - id: A-1
+    verb: store
+    recorded_at: "2026-10-02T15:00:00Z"
+    actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+    session: session:s-operator
+    tool_call: tool-call:tc-1
+    payload:
+      reference:
+        id: R-1
+        title: Accepted instruction - export the weekly report as CSV
+        kind: artifact
+        media_type: text/markdown
+        digest: {sha256: "1111111111111111111111111111111111111111111111111111111111111111"}
+        location: {stored: {store: references, key: r/1.md, version: v1}}
+        visibility: shared
+  - id: A-2
+    verb: declare
+    recorded_at: "2026-10-02T15:01:00Z"
+    actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+    session: session:s-operator
+    payload:
+      gap: {id: G-1, title: The weekly report cannot be exported, statement: Users copy the report by hand.}
+  - id: A-3
+    verb: mint
+    recorded_at: "2026-10-02T15:02:00Z"
+    actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+    session: session:s-operator
+    payload:
+      basis: {instruction: R-1}
+      addresses: [G-1]
+      promise:
+        id: P-1
+        title: The weekly report exports as CSV
+        statement: Requesting the weekly report as CSV returns every row of the report as RFC 4180 CSV.
+        scope: The weekly report export endpoint.
+  - id: A-4
+    verb: define
+    recorded_at: "2026-10-02T15:03:00Z"
+    actor: {kind: agent, agent: agent-orch, role: orchestrator, principal: key-repo}
+    session: session:s-orch
+    payload:
+      oracle:
+        id: O-1
+        title: CSV export parity check
+        judges: P-1
+        inputs: The CSV returned for a fixture report, and the fixture's rows.
+        holds_when: The CSV parses as RFC 4180 and its rows equal the fixture's rows.
+        fails_when: The CSV does not parse, or any fixture row is missing or differs.
+        arrangement: deterministic
+        executable: tests/export_csv_test.py
+  - id: A-5
+    verb: store
+    recorded_at: "2026-10-02T15:20:00Z"
+    tool_call: tool-call:tc-9
+    payload:
+      reference:
+        id: R-2
+        title: Test log of the CSV export run at commit 0a1b2c3
+        kind: repository_file
+        media_type: text/plain
+        location: {repository: example-repository, commit: 0a1b2c3d4e5f60718293a4b5c6d7e8f901234567, path: logs/export.txt}
+  - id: A-6
+    verb: produce
+    recorded_at: "2026-10-02T15:21:00Z"
+    tool_call: tool-call:tc-10
+    payload:
+      witness:
+        id: W-1
+        title: CSV export run at 0a1b2c3
+        observes: P-1
+        observed_at: "2026-10-02T15:19:30Z"
+        coordinate: commit 0a1b2c3d4e5f60718293a4b5c6d7e8f901234567
+        result: 42 fixture rows exported; parser accepted the file; all rows equal.
+        evidence: [R-2]
+  - id: A-7
+    verb: judge
+    recorded_at: "2026-10-02T15:30:00Z"
+    actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}
+    session: session:s-val
+    payload: {promise: P-1, oracle: O-1, witness: W-1, verdict: holds, reason: Both legs hold on W-1.}
+  - id: A-8
+    verb: declare
+    recorded_at: "2026-10-02T15:31:00Z"
+    actor: {kind: agent, agent: agent-val, role: validator, principal: key-repo}
+    session: session:s-val
+    payload:
+      arose_in: A-7
+      about: [P-1]
+      gap: {id: G-2, title: Export under a storage outage is unobserved, statement: No run observed the export while storage was unavailable.}
+  - id: A-9
+    verb: store
+    recorded_at: "2026-10-02T15:32:00Z"
+    actor: {kind: agent, agent: agent-scout, role: scout, principal: key-repo}
+    session: session:s-scout
+    payload:
+      reference:
+        id: R-3
+        title: RFC 4180, stored markdown extraction
+        kind: website
+        media_type: text/markdown
+        digest: {sha256: "3333333333333333333333333333333333333333333333333333333333333333"}
+        location:
+          url: https://www.rfc-editor.org/rfc/rfc4180
+          retrieved_at: "2026-10-02T15:31:50Z"
+          stored: {store: references, key: r/3.md, version: v1}
+        conversion: {tool: web-extractor, tool_version: "1.4.0", converted_at: "2026-10-02T15:31:52Z", from_media_type: text/html}
+expect:
+  states:
+    R-1: current
+    R-2: current
+    R-3: current
+    G-1: addressing
+    G-2: open
+    P-1: assured
+    O-1: in_force
+    W-1: judged

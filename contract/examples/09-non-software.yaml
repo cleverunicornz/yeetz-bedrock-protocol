@@ -1,0 +1,32 @@
+# The same nouns and verbs outside software: an organisation-level Promise
+# about a research paper, judged by a person.
+name: non-software
+defaults:
+  protocol: 2.0.0-draft
+  level: organisation
+  scope: research
+  actor: {kind: human, agent: person-2, role: authority, principal: key-person-2}
+  session: session:s-person-2
+acts:
+  - {id: A-1, verb: decide, recorded_at: "2026-10-02T09:00:00Z",
+     payload: {decision: {id: D-1, title: Report cohort sizes, statement: The paper reports the sample size of every cohort., why: Reviewers could not judge the effect sizes.}}}
+  - {id: A-2, verb: mint, recorded_at: "2026-10-02T09:01:00Z",
+     payload: {basis: {decision: D-1}, promise: {id: P-1, title: Every cohort's sample size is reported, statement: The dataset section states the sample size of every cohort in the analysis., scope: "The paper's dataset section, draft 3."}}}
+  - {id: A-3, verb: define, recorded_at: "2026-10-02T09:02:00Z",
+     payload: {oracle: {id: O-1, title: Cohort table read-through, judges: P-1, inputs: The dataset section and the analysis cohort list., holds_when: Each listed cohort has a stated sample size., fails_when: Any listed cohort lacks a stated size., arrangement: human}}}
+  - {id: A-4, verb: store, recorded_at: "2026-10-02T12:00:00Z",
+     payload: {reference: {id: R-1, title: Draft 3 dataset section, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "0911111111111111111111111111111111111111111111111111111111111111"},
+               location: {stored: {store: references, key: r/1.md, version: v1}},
+               conversion: {tool: pdf-to-markdown, tool_version: "0.9.2", converted_at: "2026-10-02T11:59:00Z", from_media_type: application/pdf}}}}
+  - {id: A-5, verb: produce, recorded_at: "2026-10-02T12:01:00Z",
+     payload: {witness: {id: W-1, title: Draft 3 read-through, observes: P-1, observed_at: "2026-10-02T11:55:00Z", coordinate: draft 3, result: Five cohorts listed; five sizes stated., evidence: [R-1]}}}
+  - id: A-6
+    verb: judge
+    recorded_at: "2026-10-02T14:00:00Z"
+    actor: {kind: human, agent: person-3, role: validator, principal: key-person-3}
+    session: session:s-person-3
+    payload: {promise: P-1, oracle: O-1, witness: W-1, verdict: holds, reason: All five cohorts carry sizes.}
+expect:
+  states:
+    P-1: assured
