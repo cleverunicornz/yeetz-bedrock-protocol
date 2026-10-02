@@ -58,6 +58,16 @@ nouns, verbs, states, an envelope with lineage on every act — in prose
 (`contract/bedrock-v2.yaml`, `contract/bedrock-v2.schema.json`), with worked
 examples and a check that they agree. It is not in force; v1 above is.
 
+v2 teaches its verbs as skills: one skill per verb under
+`contract/skills/<verb>/SKILL.md` (the thirteen verbs: what each does, its
+inputs, outputs and refusals, and which roles perform it), and the role to
+verbs table in `contract/roles.md`. They carry the meaning only. How an
+organisation's agents run each verb — runtimes, tools, version control and
+review practice — is that organisation's policy, layered on top. The skills
+are meant to be installed under a root of their own, apart from any
+organisation's skills, once v2 is released; `contract/check.py` checks them
+against the contract.
+
 ## Layers
 
 This repository is the governance layer for the whole agent runtime. Agent
