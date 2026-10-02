@@ -198,7 +198,9 @@ refusals:
   already_judged: one judgment per (Witness, Oracle) pair
   edit_window_closed: after the edit window, only supersede or revoke
   not_author: only the author amends within the edit window
-  not_amendable: only an act that made a record is amended; an amendment of an amendment is followed back to it
+  not_amendable: only an act that made a record is amended, and only that record's fields (never its id); an amendment of an amendment is followed back to it
+  amend_cycle: following amend targets back to the making act never meets an act twice; an amendment never targets itself
+  duplicate_act_id: act ids are unique in the log
   wrong_basis: a Promise minted from a Candidate cites the Decision that accepted that Candidate
   bad_member: a Plan holds only Candidates and Promises, each once; a regroup removes only what the Plan holds; a waits_on link names only members
 
@@ -245,7 +247,7 @@ verbs:
     inputs: [basis, from_candidate, addresses]
     outputs: [Promise]
     roles: [authority, orchestrator]
-    when: A commitment is accepted, from an instruction or specification (direct) or from a Candidate, citing the Decision that accepted it.
+    when: A commitment is accepted. Direct - the basis is a Decision (the grounds) or a Reference holding the accepted instruction or specification. From a Candidate - the basis is the Decision that accepted it.
   define:
     kind: act
     acts_on: [Oracle]
@@ -305,7 +307,7 @@ structural_acts:
   group: {makes: Plan}
   regroup: {changes: Plan, does: [add or remove members, add or remove waits_on links], members: [Candidate, Promise], removes: only what the Plan holds}
   relate: {links: [scope, record], relations: [belongs_to, about], removable: true}
-  amend: {changes: the author's own act payload, of: an act that made a record (an amendment of an amendment is followed back to it), within: edit_window_seconds of the making act}
+  amend: {changes: the fields of the record the making act made; the projected record takes them, of: an act that made a record (an amendment of an amendment is followed back to it; a cycle is refused), within: edit_window_seconds of the making act}
 
 transitions:
   # from: [] means the record is made by the act. recompute: the state that
@@ -391,11 +393,14 @@ references:
   kinds:
     artifact: {location: [stored], note: an object in the versioned object store; agents upload and read through the tool and never handle store keys}
     repository_file: {location: [repository, commit, path], note: any repository, pinned to a commit}
-    website: {location: [url, retrieved_at, stored], note: a markdown extraction stored at the moment of reading; conversion provenance required}
+    website: {location: [url, retrieved_at, stored], note: a markdown extraction stored at the moment of reading; it always carries its conversion record, and its source is its url}
   first_slice_media_types: [text/markdown]
   pinning: every Reference is immutable; a change is a new Reference that supersedes it (artifact - store version and sha256 digest; repository_file - commit; website - stored extraction and retrieval time)
-  conversion: [tool, tool_version, converted_at, from_media_type, source]
-  visibility: an organisation-defined value; default shared
+  conversion:
+    required: [tool, tool_version, converted_at, from_media_type]
+    source: a source Reference only where an original is kept; a website's source is its url
+  visibility: an organisation-defined value, always present on a stored Reference; the tool fills the default when none is given
+  visibility_default: shared
 
 drift_signals:
   # Measured from the act log; never a block.

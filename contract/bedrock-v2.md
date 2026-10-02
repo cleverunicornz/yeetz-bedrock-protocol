@@ -58,8 +58,8 @@ Fields (limits in "Field limits" below; `?` marks optional):
   Candidate). Depth goes in References.
 - **Decision:** `title`, `statement`, `why`, `rejected?` (alternative and why), `revisit_when?`. Optional
   `considered` links and per-subject `outcomes`.
-- **Promise:** `title`, `statement`, `scope`, `residual?`. A `basis` (a Decision, or a Reference holding the
-  accepted instruction or specification); optional `from_candidate` and `addresses` (Gaps).
+- **Promise:** `title`, `statement`, `scope`, `residual?`. A `basis`: a Decision (the grounds), or a Reference
+  holding the accepted instruction or specification; optional `from_candidate` and `addresses` (Gaps).
 - **Oracle:** `title`, `judges` (one Promise), `inputs`, `holds_when`, `fails_when`, `arrangement` (`human`,
   `agent`, `deterministic`, `mixed`), `executable?`. A wholly human Oracle is complete as it stands.
 - **Witness:** `title`, `observes` (one Promise), `observed_at`, `coordinate` (what was run: a commit, a release, a
@@ -135,7 +135,7 @@ lower layer may tighten a limit, never loosen it.
 | 3 | `formulate` | act | `Candidate` | Derive a possible response from evidence. |
 | 4 | `evaluate` | act | `Candidate` | Investigate a Candidate; findings are References; the outcome feeds `decide`. |
 | 5 | `decide` | act | `Decision` `Candidate` `Gap` | Collapse a choice: record each subject's outcome and the grounds. Never mints. |
-| 6 | `mint` | act | `Promise` | Make a commitment from an accepted instruction (direct) or an accepted Candidate (via its Decision). |
+| 6 | `mint` | act | `Promise` | Make a commitment, directly (on a Decision or an accepted instruction) or from an accepted Candidate (via its Decision). |
 | 7 | `define` | act | `Oracle` | Make the judgment rule for one Promise. |
 | 8 | `produce` | act | `Witness` | Retain an observation of a real run, with no verdict. |
 | 9 | `refine` | act | `Witness` `Gap` `Candidate` | Add without changing a claim: a better Witness after an inconclusive verdict, or a sighting on a Gap or Candidate. |
@@ -174,7 +174,7 @@ lower layer may tighten a limit, never loosen it.
 | `group` | Plan | Make a Plan with its first members. |
 | `regroup` | Plan | Add or remove members or `waits_on` links. |
 | `relate` | an optional link | Add or remove `belongs_to` (scope to scope) or `about` (record to record). Never required up front. |
-| `amend` | the author's own act | Correct one's own record within the edit window. |
+| `amend` | the author's own record | Correct one's own record within the edit window: the projected record takes the corrected fields. |
 
 ## 5. Acts as nodes
 
@@ -214,7 +214,7 @@ Every act, verb or structural, is a node with these fields:
 | `formulate` | `responds_to` | `Candidate` | `authority` `orchestrator` `scout` `implementer` `advisor` `automation` | Evidence suggests a response. Walk the scope first: refine or supersede an existing Candidate rather than duplicate it. |
 | `evaluate` | `Candidate` | `findings`, `outcome` | `orchestrator` `scout` `advisor` | A Candidate needs investigation before deciding. Recorded once the investigation is done, with its outcome. |
 | `decide` | `considered` | `Decision`, `outcomes` | `authority` | A choice collapses: a Candidate accepted or declined, a Gap closed or kept, any recorded choice. |
-| `mint` | `basis`, `from_candidate`, `addresses` | `Promise` | `authority` `orchestrator` | A commitment is accepted. Direct: basis is the instruction's Reference. Via a Candidate: basis is the Decision that accepted it; citing any other Decision is refused (`wrong_basis`). |
+| `mint` | `basis`, `from_candidate`, `addresses` | `Promise` | `authority` `orchestrator` | A commitment is accepted. Direct: basis is a Decision (the grounds) or a Reference holding the accepted instruction. Via a Candidate: basis is the Decision that accepted it; citing any other Decision is refused (`wrong_basis`). |
 | `define` | `Promise` | `Oracle` | `authority` `orchestrator` | Best before `produce`. A retrospective Oracle is ordinary and honest about its time. |
 | `produce` | `Promise`, `evidence` | `Witness` | `implementer` | A real run observed the Promise's subject. |
 | `refine` | `target`, `evidence` | `Witness`, `sighting` | `implementer` `automation` | After an inconclusive verdict; or a further independent sighting of a Gap or Candidate. |
@@ -307,6 +307,12 @@ Notes:
   amended: amending an act that made none (`evaluate`, `judge`, `revoke`, `supersede`, `regroup`, `relate`, a
   sighting) is refused (`not_amendable`). Worked examples: `contract/examples/14-amend-of-amend-window.yaml`,
   `contract/examples/15-amend-needs-made-record.yaml`.
+- **An amendment changes only the record the act made.** Its `changes` name that record and its corrected fields;
+  the projected record takes them (`contract/examples/05-edit-window.yaml`). Another key, or a changed `id`, is
+  refused (`not_amendable`).
+- **Following the targets back never loops.** An amendment that targets itself, or a chain that meets an act twice,
+  is refused (`amend_cycle`; `contract/examples/16-amend-self-reference.yaml`). Act ids are unique in the log: a
+  second act with a recorded id is refused (`duplicate_act_id`; `contract/examples/17-duplicate-act-id.yaml`).
 - **The tool tells the author how long is left**, as `edit_window_closes_at` and seconds left, on the making act and
   on every amendment.
 - **After the window, only `supersede` or `revoke`.** An amendment after the window (`edit_window_closed`), or by
@@ -446,13 +452,14 @@ Layers are where rules come from; levels are where records apply. They are separ
   versioned) and returns a Reference. Agents never handle store keys.
 - **First slice: markdown only.** A stored artifact or extraction is `text/markdown`. Other media come later through
   conversions; a kept original is its own Reference, named as the conversion's `source`.
-- **Every conversion records what made it:** `tool`, `tool_version`, `converted_at`, `from_media_type`, and the
-  `source` Reference where one is kept. A website Reference always carries one.
+- **Every conversion records what made it:** `tool`, `tool_version`, `converted_at` and `from_media_type`, and a
+  `source` Reference only where an original is kept. A website Reference always carries its conversion record; its
+  source is its `url`.
 - **References are immutable.** A change is a new Reference that supersedes the old one. Superseding a Reference
   never removes assurance (section 6, rule c).
 - **References are depth, not law.** They never override a record that links them.
-- **Visibility** is an organisation-defined value on each Reference, default `shared`; Bedrock only guarantees it is
-  there. References attached at a private scope, such as an operator's console, are visible only there; organisation
+- **Visibility** is an organisation-defined value on each Reference, default `shared`. It is always present on a
+  stored Reference: when a `store` act gives none, the tool fills the default. References attached at a private scope, such as an operator's console, are visible only there; organisation
   policy sets this.
 
 ## 10. Queries

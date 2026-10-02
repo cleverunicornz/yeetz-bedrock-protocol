@@ -125,3 +125,7 @@ expect:
     P-1: assured
     O-1: defined
     W-1: judged
+  records:
+    # R-2 was stored without a visibility value; the projector fills the default.
+    R-2: {visibility: shared}
+    R-1: {visibility: shared}

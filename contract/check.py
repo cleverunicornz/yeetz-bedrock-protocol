@@ -406,6 +406,21 @@ def check_schema(schema: dict, contract: dict) -> None:
         fail("schema level examples != contract initial levels")
     if defs["reference"]["properties"]["kind"]["enum"] != list(contract["references"]["kinds"]):
         fail("schema reference kinds != contract reference kinds")
+    # A website Reference always carries its conversion record; a source
+    # Reference is optional (only where an original is kept).
+    refs = contract["references"]
+    conv = defs["reference"]["properties"]["conversion"]
+    if conv["required"] != refs["conversion"]["required"] or "source" in conv["required"]:
+        fail(f"schema conversion requires {conv['required']}, contract {refs['conversion']['required']}")
+    website = [b["then"] for b in defs["reference"]["allOf"]
+               if b["if"]["properties"]["kind"].get("const") == "website"]
+    if not website or "conversion" not in website[0].get("required", []):
+        fail("schema: a website Reference must require its conversion record")
+    # Visibility is always present on a stored Reference, defaulting as the contract says.
+    if "visibility" not in defs.get("stored_reference", {}).get("required", []):
+        fail("schema: stored_reference must require visibility")
+    if defs["reference"]["properties"]["visibility"].get("default") != refs["visibility_default"]:
+        fail("schema visibility default != contract visibility_default")
     if schema["properties"]["protocol"]["const"] != contract["bedrock"]:
         fail("schema protocol const != contract version")
     for verb in act_names:
@@ -466,6 +481,10 @@ def noun_of(record_id: str, contract: dict) -> str:
         return "Plan"
     raise Refused("unknown_id", f"unknown record id {record_id}")
 
+
+# The schema definition a projected (stored) record validates against, where it
+# differs from the payload definition.
+STORED_DEFS = {"Reference": "stored_reference"}
 
 MADE_KEYS = ("invariant", "gap", "candidate", "decision", "promise", "oracle", "witness", "reference", "plan")
 
@@ -570,8 +589,12 @@ class Projector:
         act itself when it made a record, the end of its amend chain when it
         is an amendment. Refused when that act made no record."""
         target = act
+        passed = {act["id"]}
         while target["verb"] == "amend":
             tid = target["payload"]["target_act"]
+            if tid in passed:
+                raise Refused("amend_cycle", f"{act['id']} reaches {tid} again; an amendment never targets itself")
+            passed.add(tid)
             found = next((a for a in self.log if a["id"] == tid), None)
             if found is None:
                 raise Refused("missing_input", f"{tid} is not a recorded act")
@@ -584,6 +607,8 @@ class Projector:
         saved = copy.deepcopy(
             (self.state, self.record, self.hist, self.author, self.subjects, self.judged, self.applied)
         )
+        if any(a["id"] == act["id"] for a in self.log):
+            raise Refused("duplicate_act_id", f"act {act['id']} is already recorded")
         try:
             self.log.append(act)
             self._apply(act)
@@ -712,6 +737,9 @@ class Projector:
             self.give(t, act, self.past[v])
         elif v == "store":
             self.create(p["reference"], "Reference", act)
+            self.record[p["reference"]["id"]].setdefault(
+                "visibility", self.c["references"]["visibility_default"]
+            )
         elif v == "group":
             plan = p["plan"]
             members: list[str] = []
@@ -757,6 +785,14 @@ class Projector:
             window = self.c["parameters"]["edit_window_seconds"]
             if (when(act) - when(target)).total_seconds() > window:
                 raise Refused("edit_window_closed", "the edit window has closed; supersede or revoke")
+            made = next(k for k in MADE_KEYS if isinstance(target["payload"].get(k), dict))
+            rid = target["payload"][made]["id"]
+            for key, fields in p["changes"].items():
+                if key != made or not isinstance(fields, dict):
+                    raise Refused("not_amendable", f"{target['id']} made a {made}; {key} is not amended")
+                if "id" in fields:
+                    raise Refused("not_amendable", "an amendment never changes a record's id")
+                self.record[rid] = merge(self.record[rid], fields)
         else:
             raise Refused("unknown_verb", v)
 
@@ -845,6 +881,14 @@ def check_examples(schema: dict, contract: dict) -> tuple[set[tuple], set[str]]:
                 if when({"recorded_at": act["edit_window_closes_at"]}) != closes:
                     fail(f"{name} act {i} ({act['id']}): edit_window_closes_at {act['edit_window_closes_at']}"
                          f" != {made['id']} recorded_at + window ({closes.isoformat()})")
+            # Every projected record, as amended and with defaults filled,
+            # validates as a stored record.
+            for rid, rec in proj.record.items():
+                rdef = STORED_DEFS.get(noun_of(rid, contract), noun_of(rid, contract).lower())
+                for err in jsonschema.Draft202012Validator(
+                    {"$ref": f"#/$defs/{rdef}", "$defs": schema["$defs"]}
+                ).iter_errors(rec):
+                    fail(f"{name} act {i} ({act['id']}): stored {rid}: {err.message}")
             # Rule 5a: recomputation never creates work.
             if len(proj.log) != i + 1:
                 fail(f"{name} act {i}: the log holds {len(proj.log)} acts after {i + 1} were submitted")
@@ -874,6 +918,11 @@ def check_examples(schema: dict, contract: dict) -> tuple[set[tuple], set[str]]:
                 fail(f"{name}: {rid} expected {st}, projected {proj.state.get(rid)}")
             if st in REMOVED_STATE_WORDS:
                 fail(f"{name}: {rid} expects removed state word {st}")
+        for rid, want_fields in expect.get("records", {}).items():
+            got = proj.record.get(rid, {})
+            for field, value in want_fields.items():
+                if got.get(field) != value:
+                    fail(f"{name}: {rid}.{field} is {got.get(field)!r}, expected {value!r}")
         for pid, want_plan in expect.get("plans", {}).items():
             got = proj.record.get(pid, {})
             got_plan = {"members": got.get("members"), "waits_on": got.get("waits_on", [])}

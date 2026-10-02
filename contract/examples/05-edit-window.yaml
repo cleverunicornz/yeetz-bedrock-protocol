@@ -1,5 +1,6 @@
 # The author corrects its own record within the 10-minute edit window; the
 # tool refuses a correction after the window closes (supersede or revoke then).
+# The accepted amendment changes the projected record.
 name: edit-window
 defaults:
   protocol: 2.0.0-draft
@@ -22,3 +23,6 @@ expect:
   refused: {act_index: 3, code: edit_window_closed}
   states:
     P-1: asserted
+  records:
+    # The amendment within the window applies; the refused one changes nothing.
+    P-1: {statement: Parsing an empty file returns an empty document without error., scope: The parser.}

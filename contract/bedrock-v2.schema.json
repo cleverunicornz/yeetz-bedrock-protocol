@@ -849,7 +849,8 @@
               "minLength": 1
             },
             "source": {
-              "$ref": "#/$defs/id_Reference"
+              "$ref": "#/$defs/id_Reference",
+              "description": "Only where an original is kept; a website's source is its location url."
             }
           },
           "required": [
@@ -858,13 +859,14 @@
             "converted_at",
             "from_media_type"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "Required on a website Reference: tool, tool_version, converted_at, from_media_type."
         },
         "visibility": {
           "type": "string",
           "minLength": 1,
           "default": "shared",
-          "description": "Organisation-defined value."
+          "description": "Organisation-defined value. Optional on a store act; always present on the stored Reference (the tool fills the default)."
         }
       },
       "required": [
@@ -1019,6 +1021,17 @@
             }
           }
         }
+      ]
+    },
+    "stored_reference": {
+      "description": "A Reference as stored and projected: visibility is always present.",
+      "allOf": [
+        {
+          "$ref": "#/$defs/reference"
+        }
+      ],
+      "required": [
+        "visibility"
       ]
     },
     "plan": {
@@ -1237,7 +1250,8 @@
               ],
               "additionalProperties": false
             }
-          ]
+          ],
+          "description": "A Decision (the grounds, or the Decision that accepted from_candidate) or a Reference holding the accepted instruction or specification."
         },
         "from_candidate": {
           "$ref": "#/$defs/id_Candidate",
@@ -1575,7 +1589,8 @@
         },
         "changes": {
           "type": "object",
-          "minProperties": 1
+          "minProperties": 1,
+          "description": "Keyed by the record the making act made (for example promise), with the corrected fields; never its id."
         }
       },
       "required": [

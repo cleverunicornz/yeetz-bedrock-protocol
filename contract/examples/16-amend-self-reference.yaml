@@ -1,0 +1,21 @@
+# An amendment that names itself as its target is refused, never followed: the
+# tool follows amend targets back to the act that made the record, and a
+# target it has already passed (here, the amendment itself) is a cycle.
+name: amend-self-reference
+defaults:
+  protocol: 2.0.0-draft
+  level: board
+  scope: session:s-impl
+  actor: {kind: agent, agent: agent-impl, role: implementer, principal: key-repo}
+  session: session:s-impl
+acts:
+  - {id: A-1, verb: declare, recorded_at: "2026-10-02T15:00:00Z",
+     payload: {gap: {id: G-1, title: The parser rejects empty input, statement: An empty file raises an error.}}}
+  - {id: A-2, verb: amend, recorded_at: "2026-10-02T15:02:00Z",
+     payload: {target_act: A-2, changes: {gap: {statement: An empty file raises a parse error.}}}}
+expect:
+  refused: {act_index: 1, code: amend_cycle}
+  states:
+    G-1: declared
+  records:
+    G-1: {statement: An empty file raises an error.}
