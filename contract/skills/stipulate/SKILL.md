@@ -49,3 +49,74 @@ Reference, a Witness or another Invariant the rule rests on.
 
 `contract/bedrock-v2.md` sections 3, 4 and 10; `contract/bedrock-v2.yaml`
 `verbs.stipulate` and `nouns.Invariant`.
+
+
+## Executable procedure
+
+Use the pinned receiver interface in `contract/tool-interface.md` and
+`contract/tool-interface.json`. The JSON below is the exact client argument
+shape after substitution. `${scope}` is the admitted scope; `${run}` is a
+unique replay prefix. `${step.field}` binds a field from an earlier successful
+response in `contract/tool-examples/calls.json`; these substitutions are
+performed before sending, never by the receiver. Never guess allocated IDs.
+
+The receiver stamps the actor and role; callers never supply
+actor, role, principal, allocated IDs or recording time. Preserve the verb's
+roles and meaning in the Contract table above.
+
+```json
+{
+  "op": "act",
+  "verb": "stipulate",
+  "level": "repository",
+  "scope": "${scope}",
+  "payload": {
+    "invariant": {
+      "title": "Fixture observations keep their source",
+      "rule": "Every fixture observation points to its evidence.",
+      "priority": "standard"
+    }
+  },
+  "request_id": "${run}:stipulate"
+}
+```
+
+The native request is `POST /v1/acts`. `${session}` is discovered caller
+lineage added by the client, not a client argument. Its required envelope is:
+
+```json
+{
+  "verb": "stipulate",
+  "level": "repository",
+  "scope": "${scope}",
+  "payload": {
+    "invariant": {
+      "title": "Fixture observations keep their source",
+      "rule": "Every fixture observation points to its evidence.",
+      "priority": "standard"
+    }
+  },
+  "request_id": "${run}:stipulate",
+  "session": "${session}"
+}
+```
+
+Retain `act_id`, `made`, `seq`, `recorded_at`, `changes` and any edit-window fields. Bind the returned `made` before any dependent call. Read back using this exact query:
+
+```json
+{
+  "op": "query",
+  "name": "record",
+  "params": {
+    "id": "${stipulate.made}"
+  }
+}
+```
+
+Query answers carry `watermark` and `head`; check that projection has passed
+the returned act sequence before interpreting the state. A lagging or absent
+projection is not a refusal. On an uncertain write outcome, retain and repeat
+the identical arguments and original request key; never allocate a new key
+for that intent. The pinned client suppresses native refusal messages and
+raises an error containing the refusal code. Readback and replay limits are
+listed in `contract/tool-interface.md`.

@@ -2,7 +2,7 @@
 # about a research paper, judged by a person.
 name: non-software
 defaults:
-  protocol: 2.0.0-draft
+  protocol: 2.0.0
   level: organisation
   scope: research
   actor: {kind: human, agent: person-2, role: authority, principal: key-person-2}

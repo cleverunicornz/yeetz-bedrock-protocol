@@ -64,3 +64,89 @@ retains what a run of it showed.
 
 `contract/bedrock-v2.md` sections 3, 4, 6 and 7; `contract/bedrock-v2.yaml`
 `verbs.produce` and `nouns.Witness`.
+
+
+## Executable procedure
+
+Use the pinned receiver interface in `contract/tool-interface.md` and
+`contract/tool-interface.json`. The JSON below is the exact client argument
+shape after substitution. `${scope}` is the admitted scope; `${run}` is a
+unique replay prefix. `${step.field}` binds a field from an earlier successful
+response in `contract/tool-examples/calls.json`; these substitutions are
+performed before sending, never by the receiver. Never guess allocated IDs.
+
+Resolve `evidence.made`, `mint.made` from successful preceding responses. The receiver stamps the actor and role; callers never supply
+actor, role, principal, allocated IDs or recording time. Preserve the verb's
+roles and meaning in the Contract table above.
+
+```json
+{
+  "op": "act",
+  "verb": "produce",
+  "level": "repository",
+  "scope": "${scope}",
+  "payload": {
+    "witness": {
+      "title": "Empty-list fixture observation",
+      "observes": "${mint.made}",
+      "observed_at": "${observed_at}",
+      "coordinate": "${fixture_commit}",
+      "result": "${probe_result}",
+      "evidence": [
+        "${evidence.made}"
+      ]
+    }
+  },
+  "request_id": "${run}:produce"
+}
+```
+
+The native request is `POST /v1/acts`. `${session}` is discovered caller
+lineage added by the client, not a client argument. Its required envelope is:
+
+```json
+{
+  "verb": "produce",
+  "level": "repository",
+  "scope": "${scope}",
+  "payload": {
+    "witness": {
+      "title": "Empty-list fixture observation",
+      "observes": "${mint.made}",
+      "observed_at": "${observed_at}",
+      "coordinate": "${fixture_commit}",
+      "result": "${probe_result}",
+      "evidence": [
+        "${evidence.made}"
+      ]
+    }
+  },
+  "request_id": "${run}:produce",
+  "session": "${session}"
+}
+```
+
+Retain `act_id`, `made`, `seq`, `recorded_at`, `changes` and any edit-window fields. Bind the returned `made` before any dependent call. Read back using this exact query:
+
+```json
+{
+  "op": "query",
+  "name": "record",
+  "params": {
+    "id": "${produce.made}"
+  }
+}
+```
+
+Query answers carry `watermark` and `head`; check that projection has passed
+the returned act sequence before interpreting the state. A lagging or absent
+projection is not a refusal. On an uncertain write outcome, retain and repeat
+the identical arguments and original request key; never allocate a new key
+for that intent. The pinned client suppresses native refusal messages and
+raises an error containing the refusal code. Readback and replay limits are
+listed in `contract/tool-interface.md`.
+
+`${observed_at}`, `${fixture_commit}` and `${probe_result}` are actual probe
+values supplied by the isolated replay. For real work use its actual run
+time, artifact coordinate, result and previously stored evidence References.
+A fixture observation is never a qualification of the deployed receiver.

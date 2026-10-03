@@ -5,7 +5,7 @@
 # (outcome close; state decided).
 name: candidate-path
 defaults:
-  protocol: 2.0.0-draft
+  protocol: 2.0.0
   level: repository
   scope: example-repository
   actor: {kind: agent, agent: agent-auto, role: automation, principal: key-automation}

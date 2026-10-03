@@ -2,7 +2,7 @@
 # refused, so an amendment can never resolve its target to the wrong act.
 name: duplicate-act-id
 defaults:
-  protocol: 2.0.0-draft
+  protocol: 2.0.0
   level: repository
   scope: example-repository
   actor: {kind: agent, agent: agent-auto, role: automation, principal: key-automation}

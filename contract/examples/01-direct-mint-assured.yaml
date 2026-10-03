@@ -3,7 +3,7 @@
 # while judging; the Gap is recorded and does not gate assurance.
 name: direct-mint-assured
 defaults:
-  protocol: 2.0.0-draft
+  protocol: 2.0.0
   level: repository
   scope: example-repository
   actor: {kind: agent, agent: agent-impl, role: implementer, principal: key-repo}

@@ -1,218 +1,143 @@
 {
-  "version": "2.0.0-draft",
-  "description": "Bedrock protocol published files, root protocol block, repository block template, organization template, skills, organization situation records, the draft v2 contract, the draft v2 verb skills and the draft v2 role table.",
+  "version": "2.0.0",
+  "description": "Bedrock 2.0 fixed contract, executable procedures and short instruction compiler; organisation is a separate paired package.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
-    "sha256": "38cc50b369a7d097ac4847f660ee506937f0d3d353e2d4d4ff6f33e4b11006fb"
+    "sha256": "7f005ce6bf18ff8b7d7721b46018ebf21497aa8d77ebf5b91ba0c1448607a55f"
   },
   "repository_block": {
     "path": "templates/repository-block.md",
-    "sha256": "a419ee8c2b069d94550a9af2b662c0cbb318ea648b0f1a062bc941783e83a347"
+    "sha256": "5beff204ef7da1180cf03dc5dbcbe169c87fff5c35547390cd8d68056dd8652a"
   },
-  "organization": {
-    "path": "templates/organization.md",
-    "sha256": "05f96134c25fb1dccabd2cd3d74357b2c77051495d81e9b00b0fd385e46f4ddd"
-  },
-  "files": [
-    {
-      "path": "situation/AGENTS.md",
-      "sha256": "5d46cca6dd1a07c3e8631865ab885bd219206ce9299b2f17473dc227c0389144"
-    },
-    {
-      "path": "situation/candidates/AGENTS.md",
-      "sha256": "7b796a8268d1e21b5fb23df24ec7e6f337032c01d53766d0a32116c549a1bace"
-    },
-    {
-      "path": "situation/decisions/AGENTS.md",
-      "sha256": "35cb11346c4b2c9543e73b9fd1a742ee175730f3a84aca7dd19a2d1dadceb9a2"
-    },
-    {
-      "path": "situation/gaps/AGENTS.md",
-      "sha256": "63077e0ed5ff06a08c9f384a16ea950d04c3532014687b59735284f1770c9d82"
-    },
-    {
-      "path": "situation/invariants/AGENTS.md",
-      "sha256": "0c1d2ff334e419d4c057dcf3bc615899bfbe9ad2824c4e1d2b1cc588b8bd7c4f"
-    },
-    {
-      "path": "situation/oracles/AGENTS.md",
-      "sha256": "752f67f269ec732e3546bc35e4634d41a95069ad461e9a3519b7743d1ef8a8d7"
-    },
-    {
-      "path": "situation/plans/AGENTS.md",
-      "sha256": "5b84a08ecc490f4fc666f1beb0dae70d7c06ffc66db8e0cd356144a24dce5051"
-    },
-    {
-      "path": "situation/promises/AGENTS.md",
-      "sha256": "4afbe91dd7a57f57092658795386477e6276d1287c21daac3cee7f3c0ce77188"
-    },
-    {
-      "path": "situation/references/AGENTS.md",
-      "sha256": "ec630fdd1350106c100fa5d40c57bdfa25c45f518f9f1ba25057f5af5396efcf"
-    },
-    {
-      "path": "situation/witnesses/AGENTS.md",
-      "sha256": "982ee98b719dd752599cf5a6585d18e604b849f598fa21f36cb2492b2e410cb5"
-    }
-  ],
-  "skills": [
-    {
-      "path": "skills/advisor/SKILL.md",
-      "sha256": "613e332b4fdf16cfac8718b8859371d8b456c7ef0a246e28f8084f13f170e672"
-    },
-    {
-      "path": "skills/board/SKILL.md",
-      "sha256": "2e4b5d3af99340302dbfde2e769984ba63e8f708cf80dbaec812a9d43957bf0f"
-    },
-    {
-      "path": "skills/ci-runners/SKILL.md",
-      "sha256": "13ee00dca2a0a1e8933cf3a360d6c0c1a51db237f28570d58d4402572d61bb86"
-    },
-    {
-      "path": "skills/environments/SKILL.md",
-      "sha256": "f514e5e425adca2e63b10408634202b24158662035bd0bf9e3d17107a9e989c5"
-    },
-    {
-      "path": "skills/git-etiquette/SKILL.md",
-      "sha256": "b268a017cc0d705816feef41f0cb1a5c98c1decf6b60a0575b09d517f131dd48"
-    },
-    {
-      "path": "skills/github/SKILL.md",
-      "sha256": "91a1696522650f7410f280cab19afa1791b97013e99f99c95a9dbbc507b2ed4c"
-    },
-    {
-      "path": "skills/implementer/SKILL.md",
-      "sha256": "9807bd2fd4d1c6346f49c7151ed25c94d306d7848b65d4735648b5bb038de482"
-    },
-    {
-      "path": "skills/multi-agent/SKILL.md",
-      "sha256": "9c7857f7084b1d8f5a0fb57d12ee21d6519c0e376dbe90001e2195bc2d276240"
-    },
-    {
-      "path": "skills/orchestrator/SKILL.md",
-      "sha256": "dd2c850c5b7ea92f962f43002d39295feaeda6746d7311a7d788cc1721fe6461"
-    },
-    {
-      "path": "skills/scout/SKILL.md",
-      "sha256": "da2857b666f7667dcbeaaa6c0b13ba2d7ed44dcd82c0ec5679f5538067fa576b"
-    },
-    {
-      "path": "skills/skill-observation/SKILL.md",
-      "sha256": "a88f4cb7901f6ae7dbccc0fb3a7e416412d8170d9fecf8cc29e7ac6bdd56b8cf"
-    },
-    {
-      "path": "skills/validator/SKILL.md",
-      "sha256": "204d6cb84a3f201b3c5d444e4e1526bb51b9c1ccb1608e93a5923189c0d2c566"
-    },
-    {
-      "path": "skills/workbench/SKILL.md",
-      "sha256": "485d1be588fa8f0eb131b6747db8bf60aa5df1c439aee7b08082385b2cf9c220"
-    }
-  ],
-  "organization_situation": [
-    {
-      "path": "organization/situation/context.md",
-      "sha256": "b3d67d7b5faee0318eaf5c79af13b5ab43ab7ea85e5ff6eb02c9224a20280b43"
-    },
-    {
-      "path": "organization/situation/decisions/D-000001-knowledge-in-records-skills-as-verbs.md",
-      "sha256": "80f6ddfb5cadf3e61e5644b583ec64808a94336fe3734a806d9d9474e24fa98b"
-    },
-    {
-      "path": "organization/situation/invariants/I-000001-github-through-mcp-tools.md",
-      "sha256": "65a812ddfaf7c9cc369aa7f2372b3b2dfe188909450bbdb64c5a0a342e7154af"
-    },
-    {
-      "path": "organization/situation/invariants/I-000002-ci-waited-in-background.md",
-      "sha256": "8961d330799ad1f9f4c5e810951ff2ce708b7e9563c70eb7258589faaf725d18"
-    },
-    {
-      "path": "organization/situation/invariants/I-000003-github-lists-read-to-end.md",
-      "sha256": "2f07c0ac13e4d4093cea097832e1dbbcbc09a192caeedc7d2f77db94cc7cc831"
-    },
-    {
-      "path": "organization/situation/references/I-000001/github-mcp-tools.md",
-      "sha256": "f17b930fb16a908de14f80270605f440f238f2872f671dce3b8f1311a356fcf6"
-    },
-    {
-      "path": "organization/situation/references/I-000002/github-ci-runs.md",
-      "sha256": "f71c99720efd46f5087e58c9a88013d46255411e702d0cf22bfa7cbbd2b4130e"
-    },
-    {
-      "path": "organization/situation/references/I-000003/github-mcp-results.md",
-      "sha256": "081d2199b91b01914c3fb7a0ea5ac3c2bcaf88e4516336f606fd5332078d95c4"
-    }
-  ],
   "contract": [
     {
       "path": "contract/bedrock-v2.md",
-      "sha256": "26b97befbea81b9423eb78859fa6194b5e7a8cabf5eb16e41bc5e456a4e9467f"
+      "sha256": "d03c3da912e14b996cb5f5115268b427be2435796d8cd06060f9a3bc1ad87165"
     },
     {
       "path": "contract/bedrock-v2.yaml",
-      "sha256": "e081fc33048afa7b422ec04723d02eceac3af7116cc8744d4f4a8068d7c9d7a3"
+      "sha256": "13eea576b95fec45b1957518201cef9a44cac99c7ebe58703aa615423482262c"
     },
     {
       "path": "contract/bedrock-v2.schema.json",
-      "sha256": "1b15f731caf226eeec5a6f96f9bb043e3d9827de9a8f2feeb0c9fc3ef238484e"
+      "sha256": "449b14a8d4d5adbf6ea89c5f51086588ee24a6da7c91a467af7e0c8a3b4f38a3"
+    },
+    {
+      "path": "contract/tool-interface.md",
+      "sha256": "0fb25da4fb59eb0e5ce83a971d3faf89ab1099ccc850e4a9437e3bcd75da1a27"
+    },
+    {
+      "path": "contract/tool-interface.json",
+      "sha256": "b3ffe7e294a30afc0f638850321d0ae27712b6e5e2243dabd5ff040a87416d23"
+    },
+    {
+      "path": "contract/stage0.md",
+      "sha256": "bd2069e571a81481ac8aebee4b38aa3bccdf51dd0a98f7342ab17cb5bcb56a2e"
     }
   ],
   "verb_skills": [
     {
       "path": "contract/skills/assure/SKILL.md",
-      "sha256": "42bf28733dfb38e8939ea6b0ec5430ef2422b09cae4e196a140228a04b1a343f"
+      "sha256": "3a5979ad0c6629336d7973fb6caceb263e7ed8a556dad9f8a14fb3f39e22ea5f"
     },
     {
       "path": "contract/skills/decide/SKILL.md",
-      "sha256": "2896bc97622ec69b5c70864c89d4623ddb6cd47360373ab8b470674b8aafccd1"
+      "sha256": "d114ab32180e8ae098ebfe29921a6c949bd5b48bc508f80de58437908ee7b20a"
     },
     {
       "path": "contract/skills/declare/SKILL.md",
-      "sha256": "71dee2a65663c596ca2fab4c891aa77fdebe0c9312b89633176c675dfe9d910b"
+      "sha256": "30118b78d0e95cedd4591f26c65e26e013064787f82d1000d260a88abd74a8ac"
     },
     {
       "path": "contract/skills/define/SKILL.md",
-      "sha256": "8b180de0c42d898b88ff82cd36afe48061937b41bc9ad33c2cc710b64b347391"
+      "sha256": "d02ef1ebd449937f30d1521cba08068759238c2bab92dde368dee73e4bb81d31"
     },
     {
       "path": "contract/skills/evaluate/SKILL.md",
-      "sha256": "0173c4d393e2c334a2ed3f082e423c0be200be7178b9ddf40264dcf0d77ecb07"
+      "sha256": "fe767f8d01b284ca582caf61921ac07dfdf3fb0f55ee5197e92b011b2580e437"
     },
     {
       "path": "contract/skills/formulate/SKILL.md",
-      "sha256": "f33c5d0413fd2b71ce8c0c31ccf0ed415f550ff80bc3da8b414599e8b1fa7324"
+      "sha256": "476873ac1b643f1b3e9e1ed7bb7317c5ccf81b1632200c4879d456a68d9285e2"
     },
     {
       "path": "contract/skills/judge/SKILL.md",
-      "sha256": "849e588556626f04914eaf13aad776d4edd439cc39d04268087a5eab0358fde8"
+      "sha256": "e623485ce705ffe587f50f5256698ba4a4e10d5ec7cf7aa2d1c26aff9986be8c"
     },
     {
       "path": "contract/skills/mint/SKILL.md",
-      "sha256": "c20d1f8a703c7c71911887ed6173ecba9c4a1d76422b64b1d068b0e5b4b78ff5"
+      "sha256": "447fa1e5cf5ffa7b65920af3bee81696467b33fdae2f22e3eadc6c612c36d8b1"
     },
     {
       "path": "contract/skills/produce/SKILL.md",
-      "sha256": "4fb1208519ba3896ab616ae841eb23e18833fb7bbbeb510f51463bf4ecde8e2e"
+      "sha256": "03da07bc94845409f93e8f305edf62efe55a7998b9de25afa7f762bf92bdf399"
     },
     {
       "path": "contract/skills/refine/SKILL.md",
-      "sha256": "13e2cd8bca09c592fecd9fc674d41994bc44301c670aa1976b9a2a710f12ce44"
+      "sha256": "3da5cfa799ffb114901660e74f7539d84f02c50d1fe69ade788c0aa7e6ee2371"
     },
     {
       "path": "contract/skills/revoke/SKILL.md",
-      "sha256": "b8f884010ffe9ef37fcd14d5b9bbd2facd0a2f5373b1e216edb2f2e4becbd282"
+      "sha256": "736ce84315bab221b5201e9875435a1cbc07aad2e8d2c48d871f141e45035f48"
     },
     {
       "path": "contract/skills/stipulate/SKILL.md",
-      "sha256": "d1ad1fbd4fd6640c428a6fcace8d7b322136f78c8ebbe1eaf8b6c1083d7701ce"
+      "sha256": "0c86cdebe9ca266918803409738bbd47c7fedb3ba1a7e47ec7cae0b673da370b"
     },
     {
       "path": "contract/skills/supersede/SKILL.md",
-      "sha256": "ca08e417d66075e085bf7c7880d7f3818dc011733889b801c3cec8527b214580"
+      "sha256": "81c406533057fc6670b744516db8d249c79f8a03082af962fe07d95e866a929f"
+    }
+  ],
+  "structural_skills": [
+    {
+      "path": "contract/structural-skills/amend/SKILL.md",
+      "sha256": "8342053c91379a9621d676e37a36c40853fa29abcfae56dbb62b9952472a0eb6"
+    },
+    {
+      "path": "contract/structural-skills/group/SKILL.md",
+      "sha256": "da2662c08d470216d1c694e5b07d5026de3ac615961690e892c452a5436cfee8"
+    },
+    {
+      "path": "contract/structural-skills/regroup/SKILL.md",
+      "sha256": "c0f40d2d9376e56ac018683a24227798fa002327332ec922ff24c9b8558bc207"
+    },
+    {
+      "path": "contract/structural-skills/relate/SKILL.md",
+      "sha256": "f5abb4c4a12d8ee5e25924d0a09cb56f1e2579e2dfc8f23f296c6ee02c282b2f"
+    },
+    {
+      "path": "contract/structural-skills/store/SKILL.md",
+      "sha256": "ad6d70117a75f5229d7b0c11e018bd6396c8ea76c14595142dc072f9b469679d"
     }
   ],
   "roles": {
     "path": "contract/roles.md",
     "sha256": "3c83b976dccec34995d6ba7a7cd7c7c79607760b678be1b1131c3e0f6d9149e4"
+  },
+  "compiler": [
+    {
+      "path": "compiler/check_sentences.py",
+      "sha256": "890450926bde5a57e07f84e9b9f150b69df64cf23ed76e66b411b136702d5c4c"
+    },
+    {
+      "path": "compiler/compile.py",
+      "sha256": "75ab264c303ba62faa34ea79715e144fc2d8133816d9a06e4602f33dd4c139e2"
+    },
+    {
+      "path": "compiler/generate_manifest.py",
+      "sha256": "be992699ec52f3e6940edc2d148be1c1ad2ae474491cb1df01e0d1e6f57f340b"
+    },
+    {
+      "path": "compiler/README.md",
+      "sha256": "d5da7f6e5a000f01578cf755be7e9c30195cd4b6909013583ab2138a47a1a84b"
+    }
+  ],
+  "distribution": {
+    "protocol_root": "bedrock",
+    "verb_skill_source": "contract/skills",
+    "structural_skill_source": "contract/structural-skills",
+    "installed_skill_root": "bedrock/skills",
+    "organisation_root": "org"
   }
 }

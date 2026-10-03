@@ -3,7 +3,7 @@
 # refused (bad_member), and the Plan keeps what the first regroup left.
 name: regroup-bad-removal
 defaults:
-  protocol: 2.0.0-draft
+  protocol: 2.0.0
   level: board
   scope: session:s-orch
   actor: {kind: agent, agent: agent-orch, role: orchestrator, principal: key-repo}

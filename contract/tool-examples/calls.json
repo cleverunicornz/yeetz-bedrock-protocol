@@ -1,0 +1,685 @@
+{
+  "format": 1,
+  "steps": [
+    {
+      "key": "instruction",
+      "role": "scout",
+      "arguments": {
+        "op": "reference.put",
+        "level": "repository",
+        "scope": "${scope}",
+        "reference": {
+          "title": "Accepted fixture specification",
+          "kind": "repository_file",
+          "repository": "cleverunicornz/yeetz-bedrock-protocol",
+          "commit": "${fixture_commit}",
+          "path": "contract/tool-examples/probe.py"
+        },
+        "request_id": "${run}:instruction"
+      },
+      "check": {
+        "state": "stored"
+      }
+    },
+    {
+      "key": "evidence",
+      "role": "scout",
+      "arguments": {
+        "op": "reference.put",
+        "level": "repository",
+        "scope": "${scope}",
+        "reference": {
+          "title": "Fixture probe source",
+          "kind": "repository_file",
+          "repository": "cleverunicornz/yeetz-bedrock-protocol",
+          "commit": "${fixture_commit}",
+          "path": "contract/tool-examples/probe.py"
+        },
+        "request_id": "${run}:evidence"
+      },
+      "check": {
+        "state": "stored"
+      }
+    },
+    {
+      "key": "stipulate",
+      "role": "authority",
+      "arguments": {
+        "op": "act",
+        "verb": "stipulate",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "invariant": {
+            "title": "Fixture observations keep their source",
+            "rule": "Every fixture observation points to its evidence.",
+            "priority": "standard"
+          }
+        },
+        "request_id": "${run}:stipulate"
+      },
+      "check": {
+        "state": "stipulated"
+      }
+    },
+    {
+      "key": "declare",
+      "role": "implementer",
+      "arguments": {
+        "op": "act",
+        "verb": "declare",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "gap": {
+            "title": "Fixture coverage is unobserved",
+            "statement": "The isolated replay has not yet observed an empty-list parse."
+          }
+        },
+        "request_id": "${run}:declare"
+      },
+      "check": {
+        "state": "declared"
+      }
+    },
+    {
+      "key": "amend",
+      "role": "implementer",
+      "arguments": {
+        "op": "act",
+        "verb": "amend",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "target_act": "${declare.act_id}",
+          "changes": {
+            "gap": {
+              "title": "Observed fixture coverage gap"
+            }
+          }
+        },
+        "request_id": "${run}:amend"
+      },
+      "check": {
+        "subject": "${declare.made}",
+        "state": "declared"
+      }
+    },
+    {
+      "key": "formulate",
+      "role": "scout",
+      "arguments": {
+        "op": "act",
+        "verb": "formulate",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "responds_to": [
+            "${declare.made}"
+          ],
+          "candidate": {
+            "title": "Run the empty-list probe",
+            "hypothesis": "Parsing the fixture empty JSON list produces an empty list."
+          }
+        },
+        "request_id": "${run}:formulate"
+      },
+      "check": {
+        "state": "formulated"
+      }
+    },
+    {
+      "key": "evaluate",
+      "role": "scout",
+      "arguments": {
+        "op": "act",
+        "verb": "evaluate",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "candidate": "${formulate.made}",
+          "outcome": "favourable",
+          "findings": [
+            "${evidence.made}"
+          ],
+          "note": "The fixture probe supplies a concrete result."
+        },
+        "request_id": "${run}:evaluate"
+      },
+      "check": {
+        "subject": "${formulate.made}",
+        "state": "evaluated",
+        "outcome": "favourable"
+      }
+    },
+    {
+      "key": "decide",
+      "role": "authority",
+      "arguments": {
+        "op": "act",
+        "verb": "decide",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "considered": [
+            "${declare.made}",
+            "${formulate.made}"
+          ],
+          "outcomes": [
+            {
+              "subject": "${formulate.made}",
+              "outcome": "accept"
+            },
+            {
+              "subject": "${declare.made}",
+              "outcome": "keep"
+            }
+          ],
+          "decision": {
+            "title": "Accept the empty-list fixture",
+            "statement": "Accept the Candidate within the isolated replay.",
+            "why": "The fixture source defines a deterministic observation."
+          }
+        },
+        "request_id": "${run}:decide"
+      },
+      "check": {
+        "state": "decided"
+      }
+    },
+    {
+      "key": "mint",
+      "role": "orchestrator",
+      "arguments": {
+        "op": "act",
+        "verb": "mint",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "basis": {
+            "decision": "${decide.made}"
+          },
+          "from_candidate": "${formulate.made}",
+          "addresses": [
+            "${declare.made}"
+          ],
+          "promise": {
+            "title": "The fixture empty list parses",
+            "statement": "Parsing [] produces an empty list.",
+            "scope": "The isolated fixture probe."
+          }
+        },
+        "request_id": "${run}:mint"
+      },
+      "check": {
+        "state": "asserted"
+      }
+    },
+    {
+      "key": "group",
+      "role": "scout",
+      "arguments": {
+        "op": "act",
+        "verb": "group",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "plan": {
+            "title": "Fixture qualification",
+            "members": [
+              "${mint.made}"
+            ],
+            "waits_on": []
+          }
+        },
+        "request_id": "${run}:group"
+      },
+      "check": {
+        "state": "grouped"
+      }
+    },
+    {
+      "key": "regroup",
+      "role": "scout",
+      "arguments": {
+        "op": "act",
+        "verb": "regroup",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "plan": "${group.made}",
+          "add_members": [
+            "${formulate.made}"
+          ]
+        },
+        "request_id": "${run}:regroup"
+      },
+      "check": {
+        "subject": "${group.made}",
+        "state": "regrouped"
+      }
+    },
+    {
+      "key": "relate",
+      "role": "scout",
+      "arguments": {
+        "op": "act",
+        "verb": "relate",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "from": "scope:repository/${scope}",
+          "to": "scope:organisation/fixture-org",
+          "relation": "belongs_to"
+        },
+        "request_id": "${run}:relate"
+      },
+      "check": {}
+    },
+    {
+      "key": "define",
+      "role": "orchestrator",
+      "arguments": {
+        "op": "act",
+        "verb": "define",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "oracle": {
+            "title": "Check the empty-list probe",
+            "judges": "${mint.made}",
+            "inputs": "The fixture probe result and pinned source.",
+            "holds_when": "The result is an empty list.",
+            "fails_when": "The result differs from an empty list.",
+            "arrangement": "deterministic"
+          }
+        },
+        "request_id": "${run}:define"
+      },
+      "check": {
+        "state": "defined"
+      }
+    },
+    {
+      "key": "produce",
+      "role": "implementer",
+      "arguments": {
+        "op": "act",
+        "verb": "produce",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "witness": {
+            "title": "Empty-list fixture observation",
+            "observes": "${mint.made}",
+            "observed_at": "${observed_at}",
+            "coordinate": "${fixture_commit}",
+            "result": "${probe_result}",
+            "evidence": [
+              "${evidence.made}"
+            ]
+          }
+        },
+        "request_id": "${run}:produce"
+      },
+      "check": {
+        "state": "produced"
+      }
+    },
+    {
+      "key": "judge",
+      "role": "validator",
+      "arguments": {
+        "op": "act",
+        "verb": "judge",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "promise": "${mint.made}",
+          "oracle": "${define.made}",
+          "witness": "${produce.made}",
+          "verdict": "holds",
+          "reason": "The fixture result is an empty list."
+        },
+        "request_id": "${run}:judge"
+      },
+      "check": {
+        "subject": "${mint.made}",
+        "state": "assured"
+      }
+    },
+    {
+      "key": "assure",
+      "role": "scout",
+      "arguments": {
+        "op": "query",
+        "name": "assured_by",
+        "params": {
+          "promise": "${mint.made}"
+        }
+      },
+      "check": {
+        "state": "assured",
+        "standing_act": "${judge.act_id}"
+      }
+    },
+    {
+      "key": "refine",
+      "role": "scout",
+      "arguments": {
+        "op": "act",
+        "verb": "refine",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "target": "${declare.made}",
+          "sighting": {
+            "note": "The independent fixture replay sees the same coverage need.",
+            "evidence": [
+              "${evidence.made}"
+            ]
+          }
+        },
+        "request_id": "${run}:refine"
+      },
+      "check": {
+        "subject": "${declare.made}",
+        "state": "decided"
+      }
+    },
+    {
+      "key": "refine_candidate",
+      "role": "scout",
+      "arguments": {
+        "op": "act",
+        "verb": "refine",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "target": "${formulate.made}",
+          "sighting": {
+            "note": "The same probe is usable by another reader.",
+            "evidence": [
+              "${evidence.made}"
+            ]
+          }
+        },
+        "request_id": "${run}:refine_candidate"
+      },
+      "check": {
+        "subject": "${formulate.made}",
+        "state": "decided"
+      }
+    },
+    {
+      "key": "refine_witness",
+      "role": "implementer",
+      "arguments": {
+        "op": "act",
+        "verb": "refine",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "target": "${produce.made}",
+          "witness": {
+            "title": "Repeated empty-list fixture observation",
+            "observes": "${mint.made}",
+            "observed_at": "${observed_at}",
+            "coordinate": "${fixture_commit}",
+            "result": "${probe_result}",
+            "evidence": [
+              "${evidence.made}"
+            ]
+          }
+        },
+        "request_id": "${run}:refine_witness"
+      },
+      "check": {
+        "state": "produced"
+      }
+    },
+    {
+      "key": "judge_inconclusive",
+      "role": "validator",
+      "arguments": {
+        "op": "act",
+        "verb": "judge",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "promise": "${mint.made}",
+          "oracle": "${define.made}",
+          "witness": "${refine_witness.made}",
+          "verdict": "inconclusive",
+          "reason": "This fixture verdict demonstrates an inconclusive round."
+        },
+        "request_id": "${run}:judge_inconclusive"
+      },
+      "check": {
+        "subject": "${mint.made}",
+        "state": "assured"
+      }
+    },
+    {
+      "key": "judgment_gap",
+      "role": "validator",
+      "arguments": {
+        "op": "act",
+        "verb": "declare",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "arose_in": "${judge.act_id}",
+          "about": [
+            "${mint.made}"
+          ],
+          "gap": {
+            "title": "Fixture deployment is unqualified",
+            "statement": "The isolated receiver uses test identity; deployment trust was not exercised."
+          }
+        },
+        "request_id": "${run}:judgment_gap"
+      },
+      "check": {
+        "state": "declared"
+      }
+    },
+    {
+      "key": "successor",
+      "role": "scout",
+      "arguments": {
+        "op": "act",
+        "verb": "declare",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "gap": {
+            "title": "Fixture runtime qualification is absent",
+            "statement": "Runtime registration and deployed tool invocation remain outside this isolated replay."
+          }
+        },
+        "request_id": "${run}:successor"
+      },
+      "check": {
+        "state": "declared"
+      }
+    },
+    {
+      "key": "supersede",
+      "role": "authority",
+      "arguments": {
+        "op": "act",
+        "verb": "supersede",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "target": "${judgment_gap.made}",
+          "successor": "${successor.made}",
+          "reason": "The successor states the observed limit more precisely."
+        },
+        "request_id": "${run}:supersede"
+      },
+      "check": {
+        "subject": "${judgment_gap.made}",
+        "state": "superseded"
+      }
+    },
+    {
+      "key": "revoke",
+      "role": "implementer",
+      "arguments": {
+        "op": "act",
+        "verb": "revoke",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "target": "${produce.made}",
+          "reason": "Withdraw the fixture observation to exercise assurance recomputation."
+        },
+        "request_id": "${run}:revoke"
+      },
+      "check": {
+        "subject": "${mint.made}",
+        "state": "asserted"
+      }
+    },
+    {
+      "key": "witness_successor",
+      "role": "implementer",
+      "arguments": {
+        "op": "act",
+        "verb": "produce",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "witness": {
+            "title": "Independent current fixture Witness",
+            "observes": "${mint.made}",
+            "observed_at": "${observed_at}",
+            "coordinate": "${fixture_commit}",
+            "result": "${probe_result}",
+            "evidence": [
+              "${evidence.made}"
+            ]
+          }
+        },
+        "request_id": "${run}:witness_successor"
+      },
+      "check": {
+        "state": "produced"
+      }
+    },
+    {
+      "key": "assure_after_revoke",
+      "role": "scout",
+      "arguments": {
+        "op": "query",
+        "name": "assured_by",
+        "params": {
+          "promise": "${mint.made}"
+        }
+      },
+      "check": {
+        "state": "asserted",
+        "standing_act": null
+      }
+    },
+    {
+      "key": "binds",
+      "role": "scout",
+      "arguments": {
+        "op": "query",
+        "name": "binds",
+        "params": {
+          "level": "repository",
+          "scope": "${scope}"
+        }
+      },
+      "check": {}
+    },
+    {
+      "key": "open_work",
+      "role": "scout",
+      "arguments": {
+        "op": "query",
+        "name": "open_work",
+        "params": {
+          "level": "repository",
+          "scope": "${scope}"
+        }
+      },
+      "check": {}
+    },
+    {
+      "key": "reference_get",
+      "role": "scout",
+      "arguments": {
+        "op": "reference.get",
+        "id": "${evidence.made}"
+      },
+      "check": {
+        "state": "stored"
+      }
+    }
+  ],
+  "negative_steps": [
+    {
+      "key": "duplicate_judge",
+      "role": "validator",
+      "arguments": {
+        "op": "act",
+        "verb": "judge",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "promise": "${mint.made}",
+          "oracle": "${define.made}",
+          "witness": "${refine_witness.made}",
+          "verdict": "holds",
+          "reason": "Duplicate pair fixture."
+        },
+        "request_id": "${run}:duplicate_judge"
+      },
+      "refusal": "already_judged"
+    },
+    {
+      "key": "missing_input",
+      "role": "scout",
+      "arguments": {
+        "op": "act",
+        "verb": "formulate",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "responds_to": [
+            "G-fixture-absent"
+          ],
+          "candidate": {
+            "title": "Invalid fixture",
+            "hypothesis": "No recorded basis exists."
+          }
+        },
+        "request_id": "${run}:missing_input"
+      },
+      "refusal": "missing_input"
+    },
+    {
+      "key": "supersede_witness",
+      "role": "authority",
+      "arguments": {
+        "op": "act",
+        "verb": "supersede",
+        "level": "repository",
+        "scope": "${scope}",
+        "payload": {
+          "target": "${refine_witness.made}",
+          "successor": "${witness_successor.made}",
+          "reason": "Invalid fixture."
+        },
+        "request_id": "${run}:supersede_witness"
+      },
+      "refusal": "transition_not_allowed"
+    }
+  ],
+  "note": "Role labels configure the isolated test receiver only; no role is a caller argument. This is a protocol fixture, not deployed authority."
+}

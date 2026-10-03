@@ -3,7 +3,7 @@
 # target it has already passed (here, the amendment itself) is a cycle.
 name: amend-self-reference
 defaults:
-  protocol: 2.0.0-draft
+  protocol: 2.0.0
   level: board
   scope: session:s-impl
   actor: {kind: agent, agent: agent-impl, role: implementer, principal: key-repo}

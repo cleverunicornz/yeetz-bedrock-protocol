@@ -1,10 +1,10 @@
 # Bedrock v2: the contract
 
-Version 2.0.0-draft. **Status: draft for review.** Nothing in this directory is in force. The v1 protocol
-(`templates/root-protocol.md` and the namespace files under `situation/`) stays in force, unchanged, until a release
-replaces it. The machine-readable form of this contract is `contract/bedrock-v2.yaml`; an act is validated by
-`contract/bedrock-v2.schema.json`; `contract/check.py` proves that the prose, the YAML, the schema and the worked
-examples in `contract/examples/` agree.
+Version 2.0.0. This release adopts the fixed v2 meanings. Authority changes
+only at a qualified scope; a release does not activate a runtime or migrate
+records. The source Decision is `migrations/2.0.0-draft-to-2.0.0.md`.
+`contract/check.py` checks prose, YAML, schema, worked examples and executable
+verb procedures together.
 
 ## 1. What Bedrock is
 

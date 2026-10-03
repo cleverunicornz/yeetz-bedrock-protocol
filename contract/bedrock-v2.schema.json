@@ -9,7 +9,7 @@
       "$ref": "#/$defs/id_act"
     },
     "protocol": {
-      "const": "2.0.0-draft"
+      "const": "2.0.0"
     },
     "verb": {
       "$ref": "#/$defs/verb"
