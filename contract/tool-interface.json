@@ -114,8 +114,13 @@
         "coordinate": "Private: cleverunicornz/runner-images@f4dad5ba6c989e5aaf0896b7dd1ccd8e49fd3c37#images/repo-pod/runtime/cvu_memory.py"
       }
     ],
-    "specimen_image": "ghcr.io/cleverunicornz/runner-images/repo-pod@sha256:57111d0efbf645bb72a21e9d040b947bec37ca29c3d9c85a175c16e239fa4eed",
-    "specimen_path": "/opt/cvu/runtime"
+    "specimen_image": "ghcr.io/cleverunicornz/runner-images/repo-pod@sha256:6a7dd9fc7f43e07819670d977d67f542e2ab07c12ea8114b508073373b0beeb3",
+    "specimen_path": "/opt/cvu/runtime",
+    "specimen_publication": {
+      "source_commit": "002b47a55421e44380f8d96d9d63b26f6695164d",
+      "run_url": "https://github.com/cleverunicornz/runner-images/actions/runs/37127669475",
+      "job_url": "https://github.com/cleverunicornz/runner-images/actions/runs/37127669475/job/111216200506"
+    }
   },
   "client_tool": {
     "server": "task-graph",
