@@ -32,6 +32,12 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Python for the pinned source runtime
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - name: Qualification toolchain
+        run: python -m pip install 'uv==0.12.17'
       - name: Materialize matching source bytes from pinned images
         run: python3 contract/tool-examples/materialize_images.py --output .qualification
       - name: Real pinned PostgreSQL AGE API client projector replay
