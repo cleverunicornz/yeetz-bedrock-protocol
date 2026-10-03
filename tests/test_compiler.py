@@ -98,6 +98,9 @@ class CompilerTests(unittest.TestCase):
     def test_folded_front_matter_description_sentence_duplication(self):
         self.check_duplicate_form("---\nname: operate\nverb: produce\ndescription: >-\n  Keep observations with\n  their coordinates.\n---\n# operate\nDifferent body.\n")
 
+    def test_markdown_front_matter_description_sentence_duplication(self):
+        self.check_duplicate_form("---\nname: operate\nverb: produce\ndescription: Keep **observations** with their coordinates.\n---\n# operate\nDifferent body.\n")
+
     def test_manifest_publishes_procedure_and_decision_dependencies(self):
         def paths(value):
             if isinstance(value, dict):

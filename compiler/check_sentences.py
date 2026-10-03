@@ -21,7 +21,7 @@ def sentences(text: str) -> set[str]:
                 elif len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
                     value = value[1:-1]
                 descriptions.append(value)
-        text = text[front.end():]
+        text = "\n\n".join([*descriptions, text[front.end():]])
     text = re.sub(r"^```.*?^```[^\n]*", "", text, flags=re.M | re.S)
     text = re.sub(r"^~~~.*?^~~~[^\n]*", "", text, flags=re.M | re.S)
     text = re.sub(r"<!--.*?-->", "", text, flags=re.S)
@@ -30,7 +30,7 @@ def sentences(text: str) -> set[str]:
     text = re.sub(r"[*_`]+", "", text)
     # A list item, heading or blank line starts a fresh prose block; soft
     # line wrapping inside one block does not change its sentence identity.
-    blocks = descriptions
+    blocks = []
     pending = []
     for line in text.splitlines():
         boundary = not line.strip() or bool(re.match(r"\s*(?:#{1,6}\s|[-+]\s|\d+[.)]\s|\|)", line))
