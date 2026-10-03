@@ -365,7 +365,7 @@
     },
     {
       "key": "refine",
-      "role": "scout",
+      "role": "implementer",
       "arguments": {
         "op": "act",
         "verb": "refine",
@@ -389,7 +389,7 @@
     },
     {
       "key": "refine_candidate",
-      "role": "scout",
+      "role": "implementer",
       "arguments": {
         "op": "act",
         "verb": "refine",
@@ -526,7 +526,7 @@
     },
     {
       "key": "revoke",
-      "role": "implementer",
+      "role": "authority",
       "arguments": {
         "op": "act",
         "verb": "revoke",
