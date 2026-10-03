@@ -50,3 +50,20 @@ are historical; the 2.0.0 manifest does not publish them.
 Regenerate publication digests with `python3 compiler/generate_manifest.py`.
 This does not release, install or activate anything. Scope migration and the
 six canary gates remain downstream, followed by the operator's Stage2/3 hold.
+
+## Repair an existing installation that omitted VERSION
+
+The published protocol and organisation 2.0.0 archives include VERSION beside
+their manifest. Older installers could validate the source VERSION and omit
+it when copying the package. Before using this compiler, the consumer's
+installer must verify its SAME original pinned archive/source and manifest,
+then copy that package's exact VERSION bytes into its existing installed root.
+Keep the existing package files, manifest and immutable pin unchanged; rerun
+their path/digest checks and compile again. Organisation PR17 owns this
+installer repair; protocol verification remains strict.
+
+Never reconstruct VERSION from a manifest string or a guessed version, copy
+it from another patch, relabel metadata or retag a release. If the original
+verified source lacks VERSION, the installation remains unsupported until
+its producer supplies a qualified package. Missing or mismatched VERSION
+continues to fail closed.

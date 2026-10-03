@@ -44,7 +44,7 @@
     },
     {
       "path": "contract/patch-compatibility-witness.md",
-      "sha256": "c1acb92c36eca917a9c68bf6707eb536647cb1a29eb2e8cb426fbcc6334cb1c9"
+      "sha256": "249d81b3979fbcfc6ba20d5c091bddf3a737ae61ce48463e05a52a1cc85ce06c"
     },
     {
       "path": "contract/gaps/SO-000117-skill-verb-declaration.md",
@@ -156,7 +156,7 @@
     },
     {
       "path": "migrations/2.0.0-to-2.0.1.md",
-      "sha256": "9ea9b239f8227eaf07922614a70bd7b16aba2a841a72013715b2b44b7b3fad1b"
+      "sha256": "5841544055fc77fb98d832fd149ec5cf354f0864f041bfde6e8b2880fa2c7256"
     }
   ],
   "roles": {
@@ -178,7 +178,7 @@
     },
     {
       "path": "compiler/README.md",
-      "sha256": "08d0290c409d63db92b343c85dae3d6e16e6b72eed903c47f2268122f3927de7"
+      "sha256": "5ef26852352795d8f1c918dcd763e52d48125299f13651f069f65ed6b5186f69"
     }
   ],
   "distribution": {

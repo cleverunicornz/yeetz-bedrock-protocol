@@ -42,3 +42,25 @@ No workbench calls ran after the stop order. This Witness does not claim
 independent review, Base/observer disposition, publication, canary,
 current-view qualification or live authority. Final candidate CI and review
 must precede guarded merge and forward publication.
+
+## Base review migration and workflow corrections
+
+The first Base review identified an omitted-VERSION migration path and
+coupled/custom CI selection. The selected guard was preserved. On the normal
+workbench, the actual published organisation 2.0.0 archive SHA256
+`6ac2f958b2770fb46d679c6f675afadab94feb73ddef54d78a0293dccbf01a5a`
+and manifest SHA256
+`d75352d45a1496d6d24b5645b55cbb07998c91a83774608d5e10f8260838aa5d`
+were verified. Omitting its installed VERSION produced exit1; restoring only
+that exact file from the SAME verified archive preserved the manifest and
+every published byte and allowed all three compilation modes. The complete
+probe exited0 in317ms. Documentation now assigns this repair to the consumer
+installer, with no guessed or relabelled VERSION.
+
+Both corrected workflow files parsed on the workbench in248ms. The native
+job was structurally identical to the previously qualified job. Native
+selection uses GitHub's workflow-level paths; the compiler job remains
+unconditional. The published-archive check is independent, restores a cache
+keyed by the immutable archive SHA, and still verifies the actual archive
+and manifest on every check. No archive-host failure suppresses the native
+or compiler job. Follow-up exact CI and review remain required.
