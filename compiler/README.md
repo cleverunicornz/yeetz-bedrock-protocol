@@ -1,7 +1,13 @@
 # Compilation and distribution contract
 
-The compiler consumes a protocol 2.0.0 package and a separate organisation
-2.0.0 package. The organisation manifest keeps `version`, `description`,
+The compiler independently admits stable protocol and organisation `2.0.x`
+packages under `migrations/2.0.0-to-2.0.1.md`. Each version is exactly
+`2.0.(0|[1-9][0-9]*)`, with no prerelease/build suffix or leading zeros,
+and must equal that package's own `VERSION`. Different patches may pair.
+Other major/minor lines and malformed values fail closed. Consumers still
+verify exact immutable source/archive/manifest pins; version compatibility
+does not authenticate packages or bypass path/digest checks.
+The organisation manifest keeps `version`, `description`,
 `organization`, `skills`, `organization_situation`; its organisation entry
 names `templates/organization.md`. That input is at most twelve lines,
 wrapped by `<bedrock-organization>`, and contains scope/skill pointers only.
@@ -28,7 +34,9 @@ manifest-listed protocol and organisation skills even for split output.
 Repository skills are supplied to the standalone duplication check in CI.
 Missing paths fail; omit the repository skill argument when none exist.
 
-The package root installs as `bedrock/`. Preserve `contract/`, `compiler/`
+The package root installs as `bedrock/`. Copy the exact `VERSION` and
+`manifest.json` beside the installed files for both `bedrock/` and `org/`.
+Preserve `contract/`, `compiler/`
 and template paths there, including every `tool_examples` and `migrations`
 entry. These hold the procedures' response-binding fixture and the authority
 Decision; they are digest-verified publication dependencies. Copy manifest `verb_skills` from
@@ -42,3 +50,20 @@ are historical; the 2.0.0 manifest does not publish them.
 Regenerate publication digests with `python3 compiler/generate_manifest.py`.
 This does not release, install or activate anything. Scope migration and the
 six canary gates remain downstream, followed by the operator's Stage2/3 hold.
+
+## Repair an existing installation that omitted VERSION
+
+The published protocol and organisation 2.0.0 archives include VERSION beside
+their manifest. Older installers could validate the source VERSION and omit
+it when copying the package. Before using this compiler, the consumer's
+installer must verify its SAME original pinned archive/source and manifest,
+then copy that package's exact VERSION bytes into its existing installed root.
+Keep the existing package files, manifest and immutable pin unchanged; rerun
+their path/digest checks and compile again. Organisation PR17 owns this
+installer repair; protocol verification remains strict.
+
+Never reconstruct VERSION from a manifest string or a guessed version, copy
+it from another patch, relabel metadata or retag a release. If the original
+verified source lacks VERSION, the installation remains unsupported until
+its producer supplies a qualified package. Missing or mismatched VERSION
+continues to fail closed.

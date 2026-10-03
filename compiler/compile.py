@@ -10,6 +10,9 @@ import sys
 
 from check_sentences import duplicates
 
+# migrations/2.0.0-to-2.0.1.md fixes this supported contract line in source.
+STABLE_PACKAGE_VERSION = re.compile(r"2\.0\.(?:0|[1-9][0-9]*)", re.ASCII)
+
 
 def entries(value):
     if isinstance(value, dict):
@@ -26,8 +29,12 @@ def entries(value):
 def verify(root: Path) -> tuple[dict, dict[str, Path]]:
     root = root.resolve()
     manifest = json.loads((root / "manifest.json").read_text())
-    if manifest.get("version") != "2.0.0":
-        raise ValueError(f"{root}: requires the paired 2.0.0 package")
+    version = manifest.get("version")
+    if not isinstance(version, str) or STABLE_PACKAGE_VERSION.fullmatch(version) is None:
+        raise ValueError(f"{root}: requires a stable 2.0.x package version")
+    packaged_version = (root / "VERSION").read_text().removesuffix("\n")
+    if packaged_version != version:
+        raise ValueError(f"{root}: manifest version does not match packaged VERSION")
     files = {}
     for entry in entries(manifest):
         name = entry["path"]

@@ -10,6 +10,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Untouched source baseline
         run: |
           baseline_dir=$(mktemp -d /tmp/bedrock-baseline.XXXXXX)
@@ -20,26 +21,32 @@ jobs:
         run: uv run --no-project --with pyyaml --with jsonschema python contract/check.py
       - name: Compiler and sentence boundary
         run: uv run --no-project --with pyyaml --with jsonschema python -m unittest discover -s tests -v
+      - name: Manifest regeneration agrees byte for byte
+        run: |
+          cp manifest.json /tmp/qualified-manifest.json
+          python3 compiler/generate_manifest.py
+          cmp manifest.json /tmp/qualified-manifest.json
       - name: Compile the finite three-part example
         run: |
           python3 compiler/compile.py --protocol-root . --org-root examples/organisation --repository examples/repository.json --output /tmp/compiled-AGENTS.md
           python3 compiler/check_sentences.py --agents /tmp/compiled-AGENTS.md --skills contract/skills contract/structural-skills examples/organisation/skills
           cmp /tmp/compiled-AGENTS.md examples/compiled-AGENTS.md
-  physical-replay:
-    runs-on: {group: ci, labels: automation-test-xl}
+  published-pair:
+    runs-on: {group: ci, labels: automation-test-s}
     steps:
-      - name: Exact protocol head
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-      - name: Python for the pinned source runtime
-        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Restore immutable published baseline
+        id: baseline
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
         with:
-          python-version: '3.12'
-      - name: Qualification toolchain
-        run: python -m pip install 'uv==0.12.17'
-      - name: Materialize matching source bytes from pinned images
-        run: python3 contract/tool-examples/materialize_images.py --output .qualification
-      - name: Real pinned PostgreSQL AGE API client projector replay
+          path: .qualification/bedrock-2.0.0.tar.gz
+          key: published-bedrock-5be7e35e8390d1332bb660ace4b6233eef4c12b892f87cd504241d4baef2b9c2
+      - name: Fetch baseline on cache miss
+        if: steps.baseline.outputs.cache-hit != 'true'
         run: |
-          uv run --python 3.12 --no-project --with pyyaml --with jsonschema --with 'psycopg[binary,pool]' --with boto3 --with testcontainers python contract/tool-examples/replay.py --graph-source .qualification/graph --client-source .qualification/client --fixture-commit "$(git rev-parse HEAD)"
+          mkdir -p .qualification
+          curl --fail --location --output .qualification/bedrock-2.0.0.tar.gz https://github.com/cleverunicornz/yeetz-bedrock-protocol/releases/download/v2.0.0/bedrock-2.0.0.tar.gz
+      - name: Verify archive digest and finite package compatibility
+        run: python3 tests/probe_published_archive.py .qualification/bedrock-2.0.0.tar.gz

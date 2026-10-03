@@ -259,7 +259,9 @@ def check_prose(text: str, contract: dict) -> None:
     if window != 600 or "10 minutes" not in text:
         fail(f"edit window: contract {window}s; prose must say 10 minutes")
 
-    version = (ROOT.parent / "VERSION").read_text().strip()
+    # Package patches do not change the fixed language/wire coordinate.
+    # migrations/2.0.0-to-2.0.1.md selects stable package line 2.0.x.
+    version = "2.0.0"
     if contract["bedrock"] != version:
         fail(f"version: contract {contract['bedrock']} != VERSION {version}")
     if f"Version {version}" not in text:
@@ -1136,6 +1138,8 @@ def check_manifest() -> None:
     if ROLES.is_file() and roles != {"path": str(ROLES.relative_to(ROOT.parent)), "sha256": digest(ROLES)}:
         fail(f"manifest: roles {roles} != {ROLES.relative_to(ROOT.parent)} with its digest")
     version = (ROOT.parent / "VERSION").read_text().strip()
+    if re.fullmatch(r"2\.0\.(?:0|[1-9][0-9]*)", version, re.ASCII) is None:
+        fail(f"manifest: unsupported stable package version {version!r}")
     if manifest.get("version") != version:
         fail(f"manifest: version {manifest.get('version')} != VERSION {version}")
 
