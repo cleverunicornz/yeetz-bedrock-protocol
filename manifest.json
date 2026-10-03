@@ -118,7 +118,7 @@
   "compiler": [
     {
       "path": "compiler/check_sentences.py",
-      "sha256": "890450926bde5a57e07f84e9b9f150b69df64cf23ed76e66b411b136702d5c4c"
+      "sha256": "99328ac8eec977f390de9e8bfdc68e332abc3a7ef26683586afb40801625b04b"
     },
     {
       "path": "compiler/compile.py",

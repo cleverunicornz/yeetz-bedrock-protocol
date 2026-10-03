@@ -24,6 +24,8 @@ def sentences(text: str) -> set[str]:
         if boundary and pending:
             blocks.append(" ".join(pending))
             pending = []
+        if re.match(r"\s*#{1,6}\s", line):
+            continue
         line = re.sub(r"^\s*(?:#{1,6}\s+|[-+]\s+|\d+[.)]\s+|>\s*)", "", line).strip()
         if line and not line.startswith("|") and line != "---":
             pending.append(line)
@@ -31,7 +33,7 @@ def sentences(text: str) -> set[str]:
         blocks.append(" ".join(pending))
     out = set()
     for block in blocks:
-        for part in re.split(r"(?<=[.!?])\s+(?=[A-Z\d\"'])", block):
+        for part in re.split(r"(?<=[.!?])\s+", block):
             normal = re.sub(r"\s+", " ", part).strip().casefold().rstrip(".!?")
             if normal:
                 out.add(normal)
@@ -59,9 +61,10 @@ def main() -> int:
         files.extend(path.rglob("SKILL.md") if path.is_dir() else [path])
     if not files:
         parser.error("no skills supplied")
-    for problem in duplicates(args.agents.read_text(), files):
+    problems = duplicates(args.agents.read_text(), files)
+    for problem in problems:
         print(problem, file=sys.stderr)
-    return 1 if duplicates(args.agents.read_text(), files) else 0
+    return 1 if problems else 0
 
 
 if __name__ == "__main__":
