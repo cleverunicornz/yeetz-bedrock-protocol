@@ -39,8 +39,55 @@
         "path": "ci/platform-postgres.env",
         "sha256": "88ffa5b7740841461660edee83c2d252d267e32620e6fb4f229790438e7e2459",
         "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#ci/platform-postgres.env"
+      },
+      {
+        "path": "src/taskgraph/admin.py",
+        "sha256": "c07c882057281b736306fa5a5cb35519abc448bc5a19661c4cd091d640e2aa24",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/admin.py"
+      },
+      {
+        "path": "src/taskgraph/contract.py",
+        "sha256": "5a5102178503f39294351a10b0451dc12bc1279a266806305439daeed91de69e",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/contract.py"
+      },
+      {
+        "path": "src/taskgraph/fold.py",
+        "sha256": "a1e172139478da885a7933d7e0c3552fcc904a69c08437cab45eef090ab195f8",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/fold.py"
+      },
+      {
+        "path": "src/taskgraph/redact.py",
+        "sha256": "dff0d28c761bd92acd35e66fc217d9e3c69b553b5e8d820b772a88665b442148",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/redact.py"
+      },
+      {
+        "path": "src/taskgraph/gitleaks_rules.json",
+        "sha256": "63fb7527ba1a58ec7fe8c39321665745a524bc325350381d68d57c82c3a4d98a",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/gitleaks_rules.json"
+      },
+      {
+        "path": "src/taskgraph/lineage_identity.py",
+        "sha256": "64050e0ce4406be71238eae35eff17603133e652fe92f400dc7e1459f8e9b4c7",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/lineage_identity.py"
+      },
+      {
+        "path": "sql/store.sql",
+        "sha256": "9391a5c93bcf7146398b11f06d7526c44623fe45fbc5972b089508ce708c48a3",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#sql/store.sql"
+      },
+      {
+        "path": "vendor/bedrock/contract/bedrock-v2.yaml",
+        "sha256": "e081fc33048afa7b422ec04723d02eceac3af7116cc8744d4f4a8068d7c9d7a3",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#vendor/bedrock/contract/bedrock-v2.yaml"
+      },
+      {
+        "path": "vendor/bedrock/contract/bedrock-v2.schema.json",
+        "sha256": "1b15f731caf226eeec5a6f96f9bb043e3d9827de9a8f2feeb0c9fc3ef238484e",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#vendor/bedrock/contract/bedrock-v2.schema.json"
       }
-    ]
+    ],
+    "specimen_image": "ghcr.io/cleverunicornz/task-graph/service@sha256:4090f9c0ebee5907a95aba8040980084b7c2b37c9f3060e7bce2c7a1ec4ca580",
+    "specimen_path": "/opt/taskgraph/lib/python3.12/site-packages/taskgraph"
   },
   "client": {
     "repository": "cleverunicornz/runner-images",
@@ -55,8 +102,20 @@
         "path": "images/repo-pod/runtime/cvu_task_graph_mcp.py",
         "sha256": "b45c57657c1ba32042d72ddbaefc050e794f8d24e83a187d60a8291b8023fcef",
         "coordinate": "Private: cleverunicornz/runner-images@f4dad5ba6c989e5aaf0896b7dd1ccd8e49fd3c37#images/repo-pod/runtime/cvu_task_graph_mcp.py"
+      },
+      {
+        "path": "images/repo-pod/runtime/cvu_board.py",
+        "sha256": "ef1428845050cc80ecc67b787c1275fbfc7a2ad589245bd2d08b18d2e4de20a1",
+        "coordinate": "Private: cleverunicornz/runner-images@f4dad5ba6c989e5aaf0896b7dd1ccd8e49fd3c37#images/repo-pod/runtime/cvu_board.py"
+      },
+      {
+        "path": "images/repo-pod/runtime/cvu_memory.py",
+        "sha256": "891323e154088eb3f3eb0a2deaf20e06694a250654b859556c496dd4203de173",
+        "coordinate": "Private: cleverunicornz/runner-images@f4dad5ba6c989e5aaf0896b7dd1ccd8e49fd3c37#images/repo-pod/runtime/cvu_memory.py"
       }
-    ]
+    ],
+    "specimen_image": "ghcr.io/cleverunicornz/runner-images/repo-pod@sha256:57111d0efbf645bb72a21e9d040b947bec37ca29c3d9c85a175c16e239fa4eed",
+    "specimen_path": "/opt/cvu/runtime"
   },
   "client_tool": {
     "server": "task-graph",
@@ -318,5 +377,14 @@
     "observed_at",
     "fixture_commit",
     "probe_result"
-  ]
+  ],
+  "dependencies": {
+    "postgres": {
+      "image": "ghcr.io/cleverunicornz/infra-v2/postgresql:18.6-vector0.8.6-age1.8.0-d49167596f1b-36557208073@sha256:61e0753b6f454b2ea4b782d04de49521cf27f59f7974309bcf689428b8beba3a",
+      "preload": "age"
+    },
+    "minio": {
+      "image": "docker.io/bitnamilegacy/minio:2025.7.23-debian-12-r5@sha256:6dabb4a2088c9a79908de3bc05f4586c23ad2182c8908e7e3acbf61c1467fb20"
+    }
+  }
 }

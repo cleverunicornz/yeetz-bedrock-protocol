@@ -24,8 +24,10 @@ failure for altered package bytes and copied records, and detection of a
 sentence repeated across wrapped Markdown and the paired organisation's
 skills. `compiler/check_sentences.py` rejects duplication in the actual
 compiled artifact. `contract/tool-examples/replay.py` runs the real pinned
-client/API/projector in an isolated PostgreSQL/AGE store, showing allocated-ID
-readbacks, original-key replay, expected refusals and standing assurance.
+client/API/projector in an isolated PostgreSQL/AGE store and versioned MinIO,
+showing allocated-ID readbacks, original-key replay, expected refusals,
+standing assurance and stored-Reference version/SHA readback. Consumed source
+bytes and specimen image provenance are checked independently.
 An independent Codex validator regenerates these checks before READY.
 
 ## Verification boundary

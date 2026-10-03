@@ -24,15 +24,15 @@
     },
     {
       "path": "contract/tool-interface.md",
-      "sha256": "6c54aeb84d660775be73f837f15fc50d4cb44413b93d60e3da5e2aff04e07829"
+      "sha256": "4faa1a16b442fbeb952170435b9ae584f67f6044c6c7a84e5cf8d6741f3ac5d1"
     },
     {
       "path": "contract/tool-interface.json",
-      "sha256": "b3ffe7e294a30afc0f638850321d0ae27712b6e5e2243dabd5ff040a87416d23"
+      "sha256": "80b51ed3eb44753413df17f3f94c7d6cb0fc772d378ef6a4a5e11cc03de7c978"
     },
     {
       "path": "contract/stage0.md",
-      "sha256": "cf6394ddce35dcd100df9a3e0447dbf2bde62252d924114c7966b6515dbbd5ae"
+      "sha256": "b149b41a781269ab0cbbf6fa5496a249ee5818cced45c48c40854d6b2fce7514"
     }
   ],
   "verb_skills": [
@@ -114,11 +114,15 @@
   "tool_examples": [
     {
       "path": "contract/tool-examples/calls.json",
-      "sha256": "0a5a7a3559ce08a657bc2a677b0bcfe043d043880258104f7b970a9cdf168570"
+      "sha256": "9b2f0d46bcf6f8a91f4a9154588a47b0d4f0ce2acf6e1be6a7272ebd40add746"
     },
     {
       "path": "contract/tool-examples/check_calls.py",
-      "sha256": "c6178eb626c75fe81785c392dc2def0413cebee404e22ba727a081a95e593ff5"
+      "sha256": "a11f9779cdfffaffa84b7d8a89725962ed152285a28ebfea7906609354c75b6a"
+    },
+    {
+      "path": "contract/tool-examples/materialize_images.py",
+      "sha256": "f955748f9b7fa80d98467f780af79906394858521d479490cdcdd30b50b41725"
     },
     {
       "path": "contract/tool-examples/probe.py",
@@ -126,7 +130,7 @@
     },
     {
       "path": "contract/tool-examples/replay.py",
-      "sha256": "f3ddea0ea09a167136eb730095b5409d7d8a1e8dd381f64bee5945566be9fe80"
+      "sha256": "0643a0fc9f6e8e3c6892ab36005861e0d4717d7437781ed1742273197b37924a"
     }
   ],
   "migrations": [

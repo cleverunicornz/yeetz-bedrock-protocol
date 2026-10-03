@@ -12,6 +12,7 @@ import hashlib
 import importlib
 import json
 import re
+import secrets
 import subprocess
 import sys
 import tempfile
@@ -30,10 +31,19 @@ FIXTURE = json.loads((ROOT / "tool-examples/calls.json").read_text())
 
 
 def pinned_source(root, spec):
-    actual = subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD"], text=True).strip()
-    if actual != spec["commit"]:
-        raise AssertionError(f"source pin {actual} != {spec['commit']}")
+    specimen = root / ".source-image.json"
+    receipt = None
+    if specimen.is_file():
+        receipt = json.loads(specimen.read_text())
+        if receipt.get("image") != spec["specimen_image"] or receipt.get("expected_source_commit") != spec["commit"]:
+            raise AssertionError("image specimen provenance differs from pinned interface")
+    else:
+        actual = subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD"], text=True).strip()
+        if actual != spec["commit"]:
+            raise AssertionError(f"source pin {actual} != {spec['commit']}")
     for entry in spec["files"]:
+        if receipt and entry["path"].startswith("ci/"):
+            continue
         digest = hashlib.sha256((root / entry["path"]).read_bytes()).hexdigest()
         if digest != entry["sha256"]:
             raise AssertionError(f"source digest differs: {entry['path']}")
@@ -78,7 +88,7 @@ def main():
     from taskgraph import admin, api, queries
     from taskgraph.identity import Stamp
     from taskgraph.projector import Projector
-    from taskgraph.references import References
+    from taskgraph.references import Bucket, References
     from taskgraph.store import Store
     import cvu_task_graph as client
     import cvu_task_graph_mcp as mcp_source
@@ -90,8 +100,12 @@ def main():
         raise AssertionError("actual native act fields differ from adapter")
     if set(queries.QUERIES) != set(INTERFACE["queries"]):
         raise AssertionError("actual fixed query names differ from adapter")
-    config = dict(line.split("=", 1) for line in (opts.graph_source / "ci/platform-postgres.env").read_text().splitlines()
-                  if line and not line.startswith("#"))
+    if (opts.graph_source / ".source-image.json").is_file():
+        config = {"IMAGE": INTERFACE["dependencies"]["postgres"]["image"],
+                  "PRELOAD": INTERFACE["dependencies"]["postgres"]["preload"]}
+    else:
+        config = dict(line.split("=", 1) for line in (opts.graph_source / "ci/platform-postgres.env").read_text().splitlines()
+                      if line and not line.startswith("#"))
     image = config["IMAGE"]
     preload = config["PRELOAD"]
     if "@sha256:" not in image or not re.fullmatch("[a-z_]+", preload):
@@ -102,8 +116,34 @@ def main():
                f"-c shared_preload_libraries='{preload}' -c max_connections=40")
     container = DockerContainer(image).with_exposed_ports(5432).with_kwargs(
         user="26:26", entrypoint="bash").with_command(["-c", command])
+    # Disposable fixture authentication is generated in memory and consumed
+    # directly by MinIO/boto3; it never appears in logs or source artifacts.
+    s3_access, s3_secret = "fixture" + secrets.token_hex(8), secrets.token_hex(32)
+    minio_image = INTERFACE["dependencies"]["minio"]["image"]
+    minio = (DockerContainer(minio_image).with_exposed_ports(9000)
+             .with_env("MINIO_ROOT_USER", s3_access).with_env("MINIO_ROOT_PASSWORD", s3_secret)
+             .with_kwargs(entrypoint="/opt/bitnami/minio/bin/minio")
+             .with_command(["server", "/tmp/protocol-reference-data"]))
     print("dependency_image=" + image)
-    with container, tempfile.TemporaryDirectory(prefix="bedrock-call-replay-") as scratch:
+    print("object_dependency_image=" + minio_image)
+    with container, minio, tempfile.TemporaryDirectory(prefix="bedrock-call-replay-") as scratch:
+        import boto3
+        from botocore.config import Config
+        s3 = boto3.client("s3", endpoint_url=f"http://{minio.get_container_host_ip()}:{minio.get_exposed_port(9000)}",
+                          aws_access_key_id=s3_access, aws_secret_access_key=s3_secret, region_name="us-east-1",
+                          config=Config(signature_version="s3v4", s3={"addressing_style": "path"}))
+        deadline = time.monotonic() + 90
+        while True:
+            try:
+                s3.list_buckets()
+                break
+            except Exception:
+                if time.monotonic() >= deadline:
+                    raise AssertionError("isolated MinIO did not become ready") from None
+                time.sleep(.25)
+        bucket_name = "protocol-references"
+        s3.create_bucket(Bucket=bucket_name)
+        s3.put_bucket_versioning(Bucket=bucket_name, VersioningConfiguration={"Status": "Enabled"})
         host, port = container.get_container_host_ip(), container.get_exposed_port(5432)
         base_dsn = f"host={host} port={port} dbname=postgres user=postgres"
         ready = False
@@ -137,7 +177,7 @@ def main():
         identity = FixtureIdentity()
         store = Store(dsn("api"))
         with ConnectionPool(dsn("api"), min_size=1, max_size=2) as pool:
-            app = api.App(store, pool, identity, References(store, {}))
+            app = api.App(store, pool, identity, References(store, {"references": Bucket(s3, bucket_name)}))
             server = api.serve(app, "127.0.0.1", 0)
             thread = threading.Thread(target=server.serve_forever, daemon=True)
             thread.start()
@@ -219,6 +259,15 @@ def main():
                     elif args["op"] == "reference.get":
                         if out["reference"] != args["id"] or out["state"] != checks["state"]:
                             raise AssertionError("Reference pointer roundtrip differs")
+                        if "sha256_of" in checks:
+                            expected = checks["sha256_of"]
+                            if out.get("markdown") != expected or out.get("sha256") != hashlib.sha256(expected.encode()).hexdigest():
+                                raise AssertionError("stored Reference markdown or SHA differs")
+                            if not out.get("version") or out["version"] == "null":
+                                raise AssertionError("stored Reference has no immutable object version")
+                            again = call(args)
+                            if (again["version"], again["sha256"], again["markdown"]) != (out["version"], out["sha256"], out["markdown"]):
+                                raise AssertionError("stored Reference readback changed its pinned version")
                     print("PASS call=" + step["key"])
                 for step in FIXTURE["negative_steps"]:
                     identity.role = step["role"]

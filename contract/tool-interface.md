@@ -102,11 +102,11 @@ explicitly unqualified for live platform trust. It does not read production
 credentials, modify a deployed database or activate a runtime.
 
 Physical replay receipts are printed only after the run passes. A not-run or
-failed scratch check remains a gap, never a qualification claim. Fixture
-repository-file References test pointer roundtrips, not stored object versions
-or S3 redaction. The qualified client source's broader mock suite covers its
-own transport properties; those Witnesses are not reused as native service
-qualification.
+failed scratch check remains a gap, never a qualification claim. The fixture
+tests repository-file pointers and a stored markdown Reference through real
+versioned MinIO, including byte, VersionId and SHA readback. Those tests do
+not qualify production object-store availability or redaction policy. The
+client's earlier mock Witnesses are not native service qualification.
 
 Upstream successor registration, original-key-only readback and runtime
 distribution remain dependencies:
@@ -134,3 +134,20 @@ authority/reconciliation receipt, explicit scope closure and snapshot
 watermark/head. Source compilation and native call replay qualify separately;
 no unsupported current-view call is invented in this baseline.
 Producer dependency: https://github.com/cleverunicornz/task-graph/issues/11#issuecomment-5969154679.
+
+## Heavy-CI image specimens
+
+The public protocol job cannot fetch private source repositories with its
+repository-scoped GITHUB_TOKEN. `materialize_images.py` instead reads existing
+immutable images through the runner's provided registry pull route. Images
+are pinned separately from expected source commits in tool-interface.json.
+Every consumed implementation, SQL and vendored semantic file must match its
+declared source SHA before replay. Original Git checkout qualification remains
+supported; image extraction does not create a fictitious Git HEAD.
+
+The image revision label is retained as its own provenance fact. Byte agreement
+is not a claim that an image's entire tree or revision equals the expected
+source commit. Dependency images and preload come from separately pinned
+configuration metadata. A mismatch fails before a native call; replace only
+with producer-confirmed matching image/source coordinates. No private source
+bytes or credential material are published in this repository.

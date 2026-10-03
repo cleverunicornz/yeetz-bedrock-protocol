@@ -1,7 +1,5 @@
 name: Protocol qualification
 on:
-  push:
-    branches: [feat/bedrock2-task-graph-design]
   pull_request:
 permissions:
   contents: read
@@ -34,20 +32,8 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-      - name: Pinned native working tree
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-        with:
-          repository: cleverunicornz/task-graph
-          ref: ac91c8dda973281bcc2b732886bdac8abf6ee30b
-          path: .qualification/native
-          persist-credentials: false
-      - name: Pinned client working tree
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-        with:
-          repository: cleverunicornz/runner-images
-          ref: f4dad5ba6c989e5aaf0896b7dd1ccd8e49fd3c37
-          path: .qualification/client
-          persist-credentials: false
+      - name: Materialize matching source bytes from pinned images
+        run: python3 contract/tool-examples/materialize_images.py --output .qualification
       - name: Real pinned PostgreSQL AGE API client projector replay
         run: |
-          uv run --no-project --with pyyaml --with jsonschema --with 'psycopg[binary,pool]' --with boto3 --with testcontainers python contract/tool-examples/replay.py --graph-source .qualification/native --client-source .qualification/client --fixture-commit "$(git rev-parse HEAD)"
+          uv run --python 3.12 --no-project --with pyyaml --with jsonschema --with 'psycopg[binary,pool]' --with boto3 --with testcontainers python contract/tool-examples/replay.py --graph-source .qualification/graph --client-source .qualification/client --fixture-commit "$(git rev-parse HEAD)"

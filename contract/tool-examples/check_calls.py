@@ -5,6 +5,7 @@ Used by contract/check.py. Physical source HTTP replay lives in replay.py.
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -118,8 +119,13 @@ def check(root, contract, schema, reference):
                 continue
             if args["op"] == "reference.put":
                 r = args["reference"]
-                payload = {"reference": {"title": r["title"], "kind": r["kind"], "media_type": "text/markdown",
-                    "visibility": "shared", "location": {k: r[k] for k in ("repository", "commit", "path")}}}
+                record = {"title": r["title"], "kind": r["kind"], "media_type": "text/markdown", "visibility": "shared"}
+                if r["kind"] == "repository_file":
+                    record["location"] = {k: r[k] for k in ("repository", "commit", "path")}
+                else:
+                    record["digest"] = {"sha256": hashlib.sha256(r["markdown"].encode()).hexdigest()}
+                    record["location"] = {"stored": {"store": "references", "key": "checker-local", "version": "checker-local"}}
+                payload = {"reference": record}
                 verb = "store"
             else:
                 verb, payload = args["verb"], copy.deepcopy(args["payload"])

@@ -42,6 +42,36 @@
       }
     },
     {
+      "key": "stored_artifact",
+      "role": "implementer",
+      "arguments": {
+        "op": "reference.put",
+        "level": "repository",
+        "scope": "${scope}",
+        "reference": {
+          "title": "Actual fixture observation",
+          "kind": "artifact",
+          "markdown": "Parsing the isolated fixture empty list produced an empty list.\n"
+        },
+        "request_id": "${run}:stored-artifact"
+      },
+      "check": {
+        "state": "stored"
+      }
+    },
+    {
+      "key": "stored_artifact_get",
+      "role": "scout",
+      "arguments": {
+        "op": "reference.get",
+        "id": "${stored_artifact.made}"
+      },
+      "check": {
+        "state": "stored",
+        "sha256_of": "Parsing the isolated fixture empty list produced an empty list.\n"
+      }
+    },
+    {
       "key": "stipulate",
       "role": "authority",
       "arguments": {
