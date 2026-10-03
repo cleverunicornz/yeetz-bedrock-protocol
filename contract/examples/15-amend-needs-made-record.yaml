@@ -4,7 +4,7 @@
 # evaluate.
 name: amend-needs-made-record
 defaults:
-  protocol: 2.0.0-draft
+  protocol: 2.0.0
   level: repository
   scope: example-repository
   actor: {kind: agent, agent: agent-scout, role: scout, principal: key-repo}

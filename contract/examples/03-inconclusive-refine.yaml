@@ -4,7 +4,7 @@
 # Gap and to a Candidate instead of writing duplicates; a later Witness holds.
 name: inconclusive-refine
 defaults:
-  protocol: 2.0.0-draft
+  protocol: 2.0.0
   level: repository
   scope: example-repository
   actor: {kind: agent, agent: agent-impl, role: implementer, principal: key-repo}

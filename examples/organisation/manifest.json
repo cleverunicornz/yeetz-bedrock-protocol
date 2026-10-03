@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "description": "Finite compiler fixture, no live organisation policy.",
+  "organization": {
+    "path": "templates/organization.md",
+    "sha256": "2c4a65ba4cfd289ae91024b9ad03d4e6bcb6c961a41e3874da1736fc97a37c0b"
+  },
+  "skills": [
+    {
+      "path": "skills/operate/SKILL.md",
+      "sha256": "97196536c56c53e4489f5d14c8f1257d7b0506a707cdb7d1085ee3c7e5d66cde"
+    }
+  ],
+  "organization_situation": []
+}

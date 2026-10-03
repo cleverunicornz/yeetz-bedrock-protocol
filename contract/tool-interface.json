@@ -1,0 +1,395 @@
+{
+  "format": 1,
+  "status": "source-pinned; deployment unqualified",
+  "graph": {
+    "repository": "cleverunicornz/task-graph",
+    "commit": "ac91c8dda973281bcc2b732886bdac8abf6ee30b",
+    "files": [
+      {
+        "path": "src/taskgraph/api.py",
+        "sha256": "0381636d7616b5e3011c97b625ea5c49367cfee4c691b32f6abb03b3db61a24c",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/api.py"
+      },
+      {
+        "path": "src/taskgraph/queries.py",
+        "sha256": "2d9922046e89e53668ad38935eeaebe092da206cf8662c0441df9aa5ccb126ae",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/queries.py"
+      },
+      {
+        "path": "src/taskgraph/store.py",
+        "sha256": "5ab8ba03566da051c78a425fc04364d0c097f1517abca53d0c19b564e08987c1",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/store.py"
+      },
+      {
+        "path": "src/taskgraph/projector.py",
+        "sha256": "098203c21189b60f05d539bd7dd43b9da9f9fef9eef7c786f28aa626727c9280",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/projector.py"
+      },
+      {
+        "path": "src/taskgraph/identity.py",
+        "sha256": "9c644249fc2f7e753333b40e9b0d9280cd6f7890c3b5a06d179f1426d32d8e3e",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/identity.py"
+      },
+      {
+        "path": "src/taskgraph/references.py",
+        "sha256": "d7c56f47767f9ef6eee58f5a8e61b05121c5fe1e93f58c9cb41c728c78b091f8",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/references.py"
+      },
+      {
+        "path": "ci/platform-postgres.env",
+        "sha256": "88ffa5b7740841461660edee83c2d252d267e32620e6fb4f229790438e7e2459",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#ci/platform-postgres.env"
+      },
+      {
+        "path": "src/taskgraph/admin.py",
+        "sha256": "c07c882057281b736306fa5a5cb35519abc448bc5a19661c4cd091d640e2aa24",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/admin.py"
+      },
+      {
+        "path": "src/taskgraph/contract.py",
+        "sha256": "5a5102178503f39294351a10b0451dc12bc1279a266806305439daeed91de69e",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/contract.py"
+      },
+      {
+        "path": "src/taskgraph/fold.py",
+        "sha256": "a1e172139478da885a7933d7e0c3552fcc904a69c08437cab45eef090ab195f8",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/fold.py"
+      },
+      {
+        "path": "src/taskgraph/redact.py",
+        "sha256": "dff0d28c761bd92acd35e66fc217d9e3c69b553b5e8d820b772a88665b442148",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/redact.py"
+      },
+      {
+        "path": "src/taskgraph/gitleaks_rules.json",
+        "sha256": "63fb7527ba1a58ec7fe8c39321665745a524bc325350381d68d57c82c3a4d98a",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/gitleaks_rules.json"
+      },
+      {
+        "path": "src/taskgraph/lineage_identity.py",
+        "sha256": "64050e0ce4406be71238eae35eff17603133e652fe92f400dc7e1459f8e9b4c7",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#src/taskgraph/lineage_identity.py"
+      },
+      {
+        "path": "sql/store.sql",
+        "sha256": "9391a5c93bcf7146398b11f06d7526c44623fe45fbc5972b089508ce708c48a3",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#sql/store.sql"
+      },
+      {
+        "path": "vendor/bedrock/contract/bedrock-v2.yaml",
+        "sha256": "e081fc33048afa7b422ec04723d02eceac3af7116cc8744d4f4a8068d7c9d7a3",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#vendor/bedrock/contract/bedrock-v2.yaml"
+      },
+      {
+        "path": "vendor/bedrock/contract/bedrock-v2.schema.json",
+        "sha256": "1b15f731caf226eeec5a6f96f9bb043e3d9827de9a8f2feeb0c9fc3ef238484e",
+        "coordinate": "Private: cleverunicornz/task-graph@ac91c8dda973281bcc2b732886bdac8abf6ee30b#vendor/bedrock/contract/bedrock-v2.schema.json"
+      }
+    ],
+    "specimen_image": "ghcr.io/cleverunicornz/task-graph/service@sha256:4090f9c0ebee5907a95aba8040980084b7c2b37c9f3060e7bce2c7a1ec4ca580",
+    "specimen_path": "/opt/taskgraph/lib/python3.12/site-packages/taskgraph"
+  },
+  "client": {
+    "repository": "cleverunicornz/runner-images",
+    "commit": "f4dad5ba6c989e5aaf0896b7dd1ccd8e49fd3c37",
+    "files": [
+      {
+        "path": "images/repo-pod/runtime/cvu_task_graph.py",
+        "sha256": "9e275a70728e5b9d833e81db0686fad64c82e8b655f77366b46dd23568bbe428",
+        "coordinate": "Private: cleverunicornz/runner-images@f4dad5ba6c989e5aaf0896b7dd1ccd8e49fd3c37#images/repo-pod/runtime/cvu_task_graph.py"
+      },
+      {
+        "path": "images/repo-pod/runtime/cvu_task_graph_mcp.py",
+        "sha256": "b45c57657c1ba32042d72ddbaefc050e794f8d24e83a187d60a8291b8023fcef",
+        "coordinate": "Private: cleverunicornz/runner-images@f4dad5ba6c989e5aaf0896b7dd1ccd8e49fd3c37#images/repo-pod/runtime/cvu_task_graph_mcp.py"
+      },
+      {
+        "path": "images/repo-pod/runtime/cvu_board.py",
+        "sha256": "ef1428845050cc80ecc67b787c1275fbfc7a2ad589245bd2d08b18d2e4de20a1",
+        "coordinate": "Private: cleverunicornz/runner-images@f4dad5ba6c989e5aaf0896b7dd1ccd8e49fd3c37#images/repo-pod/runtime/cvu_board.py"
+      },
+      {
+        "path": "images/repo-pod/runtime/cvu_memory.py",
+        "sha256": "891323e154088eb3f3eb0a2deaf20e06694a250654b859556c496dd4203de173",
+        "coordinate": "Private: cleverunicornz/runner-images@f4dad5ba6c989e5aaf0896b7dd1ccd8e49fd3c37#images/repo-pod/runtime/cvu_memory.py"
+      }
+    ],
+    "specimen_image": "ghcr.io/cleverunicornz/runner-images/repo-pod@sha256:6a7dd9fc7f43e07819670d977d67f542e2ab07c12ea8114b508073373b0beeb3",
+    "specimen_path": "/opt/cvu/runtime",
+    "specimen_publication": {
+      "source_commit": "002b47a55421e44380f8d96d9d63b26f6695164d",
+      "run_url": "https://github.com/cleverunicornz/runner-images/actions/runs/37127669475",
+      "job_url": "https://github.com/cleverunicornz/runner-images/actions/runs/37127669475/job/111216200506"
+    }
+  },
+  "client_tool": {
+    "server": "task-graph",
+    "name": "task-graph",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "type": "string",
+          "enum": [
+            "act",
+            "query",
+            "reference.put",
+            "reference.get"
+          ]
+        },
+        "verb": {
+          "type": "string"
+        },
+        "level": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "payload": {
+          "type": "object"
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "name": {
+          "type": "string"
+        },
+        "params": {
+          "type": "object"
+        },
+        "reference": {
+          "type": "object",
+          "properties": {
+            "commit": {
+              "type": "string"
+            },
+            "conversion": {
+              "type": "object"
+            },
+            "kind": {
+              "type": "string"
+            },
+            "markdown": {
+              "type": "string"
+            },
+            "media_type": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "repository": {
+              "type": "string"
+            },
+            "retrieved_at": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "visibility": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title"
+          ],
+          "additionalProperties": false
+        },
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "op"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "operations": {
+    "act": {
+      "method": "POST",
+      "path": "/v1/acts",
+      "required": [
+        "verb",
+        "level",
+        "scope",
+        "payload",
+        "session"
+      ],
+      "allowed": [
+        "verb",
+        "level",
+        "scope",
+        "payload",
+        "session",
+        "turn",
+        "tool_call",
+        "repository",
+        "batch",
+        "paseo_agent_id",
+        "harness",
+        "model",
+        "request_id"
+      ]
+    },
+    "query": {
+      "method": "POST",
+      "path": "/v1/query",
+      "required": [
+        "name"
+      ],
+      "allowed": [
+        "name",
+        "params"
+      ]
+    },
+    "reference.put": {
+      "method": "POST",
+      "path": "/v1/references",
+      "required": [
+        "title",
+        "level",
+        "scope",
+        "session"
+      ],
+      "allowed": [
+        "title",
+        "markdown",
+        "kind",
+        "media_type",
+        "visibility",
+        "url",
+        "retrieved_at",
+        "conversion",
+        "repository",
+        "commit",
+        "path",
+        "level",
+        "scope",
+        "session",
+        "turn",
+        "tool_call",
+        "batch",
+        "paseo_agent_id",
+        "harness",
+        "model",
+        "request_id",
+        "act_repository"
+      ]
+    },
+    "reference.get": {
+      "method": "GET",
+      "path": "/v1/references/{id}"
+    }
+  },
+  "client_fields": {
+    "act": [
+      "op",
+      "verb",
+      "level",
+      "scope",
+      "repository",
+      "payload",
+      "request_id"
+    ],
+    "query": [
+      "op",
+      "name",
+      "params"
+    ],
+    "reference.put": [
+      "op",
+      "level",
+      "scope",
+      "reference",
+      "request_id"
+    ],
+    "reference.get": [
+      "op",
+      "id"
+    ]
+  },
+  "client_required": {
+    "act": [
+      "verb",
+      "level",
+      "scope",
+      "payload"
+    ],
+    "query": [
+      "name"
+    ],
+    "reference.put": [
+      "level",
+      "scope",
+      "reference"
+    ],
+    "reference.get": [
+      "id"
+    ]
+  },
+  "lineage": [
+    "session",
+    "turn",
+    "tool_call",
+    "repository",
+    "paseo_agent_id",
+    "harness",
+    "model"
+  ],
+  "receiver_fields": [
+    "id",
+    "act_id",
+    "protocol",
+    "recorded_at",
+    "edit_window_closes_at",
+    "actor",
+    "source",
+    "occurred_at"
+  ],
+  "queries": [
+    "by_state",
+    "relations",
+    "binds",
+    "open_work",
+    "assured_by",
+    "unjudged_witnesses",
+    "gaps_without_candidate",
+    "assured_under_earlier_oracle",
+    "plan_view",
+    "how_did_we_get_here",
+    "what_changed_since",
+    "transcript_behind",
+    "drift",
+    "record"
+  ],
+  "procedure_identifiers": [
+    "act_id",
+    "request_id",
+    "recorded_at",
+    "edit_window_closes_at",
+    "edit_window_seconds_left",
+    "observed_at",
+    "fixture_commit",
+    "probe_result"
+  ],
+  "dependencies": {
+    "postgres": {
+      "image": "ghcr.io/cleverunicornz/infra-v2/postgresql:18.6-vector0.8.6-age1.8.0-d49167596f1b-36557208073@sha256:61e0753b6f454b2ea4b782d04de49521cf27f59f7974309bcf689428b8beba3a",
+      "preload": "age"
+    },
+    "minio": {
+      "image": "docker.io/bitnamilegacy/minio:2025.7.23-debian-12-r5@sha256:6dabb4a2088c9a79908de3bc05f4586c23ad2182c8908e7e3acbf61c1467fb20"
+    }
+  }
+}

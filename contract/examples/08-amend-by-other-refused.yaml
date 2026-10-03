@@ -2,7 +2,7 @@
 # supersedes, revokes, refines, or declares a Gap instead.
 name: amend-by-other-refused
 defaults:
-  protocol: 2.0.0-draft
+  protocol: 2.0.0
   level: repository
   scope: example-repository
   actor: {kind: agent, agent: agent-auto-1, role: automation, principal: key-automation}

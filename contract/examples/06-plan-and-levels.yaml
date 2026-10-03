@@ -3,7 +3,7 @@
 # when the scouting is done (a Plan has no completion condition).
 name: plan-and-levels
 defaults:
-  protocol: 2.0.0-draft
+  protocol: 2.0.0
   level: board
   scope: session:s-scout
   actor: {kind: agent, agent: agent-scout, role: scout, principal: key-repo}

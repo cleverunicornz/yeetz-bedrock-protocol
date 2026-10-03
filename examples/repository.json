@@ -1,0 +1,6 @@
+{
+  "identity": "example/parser",
+  "ownership": "OWNED",
+  "scope": "example-parser",
+  "bootstrap": "Runtime supplies task graph, memory and board access."
+}

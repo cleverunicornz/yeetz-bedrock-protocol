@@ -6,7 +6,7 @@
 # contract/examples/. Storage-neutral: nothing here names a database, a query
 # language, or a vendor.
 
-bedrock: 2.0.0-draft
+bedrock: 2.0.0
 status: draft
 
 parameters:

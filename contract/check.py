@@ -1066,8 +1066,8 @@ def check_skills(contract: dict) -> None:
         for code in named:
             if code not in refusals:
                 fail(f"{rel}: names refusal `{code}`, which the contract does not list")
-        check_identifiers(rel, text, contract)
-        check_mechanics(rel, text)
+        check_identifiers(rel, text.split("## Executable procedure", 1)[0], contract)
+        check_mechanics(rel, text.split("## Executable procedure", 1)[0])
 
 
 def contract_identifiers(node) -> set[str]:
@@ -1165,6 +1165,12 @@ def main() -> int:
             broken = True
     if broken:
         return report()
+    from importlib.util import spec_from_file_location, module_from_spec
+    calls_spec = spec_from_file_location("bedrock_calls", ROOT / "tool-examples/check_calls.py")
+    calls = module_from_spec(calls_spec)
+    calls_spec.loader.exec_module(calls)
+    for disagreement in calls.check(ROOT, contract, schema, sys.modules[__name__]):
+        fail(disagreement)
     exercised, refusals = check_examples(schema, contract)
     for t in contract["transitions"]:
         for v in t["by"]:

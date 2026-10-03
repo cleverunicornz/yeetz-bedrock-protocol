@@ -2,7 +2,7 @@
 # Promise's Oracle that is neither superseded nor revoked.
 name: judge-needs-oracle-in-force
 defaults:
-  protocol: 2.0.0-draft
+  protocol: 2.0.0
   level: repository
   scope: example-repository
   actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
