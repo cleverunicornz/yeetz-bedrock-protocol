@@ -6,10 +6,23 @@ permissions:
 jobs:
   contract:
     runs-on: {group: ci, labels: automation-test-s}
+    outputs:
+      native_changed: ${{ steps.native.outputs.changed }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
+      - name: Detect native source changes
+        id: native
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if git diff --quiet "$BASE_SHA" "$HEAD_SHA" -- contract/bedrock-v2.md contract/bedrock-v2.yaml contract/bedrock-v2.schema.json contract/tool-interface.md contract/tool-interface.json contract/tool-examples contract/skills contract/structural-skills contract/roles.md contract/examples tests/test_replay_arguments.py; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'changed=true' >> "$GITHUB_OUTPUT"
+          fi
       - name: Untouched source baseline
         run: |
           baseline_dir=$(mktemp -d /tmp/bedrock-baseline.XXXXXX)
@@ -26,6 +39,8 @@ jobs:
           python3 compiler/check_sentences.py --agents /tmp/compiled-AGENTS.md --skills contract/skills contract/structural-skills examples/organisation/skills
           cmp /tmp/compiled-AGENTS.md examples/compiled-AGENTS.md
   physical-replay:
+    needs: contract
+    if: needs.contract.outputs.native_changed == 'true'
     runs-on: {group: ci, labels: automation-test-xl}
     steps:
       - name: Exact protocol head

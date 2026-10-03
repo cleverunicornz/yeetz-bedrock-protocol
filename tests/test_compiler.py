@@ -15,6 +15,8 @@ class CompilerTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.org = Path(self.tmp.name) / "org"
+        self.org.mkdir()
+        (self.org / "VERSION").write_text("2.0.0\n")
         (self.org / "templates").mkdir(parents=True)
         (self.org / "skills/operate").mkdir(parents=True)
         (self.org / "templates/organization.md").write_text(

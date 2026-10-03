@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Bedrock 2.0 fixed contract, executable procedures and short instruction compiler; organisation is a separate paired package.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
@@ -37,6 +37,14 @@
     {
       "path": "contract/stage0-witness.md",
       "sha256": "2d2e9c88e5e271e62423e510cebd3901da6fa5bbed244e0c06dc702d70706a58"
+    },
+    {
+      "path": "contract/patch-compatibility.md",
+      "sha256": "738a38a4578b61e789566f56f77f201de9eaa55f75c0440b6b00c7ed5bac1198"
+    },
+    {
+      "path": "contract/gaps/SO-000117-skill-verb-declaration.md",
+      "sha256": "72dcd216a27a32ea132f507a3921b8ac6da4a3724f93f60d7c6409dddabcea59"
     }
   ],
   "verb_skills": [
@@ -141,6 +149,10 @@
     {
       "path": "migrations/2.0.0-draft-to-2.0.0.md",
       "sha256": "9762f944e8c2bd8797bb9402a8e1544d592672d7f281af656c8e8b49effcccd9"
+    },
+    {
+      "path": "migrations/2.0.0-to-2.0.1.md",
+      "sha256": "9ea9b239f8227eaf07922614a70bd7b16aba2a841a72013715b2b44b7b3fad1b"
     }
   ],
   "roles": {
@@ -154,15 +166,15 @@
     },
     {
       "path": "compiler/compile.py",
-      "sha256": "75ab264c303ba62faa34ea79715e144fc2d8133816d9a06e4602f33dd4c139e2"
+      "sha256": "9d3a75a17f507e47b0644476ab655ce3785f346b5351bdd19115a6e3ab6337e9"
     },
     {
       "path": "compiler/generate_manifest.py",
-      "sha256": "3917104bab85260b65965bedf3bcfc84eda840fc8c7ce11fa00727fe252dc8c0"
+      "sha256": "f45f11595b9b42d9a6b9615808dcbae7503d388c850ed22c2a2bbe53f085fbaa"
     },
     {
       "path": "compiler/README.md",
-      "sha256": "a3902676af52ecbdb91367a66495f32c2fee7f41d5f7f19b49ca957023f018ee"
+      "sha256": "08d0290c409d63db92b343c85dae3d6e16e6b72eed903c47f2268122f3927de7"
     }
   ],
   "distribution": {
