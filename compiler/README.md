@@ -29,7 +29,9 @@ Repository skills are supplied to the standalone duplication check in CI.
 Missing paths fail; omit the repository skill argument when none exist.
 
 The package root installs as `bedrock/`. Preserve `contract/`, `compiler/`
-and template paths there. Copy manifest `verb_skills` from
+and template paths there, including every `tool_examples` and `migrations`
+entry. These hold the procedures' response-binding fixture and the authority
+Decision; they are digest-verified publication dependencies. Copy manifest `verb_skills` from
 `contract/skills/<verb>/SKILL.md` and `structural_skills` from
 `contract/structural-skills/<operation>/SKILL.md` to
 `bedrock/skills/<name>/SKILL.md`. There are thirteen verb procedures and five

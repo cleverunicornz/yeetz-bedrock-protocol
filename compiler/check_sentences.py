@@ -9,6 +9,19 @@ from pathlib import Path
 
 def sentences(text: str) -> set[str]:
     # Syntax is discarded, prose is retained, including front-matter triggers.
+    front = re.match(r"\A---\s*\n(.*?)\n---\s*\n", text, re.S)
+    descriptions = []
+    if front:
+        lines = front.group(1).splitlines()
+        for index, line in enumerate(lines):
+            if line.startswith("description:"):
+                value = line.split(":", 1)[1].strip()
+                if value in ("|", "|-", "|+", ">", ">-", ">+"):
+                    value = " ".join(child.strip() for child in lines[index + 1:] if child.startswith((" ", "\t")))
+                elif len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+                    value = value[1:-1]
+                descriptions.append(value)
+        text = text[front.end():]
     text = re.sub(r"^```.*?^```[^\n]*", "", text, flags=re.M | re.S)
     text = re.sub(r"^~~~.*?^~~~[^\n]*", "", text, flags=re.M | re.S)
     text = re.sub(r"<!--.*?-->", "", text, flags=re.S)
@@ -17,7 +30,7 @@ def sentences(text: str) -> set[str]:
     text = re.sub(r"[*_`]+", "", text)
     # A list item, heading or blank line starts a fresh prose block; soft
     # line wrapping inside one block does not change its sentence identity.
-    blocks = []
+    blocks = descriptions
     pending = []
     for line in text.splitlines():
         boundary = not line.strip() or bool(re.match(r"\s*(?:#{1,6}\s|[-+]\s|\d+[.)]\s|\|)", line))
@@ -25,6 +38,12 @@ def sentences(text: str) -> set[str]:
             blocks.append(" ".join(pending))
             pending = []
         if re.match(r"\s*#{1,6}\s", line):
+            continue
+        if line.strip().startswith("|"):
+            for cell in re.split(r"(?<!\\)\|", line.strip().strip("|")):
+                cell = cell.strip()
+                if cell and not re.fullmatch(r":?-+:?", cell):
+                    blocks.append(cell)
             continue
         line = re.sub(r"^\s*(?:#{1,6}\s+|[-+]\s+|\d+[.)]\s+|>\s*)", "", line).strip()
         if line and not line.startswith("|") and line != "---":

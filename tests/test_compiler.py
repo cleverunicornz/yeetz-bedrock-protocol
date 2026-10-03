@@ -80,6 +80,35 @@ class CompilerTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("duplicated", result.stderr.lower())
 
+    def check_duplicate_form(self, skill_text):
+        agents = Path(self.tmp.name) / "AGENTS.md"
+        skill = Path(self.tmp.name) / "SKILL.md"
+        agents.write_text("Keep observations with their coordinates.\n")
+        skill.write_text(skill_text)
+        result = subprocess.run([sys.executable, str(ROOT / "compiler/check_sentences.py"), "--agents", str(agents), "--skills", str(skill)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("duplicated", result.stderr.lower())
+
+    def test_table_cell_sentence_duplication(self):
+        self.check_duplicate_form("| Rule | Procedure |\n|---|---|\n| Evidence | Keep observations with their coordinates. |\n")
+
+    def test_front_matter_description_sentence_duplication(self):
+        self.check_duplicate_form('---\nname: operate\nverb: produce\ndescription: "Keep observations with their coordinates."\n---\n# operate\nDifferent body.\n')
+
+    def test_folded_front_matter_description_sentence_duplication(self):
+        self.check_duplicate_form("---\nname: operate\nverb: produce\ndescription: >-\n  Keep observations with\n  their coordinates.\n---\n# operate\nDifferent body.\n")
+
+    def test_manifest_publishes_procedure_and_decision_dependencies(self):
+        def paths(value):
+            if isinstance(value, dict):
+                return ({value["path"]} if "path" in value else set().union(*(paths(v) for v in value.values())))
+            if isinstance(value, list):
+                return set().union(*(paths(v) for v in value))
+            return set()
+        published = paths(json.loads((ROOT / "manifest.json").read_text()))
+        required = {"contract/tool-examples/calls.json", "contract/tool-examples/probe.py", "migrations/2.0.0-draft-to-2.0.0.md"}
+        self.assertFalse(required - published, f"unpublished required inputs: {sorted(required - published)}")
+
 
 if __name__ == "__main__":
     unittest.main()

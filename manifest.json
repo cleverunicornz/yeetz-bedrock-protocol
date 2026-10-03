@@ -24,7 +24,7 @@
     },
     {
       "path": "contract/tool-interface.md",
-      "sha256": "cabfd86e6020441b01fa019e6e1c784f0f664fcad7b27c5129f11a3f642bb6bf"
+      "sha256": "6c54aeb84d660775be73f837f15fc50d4cb44413b93d60e3da5e2aff04e07829"
     },
     {
       "path": "contract/tool-interface.json",
@@ -111,6 +111,30 @@
       "sha256": "ad6d70117a75f5229d7b0c11e018bd6396c8ea76c14595142dc072f9b469679d"
     }
   ],
+  "tool_examples": [
+    {
+      "path": "contract/tool-examples/calls.json",
+      "sha256": "0a5a7a3559ce08a657bc2a677b0bcfe043d043880258104f7b970a9cdf168570"
+    },
+    {
+      "path": "contract/tool-examples/check_calls.py",
+      "sha256": "c6178eb626c75fe81785c392dc2def0413cebee404e22ba727a081a95e593ff5"
+    },
+    {
+      "path": "contract/tool-examples/probe.py",
+      "sha256": "c4a015f1509fc66b855c9cbc2cae3a7002fbf3d91424a09dbc68c686fe373435"
+    },
+    {
+      "path": "contract/tool-examples/replay.py",
+      "sha256": "f3ddea0ea09a167136eb730095b5409d7d8a1e8dd381f64bee5945566be9fe80"
+    }
+  ],
+  "migrations": [
+    {
+      "path": "migrations/2.0.0-draft-to-2.0.0.md",
+      "sha256": "9762f944e8c2bd8797bb9402a8e1544d592672d7f281af656c8e8b49effcccd9"
+    }
+  ],
   "roles": {
     "path": "contract/roles.md",
     "sha256": "3c83b976dccec34995d6ba7a7cd7c7c79607760b678be1b1131c3e0f6d9149e4"
@@ -118,7 +142,7 @@
   "compiler": [
     {
       "path": "compiler/check_sentences.py",
-      "sha256": "99328ac8eec977f390de9e8bfdc68e332abc3a7ef26683586afb40801625b04b"
+      "sha256": "5bf346aca051ab4d52d65d7081f76878808f3337a79b8591855a3d6dd21c8785"
     },
     {
       "path": "compiler/compile.py",
@@ -126,11 +150,11 @@
     },
     {
       "path": "compiler/generate_manifest.py",
-      "sha256": "be992699ec52f3e6940edc2d148be1c1ad2ae474491cb1df01e0d1e6f57f340b"
+      "sha256": "fd268889d04c3185a0ceef024b2d1695e1c74ec7f4faa89cb43eeef78ca17e9a"
     },
     {
       "path": "compiler/README.md",
-      "sha256": "d5da7f6e5a000f01578cf755be7e9c30195cd4b6909013583ab2138a47a1a84b"
+      "sha256": "a3902676af52ecbdb91367a66495f32c2fee7f41d5f7f19b49ca957023f018ee"
     }
   ],
   "distribution": {

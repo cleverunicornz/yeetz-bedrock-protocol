@@ -4,7 +4,10 @@ This adapter pins implementation mechanics separately from the fixed Bedrock
 meanings. `contract/bedrock-v2.yaml` and `contract/bedrock-v2.schema.json` own
 nouns, verbs, states, outcomes and roles. The semantic baseline is protocol
 source commit 7579057; release-coordinate changes do not change those meanings.
-Reference discipline: `situation/AGENTS.md`.
+Source coordinates use package-relative paths, commit:path for retained
+historical bytes, immutable public URLs, or declared private
+owner/repo@commit#path coordinates. Unavailable private material is explicit
+and must never be invented or copied into a public document.
 
 ## Sources and qualification
 
