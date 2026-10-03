@@ -21,7 +21,7 @@ def main():
         "description": "Bedrock 2.0 fixed contract, executable procedures and short instruction compiler; organisation is a separate paired package.",
         "root_protocol": entry("templates/root-protocol.md"),
         "repository_block": entry("templates/repository-block.md"),
-        "contract": [entry(p) for p in ("contract/bedrock-v2.md", "contract/bedrock-v2.yaml", "contract/bedrock-v2.schema.json", "contract/tool-interface.md", "contract/tool-interface.json", "contract/stage0.md", "contract/stage0-witness.md", "contract/patch-compatibility.md", "contract/gaps/SO-000117-skill-verb-declaration.md")],
+        "contract": [entry(p) for p in ("contract/bedrock-v2.md", "contract/bedrock-v2.yaml", "contract/bedrock-v2.schema.json", "contract/tool-interface.md", "contract/tool-interface.json", "contract/stage0.md", "contract/stage0-witness.md", "contract/patch-compatibility.md", "contract/patch-compatibility-witness.md", "contract/gaps/SO-000117-skill-verb-declaration.md")],
         "verb_skills": many("contract/skills/*/SKILL.md"),
         "structural_skills": many("contract/structural-skills/*/SKILL.md"),
         "tool_examples": many("contract/tool-examples/*.json") + many("contract/tool-examples/*.py"),

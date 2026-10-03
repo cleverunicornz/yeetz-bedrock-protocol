@@ -43,6 +43,10 @@
       "sha256": "738a38a4578b61e789566f56f77f201de9eaa55f75c0440b6b00c7ed5bac1198"
     },
     {
+      "path": "contract/patch-compatibility-witness.md",
+      "sha256": "c1acb92c36eca917a9c68bf6707eb536647cb1a29eb2e8cb426fbcc6334cb1c9"
+    },
+    {
       "path": "contract/gaps/SO-000117-skill-verb-declaration.md",
       "sha256": "72dcd216a27a32ea132f507a3921b8ac6da4a3724f93f60d7c6409dddabcea59"
     }
@@ -170,7 +174,7 @@
     },
     {
       "path": "compiler/generate_manifest.py",
-      "sha256": "f45f11595b9b42d9a6b9615808dcbae7503d388c850ed22c2a2bbe53f085fbaa"
+      "sha256": "7e59c02e20d1589234d85b485efb8cb4f108e52d43ce99789336c21bff87dfdd"
     },
     {
       "path": "compiler/README.md",
