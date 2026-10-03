@@ -277,6 +277,17 @@ def main():
                     elif args["op"] == "reference.get":
                         check_reference_response(args, out, checks)
                         if "sha256_of" in checks:
+                            # The isolated bucket gets a newer version behind
+                            # the same key. The API must keep reading the
+                            # Reference's original version, never the latest.
+                            versions = s3.list_object_versions(Bucket=bucket_name).get("Versions", [])
+                            stored = [version for version in versions if version["VersionId"] == out["version"]]
+                            if len(stored) != 1:
+                                raise AssertionError("stored Reference version is absent or ambiguous in MinIO")
+                            replacement = s3.put_object(Bucket=bucket_name, Key=stored[0]["Key"],
+                                                        Body=b"A later isolated object version.\n", ContentType="text/markdown")
+                            if replacement.get("VersionId") in (None, "null", out["version"]):
+                                raise AssertionError("MinIO did not create a distinct later object version")
                             again = call(args)
                             if (again["version"], again["sha256"], again["markdown"]) != (out["version"], out["sha256"], out["markdown"]):
                                 raise AssertionError("stored Reference readback changed its pinned version")
