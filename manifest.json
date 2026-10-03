@@ -33,6 +33,10 @@
     {
       "path": "contract/stage0.md",
       "sha256": "b149b41a781269ab0cbbf6fa5496a249ee5818cced45c48c40854d6b2fce7514"
+    },
+    {
+      "path": "contract/stage0-witness.md",
+      "sha256": "2d2e9c88e5e271e62423e510cebd3901da6fa5bbed244e0c06dc702d70706a58"
     }
   ],
   "verb_skills": [
@@ -154,7 +158,7 @@
     },
     {
       "path": "compiler/generate_manifest.py",
-      "sha256": "fd268889d04c3185a0ceef024b2d1695e1c74ec7f4faa89cb43eeef78ca17e9a"
+      "sha256": "3917104bab85260b65965bedf3bcfc84eda840fc8c7ce11fa00727fe252dc8c0"
     },
     {
       "path": "compiler/README.md",
