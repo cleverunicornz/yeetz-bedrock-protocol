@@ -24,7 +24,7 @@
     },
     {
       "path": "contract/tool-interface.md",
-      "sha256": "0fb25da4fb59eb0e5ce83a971d3faf89ab1099ccc850e4a9437e3bcd75da1a27"
+      "sha256": "cabfd86e6020441b01fa019e6e1c784f0f664fcad7b27c5129f11a3f642bb6bf"
     },
     {
       "path": "contract/tool-interface.json",
@@ -32,7 +32,7 @@
     },
     {
       "path": "contract/stage0.md",
-      "sha256": "bd2069e571a81481ac8aebee4b38aa3bccdf51dd0a98f7342ab17cb5bcb56a2e"
+      "sha256": "cf6394ddce35dcd100df9a3e0447dbf2bde62252d924114c7966b6515dbbd5ae"
     }
   ],
   "verb_skills": [

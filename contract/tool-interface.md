@@ -110,3 +110,24 @@ distribution remain dependencies:
 https://github.com/cleverunicornz/task-graph/issues/11#issuecomment-5968597913
 and https://github.com/cleverunicornz/runner-images/issues/130#issuecomment-5968598002.
 No profile-to-trust, human authority or cross-home mapping is inferred.
+
+## Current-source surfacing dependency
+
+At the pinned baseline, binds/open_work report native folded records. They
+can include historical imported revisions or a v1 Gap whose Git disposition
+has no native decide act. They do not yet prove canonical current-source
+invariants/open work after a backport. Do not invent disposition history or
+silently rewrite native states to obtain that view.
+
+The producer-selected repository query/act pair is level repository and
+scope the bare canonical owner/name. The trusted registration repository
+is that value; home_scope URNs identify compiler/board homes separately.
+Scope ancestors require accepted authored belongs_to links; URI prefixes
+establish no hierarchy. This package's fixture-scope is isolated test input.
+
+The actual graph-start gate depends on the producer-qualified current-view
+contract, including selected current revisions, source-state provenance,
+authority/reconciliation receipt, explicit scope closure and snapshot
+watermark/head. Source compilation and native call replay qualify separately;
+no unsupported current-view call is invented in this baseline.
+Producer dependency: https://github.com/cleverunicornz/task-graph/issues/11#issuecomment-5969154679.

@@ -39,3 +39,9 @@ real repository agents reading and writing; surfaced rules and open work;
 enforced Git freeze; fresh questioned agents with retained transcripts.
 Stage0 and Stage1 proceed through qualification. After Stage1, stop and
 report; Stage2 and Stage3 require the operator's word.
+
+Canonical surfacing after backport additionally depends on the producer's
+qualified current-source view, documented in `contract/tool-interface.md`.
+Baseline native binds/open_work, home URNs and historical folded states must
+not be presented as that qualified view. This dependency does not postpone
+finite compiler or native source-fixture qualification.
