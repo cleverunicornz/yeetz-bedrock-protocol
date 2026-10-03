@@ -30,6 +30,24 @@ INTERFACE = json.loads((ROOT / "tool-interface.json").read_text())
 FIXTURE = json.loads((ROOT / "tool-examples/calls.json").read_text())
 
 
+def check_reference_response(args, out, checks):
+    if out.get("state") != checks["state"]:
+        raise AssertionError("Reference state differs")
+    if "sha256_of" in checks:
+        expected = checks["sha256_of"]
+        if out.get("markdown") != expected or out.get("sha256") != hashlib.sha256(expected.encode()).hexdigest():
+            raise AssertionError("stored Reference markdown or SHA differs")
+        if not out.get("version") or out["version"] == "null":
+            raise AssertionError("stored Reference has no immutable object version")
+    elif out.get("reference") != args["id"]:
+        raise AssertionError("Reference pointer identity differs")
+
+
+def fixture_arguments(key, values):
+    step = next(step for step in FIXTURE["steps"] if step["key"] == key)
+    return substitute(step["arguments"], values)
+
+
 def pinned_source(root, spec):
     specimen = root / ".source-image.json"
     receipt = None
@@ -257,14 +275,8 @@ def main():
                         if standing != checks["standing_act"]:
                             raise AssertionError("standing judgment differs")
                     elif args["op"] == "reference.get":
-                        if out["reference"] != args["id"] or out["state"] != checks["state"]:
-                            raise AssertionError("Reference pointer roundtrip differs")
+                        check_reference_response(args, out, checks)
                         if "sha256_of" in checks:
-                            expected = checks["sha256_of"]
-                            if out.get("markdown") != expected or out.get("sha256") != hashlib.sha256(expected.encode()).hexdigest():
-                                raise AssertionError("stored Reference markdown or SHA differs")
-                            if not out.get("version") or out["version"] == "null":
-                                raise AssertionError("stored Reference has no immutable object version")
                             again = call(args)
                             if (again["version"], again["sha256"], again["markdown"]) != (out["version"], out["sha256"], out["markdown"]):
                                 raise AssertionError("stored Reference readback changed its pinned version")
@@ -284,7 +296,7 @@ def main():
                         raise AssertionError(f"{step['key']}: refusal appended a row")
                     print("PASS refusal=" + step["key"])
                 # Native envelope exclusion is tested independently of the client schema.
-                first = substitute(FIXTURE["steps"][2]["arguments"], values)
+                first = fixture_arguments("stipulate", values)
                 path, body = project(first, client.lineage())
                 body["request_id"] = "fixture-forged-actor"
                 body["actor"] = {"role": "authority"}

@@ -130,7 +130,7 @@
     },
     {
       "path": "contract/tool-examples/replay.py",
-      "sha256": "0643a0fc9f6e8e3c6892ab36005861e0d4717d7437781ed1742273197b37924a"
+      "sha256": "ddfa864fa84337d7ab4535d304ee57ec5da218e7b25ec525a634852820cfef6a"
     }
   ],
   "migrations": [
