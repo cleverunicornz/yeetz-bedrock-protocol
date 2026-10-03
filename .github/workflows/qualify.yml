@@ -31,8 +31,17 @@ jobs:
           uv run --no-project --with pyyaml --with jsonschema python contract/check.py
       - name: Source semantics
         run: uv run --no-project --with pyyaml --with jsonschema python contract/check.py
+      - name: Published archive refusal and candidate manifest-only package
+        run: |
+          curl --fail --location --output /tmp/bedrock-2.0.0.tar.gz https://github.com/cleverunicornz/yeetz-bedrock-protocol/releases/download/v2.0.0/bedrock-2.0.0.tar.gz
+          python3 tests/probe_published_archive.py /tmp/bedrock-2.0.0.tar.gz
       - name: Compiler and sentence boundary
         run: uv run --no-project --with pyyaml --with jsonschema python -m unittest discover -s tests -v
+      - name: Manifest regeneration agrees byte for byte
+        run: |
+          cp manifest.json /tmp/qualified-manifest.json
+          python3 compiler/generate_manifest.py
+          cmp manifest.json /tmp/qualified-manifest.json
       - name: Compile the finite three-part example
         run: |
           python3 compiler/compile.py --protocol-root . --org-root examples/organisation --repository examples/repository.json --output /tmp/compiled-AGENTS.md
