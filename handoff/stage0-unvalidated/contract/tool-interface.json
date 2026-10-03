@@ -1,0 +1,322 @@
+{
+  "format": 1,
+  "status": "source-pinned; deployment unqualified",
+  "graph": {
+    "repository": "cleverunicornz/task-graph",
+    "commit": "ac91c8dda973281bcc2b732886bdac8abf6ee30b",
+    "files": [
+      {
+        "path": "src/taskgraph/api.py",
+        "sha256": "0381636d7616b5e3011c97b625ea5c49367cfee4c691b32f6abb03b3db61a24c",
+        "url": "https://github.com/cleverunicornz/task-graph/blob/ac91c8dda973281bcc2b732886bdac8abf6ee30b/src/taskgraph/api.py"
+      },
+      {
+        "path": "src/taskgraph/queries.py",
+        "sha256": "2d9922046e89e53668ad38935eeaebe092da206cf8662c0441df9aa5ccb126ae",
+        "url": "https://github.com/cleverunicornz/task-graph/blob/ac91c8dda973281bcc2b732886bdac8abf6ee30b/src/taskgraph/queries.py"
+      },
+      {
+        "path": "src/taskgraph/store.py",
+        "sha256": "5ab8ba03566da051c78a425fc04364d0c097f1517abca53d0c19b564e08987c1",
+        "url": "https://github.com/cleverunicornz/task-graph/blob/ac91c8dda973281bcc2b732886bdac8abf6ee30b/src/taskgraph/store.py"
+      },
+      {
+        "path": "src/taskgraph/projector.py",
+        "sha256": "098203c21189b60f05d539bd7dd43b9da9f9fef9eef7c786f28aa626727c9280",
+        "url": "https://github.com/cleverunicornz/task-graph/blob/ac91c8dda973281bcc2b732886bdac8abf6ee30b/src/taskgraph/projector.py"
+      },
+      {
+        "path": "src/taskgraph/identity.py",
+        "sha256": "9c644249fc2f7e753333b40e9b0d9280cd6f7890c3b5a06d179f1426d32d8e3e",
+        "url": "https://github.com/cleverunicornz/task-graph/blob/ac91c8dda973281bcc2b732886bdac8abf6ee30b/src/taskgraph/identity.py"
+      },
+      {
+        "path": "src/taskgraph/references.py",
+        "sha256": "d7c56f47767f9ef6eee58f5a8e61b05121c5fe1e93f58c9cb41c728c78b091f8",
+        "url": "https://github.com/cleverunicornz/task-graph/blob/ac91c8dda973281bcc2b732886bdac8abf6ee30b/src/taskgraph/references.py"
+      },
+      {
+        "path": "ci/platform-postgres.env",
+        "sha256": "88ffa5b7740841461660edee83c2d252d267e32620e6fb4f229790438e7e2459",
+        "url": "https://github.com/cleverunicornz/task-graph/blob/ac91c8dda973281bcc2b732886bdac8abf6ee30b/ci/platform-postgres.env"
+      }
+    ]
+  },
+  "client": {
+    "repository": "cleverunicornz/runner-images",
+    "commit": "f4dad5ba6c989e5aaf0896b7dd1ccd8e49fd3c37",
+    "files": [
+      {
+        "path": "images/repo-pod/runtime/cvu_task_graph.py",
+        "sha256": "9e275a70728e5b9d833e81db0686fad64c82e8b655f77366b46dd23568bbe428",
+        "url": "https://github.com/cleverunicornz/runner-images/blob/f4dad5ba6c989e5aaf0896b7dd1ccd8e49fd3c37/images/repo-pod/runtime/cvu_task_graph.py"
+      },
+      {
+        "path": "images/repo-pod/runtime/cvu_task_graph_mcp.py",
+        "sha256": "b45c57657c1ba32042d72ddbaefc050e794f8d24e83a187d60a8291b8023fcef",
+        "url": "https://github.com/cleverunicornz/runner-images/blob/f4dad5ba6c989e5aaf0896b7dd1ccd8e49fd3c37/images/repo-pod/runtime/cvu_task_graph_mcp.py"
+      }
+    ]
+  },
+  "client_tool": {
+    "server": "task-graph",
+    "name": "task-graph",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "type": "string",
+          "enum": [
+            "act",
+            "query",
+            "reference.put",
+            "reference.get"
+          ]
+        },
+        "verb": {
+          "type": "string"
+        },
+        "level": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "payload": {
+          "type": "object"
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "name": {
+          "type": "string"
+        },
+        "params": {
+          "type": "object"
+        },
+        "reference": {
+          "type": "object",
+          "properties": {
+            "commit": {
+              "type": "string"
+            },
+            "conversion": {
+              "type": "object"
+            },
+            "kind": {
+              "type": "string"
+            },
+            "markdown": {
+              "type": "string"
+            },
+            "media_type": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "repository": {
+              "type": "string"
+            },
+            "retrieved_at": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "visibility": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title"
+          ],
+          "additionalProperties": false
+        },
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "op"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "operations": {
+    "act": {
+      "method": "POST",
+      "path": "/v1/acts",
+      "required": [
+        "verb",
+        "level",
+        "scope",
+        "payload",
+        "session"
+      ],
+      "allowed": [
+        "verb",
+        "level",
+        "scope",
+        "payload",
+        "session",
+        "turn",
+        "tool_call",
+        "repository",
+        "batch",
+        "paseo_agent_id",
+        "harness",
+        "model",
+        "request_id"
+      ]
+    },
+    "query": {
+      "method": "POST",
+      "path": "/v1/query",
+      "required": [
+        "name"
+      ],
+      "allowed": [
+        "name",
+        "params"
+      ]
+    },
+    "reference.put": {
+      "method": "POST",
+      "path": "/v1/references",
+      "required": [
+        "title",
+        "level",
+        "scope",
+        "session"
+      ],
+      "allowed": [
+        "title",
+        "markdown",
+        "kind",
+        "media_type",
+        "visibility",
+        "url",
+        "retrieved_at",
+        "conversion",
+        "repository",
+        "commit",
+        "path",
+        "level",
+        "scope",
+        "session",
+        "turn",
+        "tool_call",
+        "batch",
+        "paseo_agent_id",
+        "harness",
+        "model",
+        "request_id",
+        "act_repository"
+      ]
+    },
+    "reference.get": {
+      "method": "GET",
+      "path": "/v1/references/{id}"
+    }
+  },
+  "client_fields": {
+    "act": [
+      "op",
+      "verb",
+      "level",
+      "scope",
+      "repository",
+      "payload",
+      "request_id"
+    ],
+    "query": [
+      "op",
+      "name",
+      "params"
+    ],
+    "reference.put": [
+      "op",
+      "level",
+      "scope",
+      "reference",
+      "request_id"
+    ],
+    "reference.get": [
+      "op",
+      "id"
+    ]
+  },
+  "client_required": {
+    "act": [
+      "verb",
+      "level",
+      "scope",
+      "payload"
+    ],
+    "query": [
+      "name"
+    ],
+    "reference.put": [
+      "level",
+      "scope",
+      "reference"
+    ],
+    "reference.get": [
+      "id"
+    ]
+  },
+  "lineage": [
+    "session",
+    "turn",
+    "tool_call",
+    "repository",
+    "paseo_agent_id",
+    "harness",
+    "model"
+  ],
+  "receiver_fields": [
+    "id",
+    "act_id",
+    "protocol",
+    "recorded_at",
+    "edit_window_closes_at",
+    "actor",
+    "source",
+    "occurred_at"
+  ],
+  "queries": [
+    "by_state",
+    "relations",
+    "binds",
+    "open_work",
+    "assured_by",
+    "unjudged_witnesses",
+    "gaps_without_candidate",
+    "assured_under_earlier_oracle",
+    "plan_view",
+    "how_did_we_get_here",
+    "what_changed_since",
+    "transcript_behind",
+    "drift",
+    "record"
+  ],
+  "procedure_identifiers": [
+    "act_id",
+    "request_id",
+    "recorded_at",
+    "edit_window_closes_at",
+    "edit_window_seconds_left",
+    "observed_at",
+    "fixture_commit",
+    "probe_result"
+  ]
+}
