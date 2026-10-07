@@ -1,6 +1,7 @@
 """SITUATION.md is a deterministic projection of a repository's situation records (contract section 8)."""
 import importlib.util
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -113,24 +114,61 @@ class Projection(unittest.TestCase):
     def test_record_templates_shape_projects(self):
         text = self.render()
         self.assertIn("### D-000011 — Templated decision\n\nState: decided · ", text)
-        self.assertIn("Use the 2.1 template.", text)
-        self.assertNotIn("It is the format.", text)
+        self.assertIn("#### Decision\n\nUse the 2.1 template.", text)
+        self.assertIn("#### Why\n\nIt is the format.", text)
         self.assertIn("### PLAN-000012 — Gap plan\n\nState: grouped · ", text)
+        self.assertIn("#### Members\n\n- G-000004\n- C-000006", text)
 
-    def test_published_record_templates_carry_the_projected_headings(self):
+    def test_projected_headings_are_exactly_the_published_template_headings(self):
         templates = ROOT / "templates/records"
-        for heading, directory, prefix, metadata, statement in projection.CLASSES:
+        for heading, directory, prefix, facts, sections in projection.CLASSES:
             with self.subTest(records=heading):
                 text = (templates / f"{directory[:-1]}.md").read_text()
                 self.assertTrue(text.startswith(f"# {prefix}-<number> — <title>\n"))
-                for name in [h for h in metadata if h not in ("Status", "Date")] + ([statement] if statement else []):
-                    self.assertIn(f"\n## {name}\n", text)
+                published = re.findall(r"(?m)^## (.+)$", text)
+                legacy = [h for h in facts if h in projection.LEGACY_FACTS]
+                self.assertEqual(sorted(h for h in facts + sections if h not in legacy), sorted(published))
+                self.assertEqual(list(sections), [h for h in published if h in sections], "sections keep template order")
 
-    def test_statement_headings_are_demoted_and_fences_respected(self):
+    def test_every_template_heading_of_a_templated_record_is_rendered(self):
+        """A record written from its template keeps every field in the projection."""
+        situation = self.tmp / "templated/situation"
+        for heading, directory, prefix, facts, sections in projection.CLASSES:
+            template = (ROOT / "templates/records" / f"{directory[:-1]}.md").read_text()
+            body = template.replace("<number>", "000077").replace("<title>", f"Templated {heading}")
+            path = situation / directory / f"{prefix}-000077-templated.md"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(body)
+        text = projection.project(situation, "o/r", COMMIT, "2026-10-07")
+        for heading, directory, prefix, facts, sections in projection.CLASSES:
+            template = (ROOT / "templates/records" / f"{directory[:-1]}.md").read_text()
+            for name, value in re.findall(r"(?m)^## (.+)\n\n(.+)$", template):
+                with self.subTest(records=heading, heading=name):
+                    if name in sections:
+                        self.assertIn(f"#### {name}\n\n{value}", text)
+                    else:
+                        self.assertIn(f"{name}: {value}", text)
+
+    def test_plan_members_and_oracle_conditions_are_projected(self):
+        situation = self.tmp / "fields/situation"
+        write_tree(situation, {
+            "plans/PLAN-000001-p.md": "# PLAN-000001 — P\n\n## State\n\ngrouped\n\n## Members\n\n- G-000001\n\n"
+                                      "## Waits on\n\n- G-000001 upon C-000002\n",
+            "oracles/O-000001-o.md": "# O-000001 — O\n\n## State\n\ndefined\n\n## Judges\n\nP-000001\n\n"
+                                     "## Inputs\n\nThe run log.\n\n## Holds when\n\nEvery row.\n\n"
+                                     "## Fails when\n\nA row is missing.\n\n## Arrangement\n\ndeterministic\n",
+        })
+        text = projection.project(situation, "o/r", COMMIT, "2026-10-07")
+        for present in ("#### Members\n\n- G-000001", "#### Waits on\n\n- G-000001 upon C-000002",
+                        "#### Inputs\n\nThe run log.", "#### Holds when\n\nEvery row.",
+                        "#### Fails when\n\nA row is missing.", "Arrangement: deterministic"):
+            self.assertIn(present, text)
+
+    def test_section_headings_are_demoted_and_fences_respected(self):
         text = self.render()
-        self.assertIn("#### Part one", text)
+        self.assertIn("#### Decision\n\n##### Part one", text)
         self.assertIn("```text\n## not a section\n```", text)
-        self.assertNotIn("Because.", text)
+        self.assertIn("#### Why\n\nBecause.", text)
 
     def test_references_are_pointers_only(self):
         text = self.render()
@@ -143,13 +181,53 @@ class Projection(unittest.TestCase):
                        "Namespace rules"):
             self.assertNotIn(absent, text)
 
-    def test_links_into_security_or_outside_are_never_followed(self):
-        (self.situation / "candidates/linked").symlink_to(self.situation / "gaps/security", target_is_directory=True)
-        (self.situation / "promises/P-000002-outside.md").symlink_to(self.tmp / "outside.md")
+    def assert_refused(self, situation=None, root=None):
+        with self.assertRaisesRegex(ValueError, "symbolic link"):
+            projection.project(situation or self.situation, "o/r", COMMIT, "2026-10-07", root=root)
+
+    def test_a_linked_file_is_refused(self):
         (self.tmp / "outside.md").write_text("# P-000002 — OUTSIDE\n")
+        (self.situation / "promises/P-000002-outside.md").symlink_to(self.tmp / "outside.md")
+        self.assert_refused()
+
+    def test_a_linked_directory_inside_a_class_is_refused(self):
+        (self.situation / "candidates/linked").symlink_to(self.situation / "gaps/security", target_is_directory=True)
+        self.assert_refused()
+
+    def test_a_linked_class_directory_is_refused(self):
+        real = self.tmp / "elsewhere"
+        write_tree(real, {"I-000050-linked.md": "# I-000050 — LINKED RULE\n\n## Priority\n\nstandard\n"})
+        shutil.rmtree(self.situation / "invariants")
+        (self.situation / "invariants").symlink_to(real, target_is_directory=True)
+        self.assert_refused()
+
+    def test_a_linked_source_directory_or_ancestor_is_refused(self):
+        linked = self.tmp / "repo/linked-situation"
+        linked.symlink_to(self.situation, target_is_directory=True)
+        self.assert_refused(linked, root=self.tmp / "repo")
+        (self.tmp / "repo/docs").symlink_to(self.tmp / "repo", target_is_directory=True)
+        self.assert_refused(self.tmp / "repo/docs/situation", root=self.tmp / "repo")
+
+    def test_links_inside_security_directories_are_never_read(self):
+        (self.situation / "gaps/security/G-000013-linked.md").symlink_to(self.tmp / "missing.md")
+        self.assertNotIn("G-000013", self.render())
+
+    def test_cli_refuses_a_linked_class_directory(self):
+        shutil.rmtree(self.situation / "oracles")
+        (self.situation / "oracles").symlink_to(self.situation / "promises", target_is_directory=True)
+        result = subprocess.run([sys.executable, str(SCRIPT), "--root", str(self.tmp / "repo"), "--scope", "o/r",
+                                 "--commit", COMMIT, "--date", "2026-10-07"], capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("symbolic link", result.stderr)
+        self.assertEqual(result.stdout, "")
+
+    def test_references_are_in_numeric_id_order(self):
+        write_tree(self.situation, {"references/R-10.md": "ten\n", "references/R-2.md": "two\n",
+                                    "references/D-000003/R-000011-later.md": "x\n",
+                                    "references/D-000003/R-000009-earlier.md": "x\n"})
         text = self.render()
-        self.assertNotIn("SECRET", text)
-        self.assertNotIn("OUTSIDE", text)
+        self.assertLess(text.index("references/R-2.md"), text.index("references/R-10.md"))
+        self.assertLess(text.index("R-000009-earlier.md"), text.index("R-000011-later.md"))
 
     def test_same_input_same_bytes_whatever_the_file_order_or_line_endings(self):
         other = self.tmp / "other/situation"

@@ -7,8 +7,12 @@ source is the repository's own `situation/` files, authored in the shape of
 `templates/records/`. The format is fixed so that source can switch without the
 output changing shape: a header naming the scope, the source, the commit read
 and its date, then one section per record class in id order, repository level
-only. Witnesses, `context.md` and every path with a directory named `security`
-are never read, and no symbolic link is followed.
+only. Each record keeps every heading its template defines: one-line facts on
+the record's line, the other headings as sections. References are pointers.
+Witnesses, `context.md` and every path with a directory named `security` are
+never read. A symbolic link anywhere in the source - the records directory, an
+ancestor of it under the root, a class directory, a directory or a file - is
+refused, never followed.
 
 The commit read is the last commit that changed `situation/` (outside
 `security` directories), and the date is that commit's UTC date, so committing
@@ -22,33 +26,45 @@ import subprocess
 import sys
 
 DISCLAIMER = "projection; not a source of truth"
-# (heading, directory, id prefix, metadata headings, statement heading); None is the plan's preamble.
+# (heading, directory, id prefix, facts, sections). Facts and sections are exactly the headings of
+# templates/records/<class>.md, plus the legacy one-line facts that earlier records carry.
 CLASSES = (
-    ("Invariants", "invariants", "I", ("Priority", "Applies to"), "Invariant"),
-    ("Promises", "promises", "P", ("State", "Applies to"), "Promise"),
-    ("Oracles", "oracles", "O", ("State", "Judges"), None),
-    ("Decisions", "decisions", "D", ("State", "Status", "Date"), "Decision"),
-    ("Gaps", "gaps", "G", ("State",), "Gap"),
-    ("Candidates", "candidates", "C", ("State",), "Candidate"),
-    ("Plans", "plans", "PLAN", ("State",), ""),
+    ("Invariants", "invariants", "I", ("State", "Priority", "Applies to"), ("Invariant", "Basis")),
+    ("Promises", "promises", "P", ("State", "Applies to"),
+     ("Promise", "Scope", "Residual", "Basis", "From candidate", "Addresses")),
+    ("Oracles", "oracles", "O", ("State", "Judges", "Arrangement"), ("Inputs", "Holds when", "Fails when", "Executable")),
+    ("Decisions", "decisions", "D", ("State", "Status", "Date"),
+     ("Decision", "Why", "Rejected", "Revisit when", "Considered", "Outcomes")),
+    ("Gaps", "gaps", "G", ("State",), ("Gap", "Impact", "About", "Arose in")),
+    ("Candidates", "candidates", "C", ("State",), ("Candidate", "Responds to")),
+    ("Plans", "plans", "PLAN", ("State",), ("Members", "Waits on")),
 )
+LEGACY_FACTS = ("Status", "Date")
 DEFAULTS = {"Applies to": "all environments"}
 FENCE = re.compile(r"^\s*(```|~~~)")
 
 
-def excluded(path, base):
-    """Symlinks, nested AGENTS.md and anything that is or resolves under a `security` directory or outside base."""
-    real, real_base = path.resolve(), base.resolve()
-    if path.is_symlink() or path.name == "AGENTS.md" or not real.is_relative_to(real_base):
-        return True
-    parts = (*path.relative_to(base).parts, *real.relative_to(real_base).parts)
-    return any(part.casefold() == "security" for part in parts)
+def refuse_link(path):
+    if path.is_symlink():
+        raise ValueError(f"symbolic link refused: {path}")
 
 
 def files(directory):
+    """Every record file under directory, in a fixed order. A `security` directory is never entered and its
+    contents never read; any other symbolic link is refused."""
+    refuse_link(directory)
     if not directory.is_dir():
         return []
-    return [p for p in directory.rglob("*") if p.is_file() and not excluded(p, directory)]
+    found = []
+    for entry in sorted(directory.iterdir()):
+        if entry.name.casefold() == "security":
+            continue
+        refuse_link(entry)
+        if entry.is_dir():
+            found.extend(files(entry))
+        elif entry.is_file() and entry.name != "AGENTS.md":
+            found.append(entry)
+    return found
 
 
 def parse(text):
@@ -73,13 +89,15 @@ def block(lines):
     return "\n".join(line.rstrip() for line in text.split("\n")).strip()
 
 
-def demote(text):
+def demote(text, levels=2):
+    """Move a file's headings below the projection's record sections (####), outside code fences."""
     out, fenced = [], False
     for line in text.split("\n"):
+        heading = None if fenced else re.match(r"(#{1,6}) ", line)
         if FENCE.match(line):
             fenced = not fenced
-        elif not fenced and re.match(r"#{1,5} ", line):
-            line = "#" + line
+        elif heading:
+            line = "#" * min(6, len(heading.group(1)) + levels) + line[len(heading.group(1)):]
         out.append(line)
     return "\n".join(out)
 
@@ -103,26 +121,39 @@ def records(situation, directory, prefix):
     return sorted(found)
 
 
-def render_record(base, relative, record_id, path, metadata, statement):
+def render_record(base, relative, record_id, path, facts, headings):
     title, preamble, sections = parse(path.read_bytes().decode("utf-8"))
     name = title.split(" — ", 1)[1].strip() if " — " in title else (title or record_id)
-    facts = []
-    for heading in metadata:
+    line = []
+    for heading in facts:
         value = first_line(sections.get(heading, "")) or DEFAULTS.get(heading, "")
         if heading == "State" and not value and record_id.startswith("PLAN-") and relative.count("/") == 2:
             value = Path(relative).parent.name  # plans/<state>/PLAN-...
         if value:
-            facts.append(f"{heading}: {value}")
-    facts.append(link(f"{base}/{relative}"))
-    body = preamble if statement == "" else sections.get(statement, "") if statement else ""
-    parts = [f"### {record_id} — {name}", " · ".join(facts)]
-    if body:
-        parts.append(demote(body))
+            line.append(f"{heading}: {value}")
+    line.append(link(f"{base}/{relative}"))
+    parts = [f"### {record_id} — {name}", " · ".join(line)]
+    if preamble and record_id.startswith("PLAN-"):
+        parts.append(demote(preamble))
+    for heading in headings:
+        if sections.get(heading):
+            parts.extend([f"#### {heading}", demote(sections[heading])])
     return "\n\n".join(parts)
 
 
-def project(situation, scope, commit, date, base="situation"):
+def natural(path):
+    """Order paths by their numbers as numbers, so R-2 comes before R-10."""
+    return [int(part) if index % 2 else part for index, part in enumerate(re.split(r"(\d+)", path))]
+
+
+def project(situation, scope, commit, date, base="situation", root=None):
     situation = Path(situation)
+    if root is not None:
+        ancestor = Path(root)
+        for part in situation.relative_to(root).parts:
+            ancestor = ancestor / part
+            refuse_link(ancestor)
+    refuse_link(situation)
     if not situation.is_dir():
         raise ValueError(f"no situation directory: {situation}")
     out = [
@@ -133,14 +164,15 @@ def project(situation, scope, commit, date, base="situation"):
         "Repository-level records by class, in id order; each links its file. Generated on every pull request; "
         "edit the records, never this file.",
     ]
-    for heading, directory, prefix, metadata, statement in CLASSES:
+    for heading, directory, prefix, facts, sections in CLASSES:
         out.append(f"## {heading}")
         found = records(situation, directory, prefix)
-        out.extend(render_record(base, rel, record_id, p, metadata, statement) for _, rel, record_id, p in found)
+        out.extend(render_record(base, rel, record_id, p, facts, sections) for _, rel, record_id, p in found)
         if not found:
             out.append("None.")
     out.append("## References")
-    references = sorted(p.relative_to(situation).as_posix() for p in files(situation / "references"))
+    references = sorted((p.relative_to(situation).as_posix() for p in files(situation / "references")),
+                        key=lambda r: (natural(r), r))
     out.append("\n".join("- " + link(f"{base}/{r}") for r in references) if references else "None.")
     return "\n\n".join(out) + "\n"
 
@@ -170,7 +202,7 @@ def main():
     args = parser.parse_args()
     try:
         commit, date = (args.commit, args.date) if args.commit and args.date else source(args.root, args.situation)
-        text = project(args.root / args.situation, args.scope, commit, date, args.situation.strip("/"))
+        text = project(args.root / args.situation, args.scope, commit, date, args.situation.strip("/"), root=args.root)
     except (OSError, ValueError, UnicodeDecodeError, subprocess.CalledProcessError) as error:
         sys.exit(f"situation projection failed: {error}")
     if args.check:
