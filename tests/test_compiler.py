@@ -28,8 +28,9 @@ class CompilerTests(unittest.TestCase):
         self.repo = Path(self.tmp.name) / "repository.json"
         self.repo.write_text(json.dumps({"identity": "example/parser", "ownership": "OWNED", "scope": "example-parser", "bootstrap": "Tool access is provided by the runtime."}))
 
-    def run_compile(self, *extra):
-        return subprocess.run([sys.executable, str(ROOT / "compiler/compile.py"), "--protocol-root", str(ROOT), "--org-root", str(self.org), "--repository", str(self.repo), *extra], capture_output=True, text=True)
+    def run_compile(self, *extra, repository=True):
+        repo = ["--repository", str(self.repo)] if repository else []
+        return subprocess.run([sys.executable, str(ROOT / "compiler/compile.py"), "--protocol-root", str(ROOT), "--org-root", str(self.org), *repo, *extra], capture_output=True, text=True)
 
     def test_composes_short_axioms_and_pointers(self):
         result = self.run_compile()
@@ -38,7 +39,8 @@ class CompilerTests(unittest.TestCase):
             self.assertIn("<" + marker + ">", result.stdout)
         self.assertEqual(result.stdout.count("A Promise is"), 1)
         self.assertIn("bedrock/skills/mint/SKILL.md", result.stdout)
-        self.assertIn("example/parser", result.stdout)
+        self.assertIn("A Plan is a group of Candidates, Promises and Gaps", result.stdout)
+        self.assertNotIn("example/parser", result.stdout)
         self.assertLess(len(result.stdout.splitlines()), 85)
         self.assertNotIn("situation/ is canonical", result.stdout)
 
@@ -47,8 +49,25 @@ class CompilerTests(unittest.TestCase):
         repo = self.run_compile("--part", "repository")
         self.assertEqual(user.returncode, 0, user.stderr)
         self.assertEqual(repo.returncode, 0, repo.stderr)
-        self.assertNotIn("example/parser", user.stdout)
+        self.assertNotIn("bedrock-repository", user.stdout)
         self.assertNotIn("A Promise is", repo.stdout)
+
+    def test_repository_block_is_the_fixed_text_byte_for_byte(self):
+        fixed = (ROOT / "templates/repository-block.md").read_text()
+        self.assertTrue(fixed.startswith("<bedrock-repository>\nThis repository is operated through the organisation's situation graph."))
+        self.assertNotIn("{{", fixed)
+        for repository in (True, False):
+            with self.subTest(repository_input=repository):
+                result = self.run_compile("--part", "repository", repository=repository)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(result.stdout, fixed)
+
+    def test_repository_input_is_optional_and_never_rendered(self):
+        result = self.run_compile(repository=False)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn((ROOT / "templates/repository-block.md").read_text().strip(), result.stdout)
+        with_input = self.run_compile()
+        self.assertEqual(with_input.stdout, result.stdout)
 
     def test_rejects_unverified_org_bytes(self):
         (self.org / "templates/organization.md").write_text("Changed without a manifest update.")
