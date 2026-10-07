@@ -207,6 +207,7 @@ refusals:
   duplicate_act_id: act ids are unique in the log
   wrong_basis: a Promise minted from a Candidate cites the Decision that accepted that Candidate
   bad_member: a Plan holds only Candidates, Promises and Gaps, each once; a regroup removes only what the Plan holds; a waits_on link names only members
+  applies_to_mismatch: an Invariant or Promise that names a version scope is made at system level in that scope; a making act or an amendment that names another scope is refused
 
 verbs:
   stipulate:

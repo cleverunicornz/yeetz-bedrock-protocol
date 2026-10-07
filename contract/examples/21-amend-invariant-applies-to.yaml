@@ -1,0 +1,24 @@
+# Applies to stays the making act's scope through every amendment. An
+# Invariant stipulated for agent-runtime/2 may be amended in its window, but an
+# amendment naming agent-runtime/3 is refused (applies_to_mismatch) and the
+# record keeps its scope.
+name: amend-invariant-applies-to
+defaults:
+  protocol: 2.1.0
+  level: system
+  scope: agent-runtime/2
+  actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+  session: session:s-review
+acts:
+  - {id: A-1, verb: stipulate, recorded_at: "2026-10-07T09:00:00Z",
+     payload: {invariant: {id: I-1, title: Version 2 sessions start from the graph, rule: A session of version 2 orients from the graph queries., priority: standard, applies_to: agent-runtime/2}}}
+  - {id: A-2, verb: amend, recorded_at: "2026-10-07T09:02:00Z",
+     payload: {target_act: A-1, changes: {invariant: {rule: A session of version 2 orients from the graph queries first.}}}}
+  - {id: A-3, verb: amend, recorded_at: "2026-10-07T09:03:00Z",
+     payload: {target_act: A-1, changes: {invariant: {applies_to: agent-runtime/3}}}}
+expect:
+  refused: {act_index: 2, code: applies_to_mismatch}
+  states:
+    I-1: stipulated
+  records:
+    I-1: {applies_to: agent-runtime/2, rule: A session of version 2 orients from the graph queries first.}

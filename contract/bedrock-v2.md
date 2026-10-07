@@ -438,9 +438,11 @@ that every act changes only the records in its one-step reach, and that no act i
 - **Applies to.** An Invariant or a Promise may name what it binds: `all environments` (the default when absent) or a
   version scope, a `system`-level scope such as `agent-runtime/2`. In the domain it is the making act's level and
   scope: a rule for `agent-runtime/2` is stipulated at level `system`, scope `agent-runtime/2`. In a record file it
-  is the heading `Applies to`. `binds(scope)` follows `belongs_to` from the scope to its version and to the
-  organisation and returns what applies there; a rule for another version is not returned. Worked example:
-  `contract/examples/20-applies-to-a-version.yaml`.
+  is the heading `Applies to`. A record whose version scope is not its making act's, when it is made or after any
+  amendment, is refused (`applies_to_mismatch`). `binds(scope)` follows `belongs_to` from the scope to its version
+  and to the organisation and returns what applies there; a rule for another version is not returned. Worked
+  examples: `contract/examples/20-applies-to-a-version.yaml`, `contract/examples/21-amend-invariant-applies-to.yaml`,
+  `contract/examples/22-amend-promise-applies-to.yaml`.
 
 **Layering.** Rules come in layers: Bedrock, then the organisation, then the repository, then the agent at runtime.
 Each layer adds and specialises; none redefines the layer below it. Redefining is a Bedrock change.
@@ -463,7 +465,8 @@ Layers are where rules come from; levels are where records apply. They are separ
   projection of its records at the repository level, rebuilt on every merge. It holds a header naming the scope, the
   source, the commit read and its date, and the words "projection; not a source of truth", then one section per
   record class in id order: Invariants, Promises with their state, Oracles, Decisions, Gaps, Candidates, Plans, and
-  References as pointers. Nothing from the `security` level, no Witness and no scope context enters it. A private
+  References as pointers. Each record keeps every heading its template defines. Nothing from the `security` level,
+  no Witness and no scope context enters it, and a symbolic link in the source is refused. A private
   repository carries no projection. A projection is never a source: an edit to it changes nothing.
 - **The record templates are the format.** `templates/records/` gives each record class its title line and
   required headings, with `Applies to` optional on Invariants and Promises. They are the domain's record schema
@@ -480,6 +483,7 @@ Layers are where rules come from; levels are where records apply. They are separ
   it adopts: `.github/workflows/check-agents-md.yml` fails when the root `AGENTS.md` repository block differs from
   that release's template by a byte; `.github/workflows/situation-projection.yml` builds `SITUATION.md` on each pull
   request of a public repository with `scripts/situation-projection.py` and commits it to the pull request's head.
+  A pull request from a fork is refused: a fork is never where a projection is produced.
 
 ## 9. References
 

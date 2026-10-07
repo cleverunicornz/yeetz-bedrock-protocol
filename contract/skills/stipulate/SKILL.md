@@ -36,6 +36,8 @@ Reference, a Witness or another Invariant the rule rests on.
 
 ## Refusals
 
+- `applies_to_mismatch`: an Invariant whose `applies_to` names a version scope is made at
+  level `system` in that scope; another scope is refused, here and in any amendment.
 - A field over its limit (`title` 256 characters, `rule` 1024) is refused with
   the field, its size and the limit; nothing is cut.
 

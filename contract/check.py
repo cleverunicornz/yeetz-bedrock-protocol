@@ -596,15 +596,19 @@ class Projector:
             raise Refused("wrong_noun", f"{rid} is not a {noun}")
         if rid in self.hist:
             raise Refused("duplicate_id", f"{rid} exists")
-        applies = rec.get("applies_to")
-        if applies not in (None, self.c["applies_to"]["default"]):
-            # A version scope is the making act's level and scope.
-            if (act["level"], act["scope"]) != ("system", applies):
-                raise Refused("applies_to_mismatch", f"{rid} applies to {applies}; it is made at system level in that scope")
+        self.check_applies_to(rid, rec, act)
         self.record[rid] = copy.deepcopy(rec)
         self.author[rid] = (act["actor"]["agent"], when(act))
         self.made_at[rid] = scope_ref(act)
         self.give(rid, act, first_state(self.c, noun))
+
+    def check_applies_to(self, rid: str, rec: dict, making: dict) -> None:
+        """A version scope is the making act's level and scope, at creation and after every amendment."""
+        applies = rec.get("applies_to")
+        if applies not in (None, self.c["applies_to"]["default"]):
+            if (making["level"], making["scope"]) != ("system", applies):
+                raise Refused("applies_to_mismatch",
+                              f"{rid} applies to {applies}; it was made at {making['level']} level in {making['scope']}")
 
     def need(self, rid: str, noun: str) -> dict:
         if rid not in self.record or noun_of(rid, self.c) != noun:
@@ -841,7 +845,9 @@ class Projector:
                     raise Refused("not_amendable", f"{target['id']} made a {made}; {key} is not amended")
                 if "id" in fields:
                     raise Refused("not_amendable", "an amendment never changes a record's id")
-                self.record[rid] = merge(self.record[rid], fields)
+                corrected = merge(self.record[rid], fields)
+                self.check_applies_to(rid, corrected, target)
+                self.record[rid] = corrected
         else:
             raise Refused("unknown_verb", v)
 

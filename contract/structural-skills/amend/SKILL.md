@@ -10,6 +10,8 @@ Correct the making author’s record inside the original edit window.
 
 The original making act defines the author and 600-second window. Amendments do not extend it. After expiry use supersede or revoke; never mutate history.
 
+An amendment keeps an Invariant's or Promise's `applies_to` the making act's scope; naming another version scope is refused (`applies_to_mismatch`).
+
 ## Procedure
 
 Read `contract/tool-interface.md` and its exact source pins in
