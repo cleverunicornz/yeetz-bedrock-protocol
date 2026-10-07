@@ -50,11 +50,11 @@
   "contract": [
     {
       "path": "contract/bedrock-v2.md",
-      "sha256": "be76e358748168deff6a058d8dba7e33557808d7162146072a6daa71fa548bdc"
+      "sha256": "4b7bb82d15f320eac95db68a88a44592121675129028b7fe2e0011d893520a0a"
     },
     {
       "path": "contract/bedrock-v2.yaml",
-      "sha256": "4395f3399a1d5ac6d282c86ece74c7cf794aaf262b0437ed5126c20db0b5296b"
+      "sha256": "d313b39eac3dcf5c476a47dd231ebfa42d5761da6c91cd53727bd5af5dd016ec"
     },
     {
       "path": "contract/bedrock-v2.schema.json",
@@ -86,7 +86,7 @@
     },
     {
       "path": "contract/release-2.1.md",
-      "sha256": "af6880001b193d57dee0fd676e9db646dcaefca7afbd4251af199109c5ec6dac"
+      "sha256": "d59b8ba25f942675c5af22f8418c113b079a803e2bce48f6e7eb0f6733991712"
     },
     {
       "path": "contract/release-2.1-witness.md",
@@ -128,7 +128,7 @@
     },
     {
       "path": "contract/skills/mint/SKILL.md",
-      "sha256": "447fa1e5cf5ffa7b65920af3bee81696467b33fdae2f22e3eadc6c612c36d8b1"
+      "sha256": "448080239e8ca03d15ba1e624be172c2058342f4a6c9981419cb5c668f2b06eb"
     },
     {
       "path": "contract/skills/produce/SKILL.md",
@@ -144,7 +144,7 @@
     },
     {
       "path": "contract/skills/stipulate/SKILL.md",
-      "sha256": "0c86cdebe9ca266918803409738bbd47c7fedb3ba1a7e47ec7cae0b673da370b"
+      "sha256": "0f5af57d3950b1a247353a5b852ffecb9179815a25304245ef3d4491e54014af"
     },
     {
       "path": "contract/skills/supersede/SKILL.md",
@@ -154,7 +154,7 @@
   "structural_skills": [
     {
       "path": "contract/structural-skills/amend/SKILL.md",
-      "sha256": "8342053c91379a9621d676e37a36c40853fa29abcfae56dbb62b9952472a0eb6"
+      "sha256": "8f65504188f4bb3370332e8889445317b6ebe7a4ec7518fd978d3bf1555563c9"
     },
     {
       "path": "contract/structural-skills/group/SKILL.md",
@@ -175,6 +175,10 @@
   ],
   "tool_examples": [
     {
+      "path": "contract/tool-examples/additions-2.1.json",
+      "sha256": "5000f1188695bdf3fe3aa245a506cd56e8d27a51f396685cb39a118160ea5c4a"
+    },
+    {
       "path": "contract/tool-examples/calls.json",
       "sha256": "9b2f0d46bcf6f8a91f4a9154588a47b0d4f0ce2acf6e1be6a7272ebd40add746"
     },
@@ -192,7 +196,7 @@
     },
     {
       "path": "contract/tool-examples/replay.py",
-      "sha256": "1990a6410a03abe8ad1d91a05d69b71b3b126df9a81fc9c2c11aceadf67817ce"
+      "sha256": "4f0f2bc38438e7db1daa80675accad6cfd5caa82d5177c574f85b7263dcfb469"
     }
   ],
   "migrations": [
@@ -206,7 +210,7 @@
     },
     {
       "path": "migrations/v2.0.1-to-v2.1.0.md",
-      "sha256": "ca2ce5a326cd64bf4aadce11fbf76b53a95b3efe94591cb32d6b467614e3822a"
+      "sha256": "c6d9ba0e3cbd4f098b1bdfd9854f897dafc1161560a32b9b198fd4dbbeb67a3a"
     }
   ],
   "roles": {
@@ -238,7 +242,7 @@
     },
     {
       "path": ".github/workflows/situation-projection.yml",
-      "sha256": "55371d02e3a3a8f57239576fb50854f9beba5dbf7b360479e02feab15931cbc9"
+      "sha256": "255094cc2a63c5ad2ca67a505f54b5bc249eea1f124e970817e0ea990c79e3c5"
     },
     {
       "path": "scripts/check-agents-md.py",
@@ -246,7 +250,7 @@
     },
     {
       "path": "scripts/situation-projection.py",
-      "sha256": "1284a1a847b38543f5e248d1cd2b5f16a11732716546e5b25e1f78fbabd6588a"
+      "sha256": "07bb6c377b98ac8c6a5bb47e25679fc20628c3d0fae43be3679b62b9c568f137"
     }
   ],
   "distribution": {
