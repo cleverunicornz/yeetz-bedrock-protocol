@@ -37,5 +37,41 @@ class ReplayArgumentTests(unittest.TestCase):
         self.assertIn("invariant", arguments["payload"])
 
 
+class AdditiveRetractionTests(unittest.TestCase):
+    """The pinned receiver vendors the 2.0 contract; 2.1 must be 2.0 plus exactly the declared additions."""
+
+    BASELINE = "58ed6646c00726f877b66fab987d18f9719d1b5e"  # the v2.0.1 release commit
+
+    def baseline(self, path):
+        import subprocess
+        return subprocess.run(["git", "-C", str(ROOT), "show", f"{self.BASELINE}:{path}"],
+                              check=True, capture_output=True, text=True).stdout
+
+    def test_retracting_the_2_1_additions_gives_the_2_0_contract_and_schema(self):
+        import json
+        import yaml
+        local = yaml.safe_load((HERE.parent / "bedrock-v2.yaml").read_text())
+        schema = json.loads((HERE.parent / "bedrock-v2.schema.json").read_text())
+        base = yaml.safe_load(self.baseline("contract/bedrock-v2.yaml"))
+        base_schema = json.loads(self.baseline("contract/bedrock-v2.schema.json"))
+        local, schema = replay.retract_additions(local, schema)
+        for contract in (base, local):
+            contract.pop("bedrock")
+        for s in (base_schema, schema):
+            s["properties"]["protocol"].pop("const", None)
+            s.pop("title", None)
+        self.assertEqual(local, base)
+        self.assertEqual(schema, base_schema)
+
+    def test_retraction_does_not_hide_other_changes(self):
+        import json
+        import yaml
+        local = yaml.safe_load((HERE.parent / "bedrock-v2.yaml").read_text())
+        schema = json.loads((HERE.parent / "bedrock-v2.schema.json").read_text())
+        local["nouns"]["Gap"]["states"].append("parked")
+        retracted, _ = replay.retract_additions(local, schema)
+        self.assertIn("parked", retracted["nouns"]["Gap"]["states"])
+
+
 if __name__ == "__main__":
     unittest.main()

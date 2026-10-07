@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import copy
 import hashlib
 import importlib
 import json
@@ -67,10 +68,46 @@ def pinned_source(root, spec):
             raise AssertionError(f"source digest differs: {entry['path']}")
 
 
+def retract_additions(contract, schema):
+    """Undo exactly the additive 2.1.0 changes (migrations/v2.0.1-to-v2.1.0.md).
+
+    The pinned receiver vendors the 2.0 contract. Native replay qualifies that
+    2.0 subset: what remains after retracting the declared additions must equal
+    the receiver's contract, so any other difference still fails. The 2.1
+    additions themselves await a receiver that implements them.
+    """
+    contract, schema = copy.deepcopy(contract), copy.deepcopy(schema)
+    for noun in ("Invariant", "Promise"):
+        contract["nouns"][noun]["fields"].pop("applies_to", None)
+    plan = contract["group"]["Plan"]
+    plan["members"] = [m for m in plan["members"] if m != "Gap"]
+    plan["fields"]["members"] = "Candidate and Promise ids, each once"
+    plan.pop("member_work", None)
+    plan.pop("assigns", None)
+    contract["refusals"]["bad_member"] = contract["refusals"]["bad_member"].replace(
+        "Candidates, Promises and Gaps", "Candidates and Promises")
+    regroup = contract["structural_acts"]["regroup"]
+    regroup["members"] = [m for m in regroup["members"] if m != "Gap"]
+    contract["queries"]["binds"]["answers"] = (
+        "Invariants stipulated (neither superseded nor revoked) for the scope and every scope it is related to by belongs_to.")
+    contract.pop("applies_to", None)
+    contract.pop("records", None)
+    defs = schema["$defs"]
+    defs.pop("applies_to", None)
+    for noun in ("invariant", "promise"):
+        defs[noun]["properties"].pop("applies_to", None)
+    defs["id_plan_member"] = {"description": "A Plan member: a Candidate or a Promise, nothing else.",
+                              "anyOf": [ref for ref in defs["id_plan_member"]["anyOf"] if ref != {"$ref": "#/$defs/id_Gap"}]}
+    schema["properties"]["protocol"] = {"const": schema["properties"]["protocol"].get("enum", [None])[-1]}
+    return contract, schema
+
+
 def compare_semantics(graph_source):
     import yaml
     base = yaml.safe_load((graph_source / "vendor/bedrock/contract/bedrock-v2.yaml").read_text())
     local = yaml.safe_load((ROOT / "bedrock-v2.yaml").read_text())
+    local_schema = json.loads((ROOT / "bedrock-v2.schema.json").read_text())
+    local, local_schema = retract_additions(local, local_schema)
     # The parent's release coordinate changes only publication identity.
     # Actual source keeps its own pinned vendored contract; never patch it.
     base.pop("bedrock")
@@ -78,7 +115,6 @@ def compare_semantics(graph_source):
     if base != local:
         raise AssertionError("fixed semantics differ from native source contract")
     base_schema = json.loads((graph_source / "vendor/bedrock/contract/bedrock-v2.schema.json").read_text())
-    local_schema = json.loads((ROOT / "bedrock-v2.schema.json").read_text())
     for schema in (base_schema, local_schema):
         schema["properties"]["protocol"].pop("const")
         schema.pop("title", None)

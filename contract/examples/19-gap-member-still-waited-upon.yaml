@@ -1,0 +1,26 @@
+# A Gap member follows the same membership rules as any member: removing a
+# Gap that a waits_on link still names is refused (bad_member), and the Plan
+# keeps its members.
+name: gap-member-still-waited-upon
+defaults:
+  protocol: 2.1.0
+  level: repository
+  scope: example-repository
+  actor: {kind: agent, agent: agent-orch, role: orchestrator, principal: key-repo}
+  session: session:s-orch
+acts:
+  - {id: A-1, verb: declare, recorded_at: "2026-10-07T09:00:00Z",
+     payload: {gap: {id: G-1, title: Backups are not restored in tests, statement: No test restores a backup.}}}
+  - {id: A-2, verb: formulate, recorded_at: "2026-10-07T09:05:00Z",
+     payload: {responds_to: [G-1], candidate: {id: C-1, title: Restore the nightly backup in CI, hypothesis: A weekly restore job proves the backups restore.}}}
+  - {id: A-3, verb: group, recorded_at: "2026-10-07T09:10:00Z",
+     payload: {plan: {id: PLAN-1, title: Restore drills, members: [G-1, C-1], waits_on: [{member: G-1, upon: C-1}]}}}
+  - {id: A-4, verb: regroup, recorded_at: "2026-10-07T09:20:00Z",
+     payload: {plan: PLAN-1, remove_members: [G-1]}}
+expect:
+  refused: {act_index: 3, code: bad_member}
+  states:
+    PLAN-1: grouped
+    G-1: declared
+  plans:
+    PLAN-1: {members: [G-1, C-1], waits_on: [{member: G-1, upon: C-1}]}

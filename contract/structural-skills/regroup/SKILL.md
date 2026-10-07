@@ -6,7 +6,7 @@ description: Read before `regroup` through the task graph structural interface.
 
 # regroup
 
-Change a Plan membership or its optional waits-on links.
+Change a Plan membership or its optional waits-on links; members are Candidates, Promises and Gaps.
 
 The Plan must already exist. Removing a member still named by a waits-on link is refused; order is optional.
 

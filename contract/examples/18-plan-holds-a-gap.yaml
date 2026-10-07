@@ -1,0 +1,41 @@
+# A Plan may hold a Gap. The work on a Gap member is formulate (and refine);
+# its outcome is decide, and the Gap member is complete when decided. The Plan
+# itself still asserts nothing and has no completion condition.
+name: plan-holds-a-gap
+defaults:
+  protocol: 2.1.0
+  level: repository
+  scope: example-repository
+  actor: {kind: agent, agent: agent-orch, role: orchestrator, principal: key-repo}
+  session: session:s-orch
+acts:
+  - {id: A-1, verb: declare, recorded_at: "2026-10-07T09:00:00Z",
+     payload: {gap: {id: G-1, title: Exports drop rows with empty names, statement: Two of the last five exports were short by the rows whose name is empty.}}}
+  - {id: A-2, verb: group, recorded_at: "2026-10-07T09:01:00Z",
+     payload: {plan: {id: PLAN-1, title: Export completeness, members: [G-1], waits_on: []}}}
+  - {id: A-3, verb: refine, recorded_at: "2026-10-07T09:20:00Z",
+     payload: {target: G-1, sighting: {note: A third short export on the same input.}}}
+  - {id: A-4, verb: formulate, recorded_at: "2026-10-07T09:30:00Z",
+     payload: {responds_to: [G-1], candidate: {id: C-1, title: Export empty names as empty strings, hypothesis: Writing an empty string keeps every row in the export.}}}
+  - {id: A-5, verb: regroup, recorded_at: "2026-10-07T09:31:00Z",
+     payload: {plan: PLAN-1, add_members: [C-1], add_waits: [{member: G-1, upon: C-1}]}}
+  - id: A-6
+    verb: decide
+    recorded_at: "2026-10-07T11:00:00Z"
+    actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+    session: session:s-review
+    payload:
+      considered: [G-1, C-1]
+      outcomes:
+        - {subject: C-1, outcome: accept}
+        - {subject: G-1, outcome: close}
+      decision: {id: D-1, title: Export empty names as empty strings, statement: Accept C-1 and close G-1., why: The candidate keeps every row and changes no other value.}
+expect:
+  states:
+    PLAN-1: regrouped
+    G-1: decided
+    C-1: decided
+  plans:
+    PLAN-1: {members: [G-1, C-1], waits_on: [{member: G-1, upon: C-1}]}
+  trace:
+    G-1: [declared, decided]

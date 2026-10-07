@@ -38,6 +38,7 @@ SCHEMA = ROOT / "bedrock-v2.schema.json"
 EXAMPLES = ROOT / "examples"
 SKILLS = ROOT / "skills"
 ROLES = ROOT / "roles.md"
+RECORD_TEMPLATES = ROOT.parent / "templates/records"
 NO_LOOP_EXAMPLE = "contract/examples/10-no-recursive-invalidation.yaml"
 
 # Review 1 removed these state words; none may come back as a state, an
@@ -260,8 +261,8 @@ def check_prose(text: str, contract: dict) -> None:
         fail(f"edit window: contract {window}s; prose must say 10 minutes")
 
     # Package patches do not change the fixed language/wire coordinate.
-    # migrations/2.0.0-to-2.0.1.md selects stable package line 2.0.x.
-    version = "2.0.0"
+    # migrations/v2.0.1-to-v2.1.0.md moves it to the additive 2.1.0.
+    version = "2.1.0"
     if contract["bedrock"] != version:
         fail(f"version: contract {contract['bedrock']} != VERSION {version}")
     if f"Version {version}" not in text:
@@ -429,8 +430,24 @@ def check_schema(schema: dict, contract: dict) -> None:
         fail("schema: stored_reference must require visibility")
     if defs["reference"]["properties"]["visibility"].get("default") != refs["visibility_default"]:
         fail("schema visibility default != contract visibility_default")
-    if schema["properties"]["protocol"]["const"] != contract["bedrock"]:
-        fail("schema protocol const != contract version")
+    # An additive release keeps every earlier act valid: the schema admits each
+    # language version up to the contract's own, and the contract's is last.
+    protocols = schema["properties"]["protocol"].get("enum", [])
+    if protocols[-1:] != [contract["bedrock"]] or "2.0.0" not in protocols:
+        fail(f"schema protocol versions {protocols} must end with {contract['bedrock']} and keep 2.0.0")
+    # Applies to: optional on exactly the nouns the contract names.
+    applies = contract["applies_to"]
+    for noun in contract["nouns"]:
+        props = defs[noun.lower()]["properties"]
+        want = noun in applies["nouns"]
+        if ("applies_to" in props) != want or (want and props["applies_to"] != {"$ref": "#/$defs/applies_to"}):
+            fail(f"schema {noun}: applies_to must be {'an optional' if want else 'no'} field")
+        if "applies_to" in defs[noun.lower()].get("required", []):
+            fail(f"schema {noun}: applies_to is optional")
+        if want and contract["nouns"][noun]["fields"].get("applies_to") != "applies_to?":
+            fail(f"contract {noun}: applies_to is an optional field")
+    if {"const": applies["default"]} not in defs["applies_to"]["anyOf"]:
+        fail(f"schema applies_to does not admit the default {applies['default']!r}")
     for verb in act_names:
         if f"payload_{verb}" not in defs:
             fail(f"schema has no payload definition for {verb}")
@@ -439,7 +456,18 @@ def check_schema(schema: dict, contract: dict) -> None:
             fail(f"schema id pattern for {noun} does not admit {spec['prefix']}-1")
     # A Plan holds only its member nouns: every field naming a Plan member
     # admits exactly those ids.
-    member = {"anyOf": [{"$ref": f"#/$defs/id_{n}"} for n in contract["group"]["Plan"]["members"]]}
+    plan = contract["group"]["Plan"]
+    member = {"anyOf": [{"$ref": f"#/$defs/id_{n}"} for n in plan["members"]]}
+    for noun, work in plan.get("member_work", {}).items():
+        if noun not in plan["members"]:
+            fail(f"Plan member_work names {noun}, which is not a member noun")
+        for verb in work["work"]:
+            if contract["verbs"].get(verb, {}).get("kind") != "act":
+                fail(f"Plan member_work: {verb} is not a performed verb")
+        if noun not in contract["verbs"][work["outcome"]]["acts_on"]:
+            fail(f"Plan member_work: {work['outcome']} does not act on a {noun}")
+        if work["complete_when"] not in state_sets(contract)[noun]:
+            fail(f"Plan member_work: {work['complete_when']} is not a {noun} state")
     if defs.get("id_plan_member", {}).get("anyOf") != member["anyOf"]:
         fail(f"schema id_plan_member {defs.get('id_plan_member')} != {member}")
     regroup = defs["payload_regroup"]["properties"]
@@ -512,6 +540,8 @@ class Projector:
         self.judged: set[tuple[str, str]] = set()  # (Witness, Oracle)
         self.log: list[dict] = []
         self.applied: set[tuple] = set()
+        self.made_at: dict[str, str] = {}  # record -> its making act's scope_ref
+        self.belongs: set[tuple[str, str]] = set()  # (scope_ref, scope_ref)
         self.allowed = {
             (t["noun"], f, t["to"], v)
             for t in contract["transitions"]
@@ -566,8 +596,14 @@ class Projector:
             raise Refused("wrong_noun", f"{rid} is not a {noun}")
         if rid in self.hist:
             raise Refused("duplicate_id", f"{rid} exists")
+        applies = rec.get("applies_to")
+        if applies not in (None, self.c["applies_to"]["default"]):
+            # A version scope is the making act's level and scope.
+            if (act["level"], act["scope"]) != ("system", applies):
+                raise Refused("applies_to_mismatch", f"{rid} applies to {applies}; it is made at system level in that scope")
         self.record[rid] = copy.deepcopy(rec)
         self.author[rid] = (act["actor"]["agent"], when(act))
+        self.made_at[rid] = scope_ref(act)
         self.give(rid, act, first_state(self.c, noun))
 
     def need(self, rid: str, noun: str) -> dict:
@@ -613,7 +649,8 @@ class Projector:
 
     def apply(self, act: dict) -> None:
         saved = copy.deepcopy(
-            (self.state, self.record, self.hist, self.author, self.subjects, self.judged, self.applied)
+            (self.state, self.record, self.hist, self.author, self.subjects, self.judged, self.applied,
+             self.made_at, self.belongs)
         )
         if any(a["id"] == act["id"] for a in self.log):
             raise Refused("duplicate_act_id", f"act {act['id']} is already recorded")
@@ -623,7 +660,8 @@ class Projector:
             self.rebuild(act["verb"])
         except Refused:
             self.log.pop()
-            (self.state, self.record, self.hist, self.author, self.subjects, self.judged, self.applied) = saved
+            (self.state, self.record, self.hist, self.author, self.subjects, self.judged, self.applied,
+             self.made_at, self.belongs) = saved
             raise
 
     def _apply(self, act: dict) -> None:
@@ -784,6 +822,9 @@ class Projector:
             for r in (p["from"], p["to"]):
                 if not r.startswith("scope:"):
                     self.need(r, noun_of(r, self.c))
+            if p["relation"] == "belongs_to":
+                link = (p["from"], p["to"])
+                (self.belongs.discard if p.get("remove") else self.belongs.add)(link)
         elif v == "amend":
             # The window runs from the act that made the record; an amendment
             # of an amendment corrects the same record and never extends it.
@@ -803,6 +844,31 @@ class Projector:
                 self.record[rid] = merge(self.record[rid], fields)
         else:
             raise Refused("unknown_verb", v)
+
+
+    # -- queries -------------------------------------------------------------
+
+    def reaches(self, scope: str) -> set[str]:
+        """The scope and every scope it reaches by belongs_to."""
+        seen, todo = {scope}, [scope]
+        while todo:
+            here = todo.pop()
+            for frm, to in sorted(self.belongs):
+                if frm == here and to not in seen:
+                    seen.add(to)
+                    todo.append(to)
+        return seen
+
+    def binds(self, scope: str) -> list[str]:
+        """Stipulated Invariants recorded at a scope the given scope reaches."""
+        reach = self.reaches(scope)
+        return [rid for rid in self.record
+                if noun_of(rid, self.c) == "Invariant" and self.state.get(rid) == "stipulated"
+                and self.made_at[rid] in reach]
+
+
+def scope_ref(act: dict) -> str:
+    return f"scope:{act['level']}/{act['scope']}"
 
 
 # The records an act may change, by the tokens of the contract's one_step map.
@@ -936,6 +1002,9 @@ def check_examples(schema: dict, contract: dict) -> tuple[set[tuple], set[str]]:
             got_plan = {"members": got.get("members"), "waits_on": got.get("waits_on", [])}
             if got_plan != want_plan:
                 fail(f"{name}: {pid} holds {got_plan}, expected {want_plan}")
+        for scope, want_binds in expect.get("binds", {}).items():
+            if proj.binds(scope) != want_binds:
+                fail(f"{name}: binds({scope}) is {proj.binds(scope)}, expected {want_binds}")
         for rid, want_trace in expect.get("trace", {}).items():
             if trace.get(rid) != want_trace:
                 fail(f"{name}: {rid} passed through {trace.get(rid)}, expected {want_trace}")
@@ -1114,6 +1183,75 @@ def check_roles(contract: dict) -> None:
     check_mechanics(rel, text)
 
 
+# Each record class's file headings, in order, and the field each states. The
+# templates are the domain's record schema and the projection's format.
+TEMPLATE_HEADINGS = {
+    "Invariant": [("State", "state"), ("Applies to", "applies_to"), ("Priority", "priority"),
+                  ("Invariant", "rule"), ("Basis", "basis")],
+    "Gap": [("State", "state"), ("Gap", "statement"), ("Impact", "impact"), ("About", "about"),
+            ("Arose in", "arose_in")],
+    "Candidate": [("State", "state"), ("Candidate", "hypothesis"), ("Responds to", "responds_to")],
+    "Decision": [("State", "state"), ("Decision", "statement"), ("Why", "why"), ("Rejected", "rejected"),
+                 ("Revisit when", "revisit_when"), ("Considered", "considered"), ("Outcomes", "outcomes")],
+    "Promise": [("State", "state"), ("Applies to", "applies_to"), ("Promise", "statement"), ("Scope", "scope"),
+                ("Residual", "residual"), ("Basis", "basis"), ("From candidate", "from_candidate"),
+                ("Addresses", "addresses")],
+    "Oracle": [("State", "state"), ("Judges", "judges"), ("Inputs", "inputs"), ("Holds when", "holds_when"),
+               ("Fails when", "fails_when"), ("Arrangement", "arrangement"), ("Executable", "executable")],
+    "Witness": [("State", "state"), ("Observes", "observes"), ("Observed at", "observed_at"),
+                ("Coordinate", "coordinate"), ("Result", "result"), ("Evidence", "evidence"), ("Refines", "refines")],
+    "Reference": [("State", "state"), ("Kind", "kind"), ("Media type", "media_type"), ("Location", "location"),
+                  ("Digest", "digest"), ("Conversion", "conversion"), ("Visibility", "visibility")],
+    "Plan": [("State", "state"), ("Members", "members"), ("Waits on", "waits_on")],
+}
+
+
+def check_record_templates(schema: dict, contract: dict) -> None:
+    """Every record class has a template whose headings state exactly its fields
+    and links; a heading is marked optional exactly when its field is."""
+    defs = schema["$defs"]
+    made = {spec["made_by"]: noun for noun, spec in contract["nouns"].items()}
+    made[contract["group"]["Plan"]["made_by"]] = "Plan"
+    nouns = list(contract["nouns"]) + ["Plan"]
+    found = sorted(p.stem for p in RECORD_TEMPLATES.glob("*.md")) if RECORD_TEMPLATES.is_dir() else []
+    if found != sorted(n.lower() for n in nouns):
+        fail(f"record templates: templates/records/ holds {found}, not one per record class")
+    for noun in nouns:
+        path = RECORD_TEMPLATES / f"{noun.lower()}.md"
+        if not path.is_file():
+            continue
+        rel = str(path.relative_to(ROOT.parent))
+        text = path.read_text()
+        prefix = contract["group"]["Plan"]["prefix"] if noun == "Plan" else contract["nouns"][noun]["prefix"]
+        if not text.startswith(f"# {prefix}-<number> — <title>\n"):
+            fail(f"{rel}: title line must be '# {prefix}-<number> — <title>'")
+        sections = re.findall(r"^## (.+)\n\n(.+)$", text, re.M)
+        want = TEMPLATE_HEADINGS[noun]
+        if [h for h, _ in sections] != [h for h, _ in want]:
+            fail(f"{rel}: headings {[h for h, _ in sections]} != {[h for h, _ in want]}")
+            continue
+        record = defs[noun.lower()]
+        verb = contract["group"]["Plan"]["made_by"] if noun == "Plan" else contract["nouns"][noun]["made_by"]
+        payload = defs[f"payload_{verb}"]
+        fields = {}
+        for name in record["properties"]:
+            if name not in ("id", "title"):
+                fields[name] = name in record.get("required", []) or name in defs.get(f"stored_{noun.lower()}", {}).get("required", [])
+        for name in payload["properties"]:
+            if name != noun.lower():
+                fields[name] = name in payload.get("required", [])
+        if noun == "Witness":
+            fields["refines"] = False  # a Witness made by refine names the earlier one
+        fields["state"] = True
+        if sorted(f for _, f in want) != sorted(fields):
+            fail(f"{rel}: headings state {sorted(f for _, f in want)}, the record has {sorted(fields)}")
+        for (heading, field), (_, body) in zip(want, sections):
+            if field in fields and body.startswith("Optional.") == fields[field]:
+                fail(f"{rel}: '{heading}' must {'not ' if fields[field] else ''}be marked Optional.")
+        if ("Applies to" in [h for h, _ in sections]) != (noun in contract["applies_to"]["nouns"]):
+            fail(f"{rel}: Applies to belongs on exactly {contract['applies_to']['nouns']}")
+
+
 def published_skill_files() -> list[Path]:
     return sorted(SKILLS.glob("*/SKILL.md")) if SKILLS.is_dir() else []
 
@@ -1138,7 +1276,7 @@ def check_manifest() -> None:
     if ROLES.is_file() and roles != {"path": str(ROLES.relative_to(ROOT.parent)), "sha256": digest(ROLES)}:
         fail(f"manifest: roles {roles} != {ROLES.relative_to(ROOT.parent)} with its digest")
     version = (ROOT.parent / "VERSION").read_text().strip()
-    if re.fullmatch(r"2\.0\.(?:0|[1-9][0-9]*)", version, re.ASCII) is None:
+    if re.fullmatch(r"2\.[01]\.(?:0|[1-9][0-9]*)", version, re.ASCII) is None:
         fail(f"manifest: unsupported stable package version {version!r}")
     if manifest.get("version") != version:
         fail(f"manifest: version {manifest.get('version')} != VERSION {version}")
@@ -1160,6 +1298,7 @@ def main() -> int:
         lambda: check_schema(schema, contract),
         lambda: check_skills(contract),
         lambda: check_roles(contract),
+        lambda: check_record_templates(schema, contract),
         check_manifest,
     ):
         try:
