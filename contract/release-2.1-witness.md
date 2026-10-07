@@ -35,3 +35,21 @@ missing scripts; the retraction tests failed on the missing function.
 
 No receiver implementing the 2.1 additions, no caller's run of either reusable
 workflow against a published v2.1.0 release, and no migrated scope.
+
+## Round 2: validator findings F1 to F7
+
+Observed 2026-10-07 at source head `3c2afb33bd849e3f6276864fff39323d416729e6`,
+after the validation review of `60dd40d` found F1 to F7.
+
+- Before the fixes, the new checks ran against the `60dd40d` sources: worked
+  examples `21` and `22` failed (`applies_to_mismatch` not refused; the
+  amended scope kept), and the new tests gave 47 failures and 23 errors across
+  link refusal, template headings, Reference order, the fork boundary, the
+  `runs-on` record and 18 mutations inside retracted fields.
+- Protocol qualification, https://github.com/cleverunicornz/yeetz-bedrock-protocol/actions/runs/37659404180:
+  success; 71 unit tests OK, source semantics OK, actionlint and shellcheck
+  clean, projection twice byte-equal (commit read
+  `cc1597ba0e1f8d3988b3fbbb38d0c21dba594dab`).
+- Native protocol replay, https://github.com/cleverunicornz/yeetz-bedrock-protocol/actions/runs/37659404405:
+  success; 31 calls and 3 refusals PASS, and the receiver's contract equals this
+  contract with exactly the declared additions retracted.
