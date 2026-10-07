@@ -68,10 +68,11 @@ class Shape(unittest.TestCase):
         self.assertNotIn("[skip ci]", text)
 
     def test_public_neutral_wording(self):
+        """Generic tooling: the only repository it names is this public protocol repository."""
         for name in WORKFLOWS + ("../../scripts/situation-projection.py", "../../scripts/check-agents-md.py"):
             text = (ROOT / ".github/workflows" / name).read_text()
-            for private in ("clever-unicorn-org", "infra-v2", "org_read_token", "Paseo", "I-0000"):
-                self.assertNotIn(private, text, name)
+            self.assertEqual(set(re.findall(r"cleverunicornz/[\w.-]+", text)) - {"cleverunicornz/yeetz-bedrock-protocol"}, set(), name)
+            self.assertNotRegex(text, r"read_token|\bI-\d{6}\b|\bD-\d{6}\b", name)
 
 
 class ReleaseVerification(unittest.TestCase):
