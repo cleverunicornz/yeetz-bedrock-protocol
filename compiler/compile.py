@@ -10,8 +10,9 @@ import sys
 
 from check_sentences import duplicates
 
-# migrations/2.0.0-to-2.0.1.md fixes this supported contract line in source.
-STABLE_PACKAGE_VERSION = re.compile(r"2\.0\.(?:0|[1-9][0-9]*)", re.ASCII)
+# migrations/2.0.0-to-2.0.1.md fixed the stable line in source;
+# migrations/v2.0.1-to-v2.1.0.md adds the additive 2.1 line beside it.
+STABLE_PACKAGE_VERSION = re.compile(r"2\.[01]\.(?:0|[1-9][0-9]*)", re.ASCII)
 
 
 def entries(value):
@@ -31,7 +32,7 @@ def verify(root: Path) -> tuple[dict, dict[str, Path]]:
     manifest = json.loads((root / "manifest.json").read_text())
     version = manifest.get("version")
     if not isinstance(version, str) or STABLE_PACKAGE_VERSION.fullmatch(version) is None:
-        raise ValueError(f"{root}: requires a stable 2.0.x package version")
+        raise ValueError(f"{root}: requires a stable 2.0.x or 2.1.x package version")
     packaged_version = (root / "VERSION").read_text().removesuffix("\n")
     if packaged_version != version:
         raise ValueError(f"{root}: manifest version does not match packaged VERSION")
@@ -57,7 +58,14 @@ def require(files, name):
     return files[name].read_text()
 
 
-def repository_part(template: str, path: Path) -> str:
+def repository_part(template: str, path: Path | None) -> str:
+    """The repository block is one fixed text. Repository input, when given, is
+    still validated so existing callers fail closed on record copies, but none
+    of it is rendered: identity and ownership live in the graph."""
+    if re.search(r"\{\{.*?\}\}", template):
+        raise ValueError("the repository block template must be the fixed text")
+    if path is None:
+        return template
     data = json.loads(path.read_text())
     allowed = {"identity", "ownership", "scope", "bootstrap"}
     if not isinstance(data, dict):
@@ -72,13 +80,10 @@ def repository_part(template: str, path: Path) -> str:
     for key, value in data.items():
         if not isinstance(value, str) or not value.strip() or len(value) > 256 or any(c in value for c in "\n\r<>{}"):
             raise ValueError(f"repository {key} must be one short plain line")
-        template = template.replace("{{" + key + "}}", value)
-    if re.search(r"\{\{.*?\}\}", template):
-        raise ValueError("unresolved repository template input")
     return template
 
 
-def compile_text(protocol_root: Path, org_root: Path, repository: Path, part: str) -> str:
+def compile_text(protocol_root: Path, org_root: Path, repository: Path | None, part: str) -> str:
     pm, protocol = verify(protocol_root)
     om, org = verify(org_root)
     root = require(protocol, pm["root_protocol"]["path"])
@@ -108,7 +113,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--protocol-root", type=Path, required=True)
     parser.add_argument("--org-root", type=Path, required=True)
-    parser.add_argument("--repository", type=Path, required=True)
+    parser.add_argument("--repository", type=Path, help="optional; validated for compatibility, never rendered")
     parser.add_argument("--part", choices=("full", "user", "repository"), default="full")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()

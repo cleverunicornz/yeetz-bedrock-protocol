@@ -1,0 +1,42 @@
+# Applies to: an Invariant or Promise binds all environments unless it names a
+# version scope. In the domain that is the making act's level and scope: a
+# rule for agent-runtime/2 is stipulated at level system, scope
+# agent-runtime/2. binds follows belongs_to from a repository to its version
+# and to the organisation and returns what applies there; a rule for another
+# version is not returned.
+name: applies-to-a-version
+defaults:
+  protocol: 2.1.0
+  level: repository
+  scope: example-repository
+  actor: {kind: human, agent: person-1, role: authority, principal: key-operator}
+  session: session:s-review
+acts:
+  - {id: A-1, verb: stipulate, recorded_at: "2026-10-07T09:00:00Z",
+     payload: {invariant: {id: I-1, title: Exports keep every row, rule: An export writes every source row., priority: critical}}}
+  - {id: A-2, verb: stipulate, recorded_at: "2026-10-07T09:01:00Z", level: system, scope: agent-runtime/2,
+     payload: {invariant: {id: I-2, title: Version 2 sessions start from the graph, rule: A session of version 2 orients from the graph queries., priority: standard, applies_to: agent-runtime/2}}}
+  - {id: A-3, verb: stipulate, recorded_at: "2026-10-07T09:02:00Z", level: system, scope: agent-runtime/3,
+     payload: {invariant: {id: I-3, title: Version 3 sessions read the board first, rule: A session of version 3 reads its board before acting., priority: standard, applies_to: agent-runtime/3}}}
+  - {id: A-4, verb: stipulate, recorded_at: "2026-10-07T09:03:00Z", level: organisation, scope: example-organisation,
+     payload: {invariant: {id: I-4, title: Secrets stay unread, rule: No agent reads a secret value., priority: critical, applies_to: all environments}}}
+  - {id: A-5, verb: store, recorded_at: "2026-10-07T09:04:00Z",
+     payload: {reference: {id: R-1, title: Export specification, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "b311111111111111111111111111111111111111111111111111111111111111"},
+               location: {stored: {store: references, key: r/1.md, version: v1}}}}}
+  - {id: A-6, verb: mint, recorded_at: "2026-10-07T09:05:00Z", level: system, scope: agent-runtime/2,
+     payload: {basis: {instruction: R-1}, promise: {id: P-1, title: Version 2 exports stream, statement: A version 2 export streams rows as it reads them., scope: The version 2 exporter., applies_to: agent-runtime/2}}}
+  - {id: A-7, verb: relate, recorded_at: "2026-10-07T09:06:00Z",
+     payload: {from: "scope:repository/example-repository", to: "scope:system/agent-runtime/2", relation: belongs_to}}
+  - {id: A-8, verb: relate, recorded_at: "2026-10-07T09:07:00Z",
+     payload: {from: "scope:system/agent-runtime/2", to: "scope:organisation/example-organisation", relation: belongs_to}}
+expect:
+  states:
+    I-1: stipulated
+    I-2: stipulated
+    I-3: stipulated
+    I-4: stipulated
+    P-1: asserted
+  binds:
+    "scope:repository/example-repository": [I-1, I-2, I-4]
+    "scope:system/agent-runtime/3": [I-3]

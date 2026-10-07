@@ -9,7 +9,11 @@
       "$ref": "#/$defs/id_act"
     },
     "protocol": {
-      "const": "2.0.0"
+      "enum": [
+        "2.0.0",
+        "2.1.0"
+      ],
+      "description": "The Bedrock language version the act was recorded under; 2.1.0 is additive, so acts recorded under 2.0.0 stay valid."
     },
     "verb": {
       "$ref": "#/$defs/verb"
@@ -445,13 +449,16 @@
       ]
     },
     "id_plan_member": {
-      "description": "A Plan member: a Candidate or a Promise, nothing else.",
+      "description": "A Plan member: a Candidate, a Promise or a Gap, nothing else.",
       "anyOf": [
         {
           "$ref": "#/$defs/id_Candidate"
         },
         {
           "$ref": "#/$defs/id_Promise"
+        },
+        {
+          "$ref": "#/$defs/id_Gap"
         }
       ]
     },
@@ -459,6 +466,20 @@
       "type": "string",
       "pattern": "^scope:[a-z][a-z0-9_-]*/.+$",
       "description": "scope:<level>/<scope name>"
+    },
+    "applies_to": {
+      "description": "What an Invariant or Promise binds: all environments (the default when absent) or a version scope, a system-level scope such as agent-runtime/2. In the domain it is the making act's level and scope; in a record file it is the heading Applies to.",
+      "anyOf": [
+        {
+          "const": "all environments"
+        },
+        {
+          "type": "string",
+          "pattern": "^\\S+$",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      ]
     },
     "state": {
       "type": "object",
@@ -581,6 +602,9 @@
             "critical",
             "standard"
           ]
+        },
+        "applies_to": {
+          "$ref": "#/$defs/applies_to"
         }
       },
       "required": [
@@ -697,6 +721,9 @@
         },
         "residual": {
           "$ref": "#/$defs/text"
+        },
+        "applies_to": {
+          "$ref": "#/$defs/applies_to"
         }
       },
       "required": [

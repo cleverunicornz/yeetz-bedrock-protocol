@@ -1,8 +1,11 @@
 # Bedrock v2: the contract
 
-Version 2.0.0. This release adopts the fixed v2 meanings. Authority changes
-only at a qualified scope; a release does not activate a runtime or migrate
-records. The source Decision is `migrations/2.0.0-draft-to-2.0.0.md`.
+Version 2.1.0. This additive release keeps every 2.0.0 meaning and adds
+`Applies to`, Gaps as Plan members, records in the situation domain with files
+as projections, and one fixed repository block. Authority changes only at a
+qualified scope; a release does not activate a runtime or migrate records. The
+source Decisions are `migrations/2.0.0-draft-to-2.0.0.md` and
+`migrations/v2.0.1-to-v2.1.0.md`.
 `contract/check.py` checks prose, YAML, schema, worked examples and executable
 verb procedures together.
 
@@ -51,14 +54,15 @@ repository's.
 
 Fields (limits in "Field limits" below; `?` marks optional):
 
-- **Invariant:** `title`, `rule`, `priority` (`critical` or `standard`). Optional basis links.
+- **Invariant:** `title`, `rule`, `priority` (`critical` or `standard`), `applies_to?` (section 8). Optional basis
+  links.
 - **Gap:** `title`, `statement`, `impact?`. Optional `about` links and `arose_in` (the act during which it arose,
   for example a judgment).
 - **Candidate:** `title`, `hypothesis`. At least one `responds_to` link (a Gap, Witness, Decision, Reference or
   Candidate). Depth goes in References.
 - **Decision:** `title`, `statement`, `why`, `rejected?` (alternative and why), `revisit_when?`. Optional
   `considered` links and per-subject `outcomes`.
-- **Promise:** `title`, `statement`, `scope`, `residual?`. A `basis`: a Decision (the grounds), or a Reference
+- **Promise:** `title`, `statement`, `scope`, `residual?`, `applies_to?` (section 8). A `basis`: a Decision (the grounds), or a Reference
   holding the accepted instruction or specification; optional `from_candidate` and `addresses` (Gaps).
 - **Oracle:** `title`, `judges` (one Promise), `inputs`, `holds_when`, `fails_when`, `arrangement` (`human`,
   `agent`, `deterministic`, `mixed`), `executable?`. A wholly human Oracle is complete as it stands.
@@ -69,13 +73,19 @@ Fields (limits in "Field limits" below; `?` marks optional):
 
 ### Plan: a group, not a noun
 
-A **Plan** (`PLAN` prefix) groups Candidates and Promises, nothing more: `title`, `members`, and optional, loose
-`waits_on` links between members (`member` waits upon `upon`). Order is never required up front. Each member is
-named once; a `regroup` that adds another noun, removes what the Plan does not hold, or removes a member a `waits_on`
-link still names is refused (`bad_member`). A Plan asserts
+A **Plan** (`PLAN` prefix) groups Candidates, Promises and Gaps, nothing more: `title`, `members`, and optional,
+loose `waits_on` links between members (`member` waits upon `upon`). Order is never required up front. Each member
+is named once; a `regroup` that adds another noun, removes what the Plan does not hold, or removes a member a
+`waits_on` link still names is refused (`bad_member`). A Plan asserts
 nothing and has no completion condition; its progress is read from its members' states. It is made by the
 structural act `group`, changed by `regroup`, and withdrawn by `revoke`. A Plan's states are `grouped`,
 `regrouped` and `revoked`.
+
+- **A Gap member.** The work on a Gap in a Plan is `formulate` (Candidates that respond to it) and `refine` (further
+  sightings); its outcome is `decide`. A Gap member is complete when it is `decided`. Worked examples:
+  `contract/examples/18-plan-holds-a-gap.yaml`, `contract/examples/19-gap-member-still-waited-upon.yaml`.
+- **A Plan assigns nothing.** Recording a Gap assigns nothing, and neither does grouping it: a Plan assigns nothing
+  by existing. Work is assigned only by a runtime's request, which is outside this protocol.
 
 ### States: one rule
 
@@ -425,6 +435,14 @@ that every act changes only the records in its one-step reach, and that no act i
   organisation may add values.
 - **No forced hierarchy.** A board can stand alone. Belonging is an optional `relate ... belongs_to` link between
   scopes, added when it becomes true and never required up front. `binds` follows those links.
+- **Applies to.** An Invariant or a Promise may name what it binds: `all environments` (the default when absent) or a
+  version scope, a `system`-level scope such as `agent-runtime/2`. In the domain it is the making act's level and
+  scope: a rule for `agent-runtime/2` is stipulated at level `system`, scope `agent-runtime/2`. In a record file it
+  is the heading `Applies to`. A record whose version scope is not its making act's, when it is made or after any
+  amendment, is refused (`applies_to_mismatch`). `binds(scope)` follows `belongs_to` from the scope to its version
+  and to the organisation and returns what applies there; a rule for another version is not returned. Worked
+  examples: `contract/examples/20-applies-to-a-version.yaml`, `contract/examples/21-amend-invariant-applies-to.yaml`,
+  `contract/examples/22-amend-promise-applies-to.yaml`.
 
 **Layering.** Rules come in layers: Bedrock, then the organisation, then the repository, then the agent at runtime.
 Each layer adds and specialises; none redefines the layer below it. Redefining is a Bedrock change.
@@ -437,6 +455,35 @@ Each layer adds and specialises; none redefines the layer below it. Redefining i
 - **The runtime adds:** board records and a session's own Plans.
 
 Layers are where rules come from; levels are where records apply. They are separate properties.
+
+### Where records live
+
+- **Records live in the situation domain.** The act log and its projection are the authority. A repository's
+  `situation/` directory is where its records are authored only until the domain holds them; from then on it is not
+  a source.
+- **Files are projections.** A public repository carries one generated file, `SITUATION.md`: a deterministic
+  projection of its records at the repository level, rebuilt on every merge. It holds a header naming the scope, the
+  source, the commit read and its date, and the words "projection; not a source of truth", then one section per
+  record class in id order: Invariants, Promises with their state, Oracles, Decisions, Gaps, Candidates, Plans, and
+  References as pointers. Each record keeps every heading its template defines. Nothing from the `security` level,
+  no Witness and no scope context enters it, and a symbolic link in the source is refused. A private
+  repository carries no projection. A projection is never a source: an edit to it changes nothing.
+- **The record templates are the format.** `templates/records/` gives each record class its title line and
+  required headings, with `Applies to` optional on Invariants and Promises. They are the domain's record schema
+  and the projection's format; a file authored before the domain holds the records follows them too.
+
+### Repository instructions and checks
+
+- **The repository block is one fixed text.** A repository's root `AGENTS.md` holds the repository block
+  `templates/repository-block.md`, byte for byte; nothing is filled in. What the earlier block carried lives in the
+  graph: identity and ownership, with a fork's upstream coordinate, in the repository scope's context record;
+  critical invariants in `binds`; verification in `assured_by` and `open_work`; tools in the tool tree the runtime
+  gives. The user-level protocol block is delivered by the runtime and is not part of the repository.
+- **A repository under the protocol calls two checks** published with each release, pinned to the protocol version
+  it adopts: `.github/workflows/check-agents-md.yml` fails when the root `AGENTS.md` repository block differs from
+  that release's template by a byte; `.github/workflows/situation-projection.yml` builds `SITUATION.md` on each pull
+  request of a public repository with `scripts/situation-projection.py` and commits it to the pull request's head.
+  A pull request from a fork is refused: a fork is never where a projection is produced.
 
 ## 9. References
 
@@ -472,13 +519,13 @@ Every noun is queryable by its states and its relations; the rest follow from th
 |---|---|
 | `by_state` | Records of one noun in the given states, optionally at a level or scope. |
 | `relations` | A record's links in and out, each with the act that made it. |
-| `binds` | Invariants `stipulated` (neither superseded nor revoked) for a scope and every scope it belongs to. |
+| `binds` | Invariants `stipulated` (neither superseded nor revoked) that apply to a scope: recorded at it or at any scope it reaches by `belongs_to`, its version and the organisation included (section 8). |
 | `open_work` | Gaps `declared` or last decided `keep`, Candidates `formulated` or `evaluated`, Promises `asserted`, Witnesses `produced`. |
 | `assured_by` | The standing judge act, Oracle and Witness behind an assured Promise, and judge acts since. |
 | `unjudged_witnesses` | Witnesses in state `produced`, with their Promise. |
 | `gaps_without_candidate` | Gaps `declared` or last decided `keep`, with no Candidate responding and no Promise addressing (a relation query). |
 | `assured_under_earlier_oracle` | Assured Promises whose standing `holds` judgment applied an Oracle since superseded. |
-| `plan_view` | A Plan's members, their states and their `waits_on` links. |
+| `plan_view` | A Plan's members (Candidates, Promises and Gaps), their states and their `waits_on` links. |
 | `how_did_we_get_here` | The path of acts backward from a record: Decisions, Candidates, Gaps, instructions, judgments. |
 | `what_changed_since` | Acts recorded after a cursor within the reader's reach; each agent keeps its own last-seen cursor. |
 | `transcript_behind` | An act's session, turn and tool-call pointers, for the transcript store to resolve. |

@@ -114,6 +114,16 @@ https://github.com/cleverunicornz/task-graph/issues/11#issuecomment-5968597913
 and https://github.com/cleverunicornz/runner-images/issues/130#issuecomment-5968598002.
 No profile-to-trust, human authority or cross-home mapping is inferred.
 
+## Additive 2.1.0 meanings at the receiver
+
+The pinned receiver vendors the 2.0 contract. Protocol 2.1.0 adds `applies_to`
+on Invariants and Promises, Gaps as Plan members and a `binds` that reaches a
+version scope. `replay.py` retracts exactly those additions before comparing
+the fixed semantics with the receiver's, so native replay keeps qualifying the
+2.0 subset and fails on any other difference. The procedures' fixtures use no
+2.1 addition. Receiver support for the additions is a producer dependency and
+is not claimed by this package.
+
 ## Current-source surfacing dependency
 
 At the pinned baseline, binds/open_work report native folded records. They

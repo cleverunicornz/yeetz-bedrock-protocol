@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import copy
 import hashlib
 import importlib
 import json
@@ -67,10 +68,44 @@ def pinned_source(root, spec):
             raise AssertionError(f"source digest differs: {entry['path']}")
 
 
+ADDITIONS = Path(__file__).resolve().parent / "additions-2.1.json"
+
+
+def retract_additions(contract, schema):
+    """Undo exactly the declared additive 2.1.0 changes (`additions-2.1.json`).
+
+    The pinned receiver vendors the 2.0 contract. Native replay qualifies that
+    2.0 subset: each declared path must hold exactly its declared 2.1 value
+    before it is restored to its 2.0 value or removed, so a change inside a
+    retracted field fails here, and any other difference still fails the
+    comparison with the receiver's contract. The 2.1 additions themselves
+    await a receiver that implements them.
+    """
+    declared = json.loads(ADDITIONS.read_text())
+    out = {"contract": copy.deepcopy(contract), "schema": copy.deepcopy(schema)}
+    for document in ("contract", "schema"):
+        for entry in declared[document]:
+            *parents, key = entry["path"]
+            node = out[document]
+            for name in parents:
+                node = node.get(name) if isinstance(node, dict) else None
+            where = f"{document}:{'.'.join(entry['path'])}"
+            if not isinstance(node, dict) or key not in node or node[key] != entry["added"]:
+                found = node.get(key, "<absent>") if isinstance(node, dict) else "<absent>"
+                raise AssertionError(f"{where} holds {found!r}, not the declared 2.1 addition")
+            if "baseline" in entry:
+                node[key] = copy.deepcopy(entry["baseline"])
+            else:
+                del node[key]
+    return out["contract"], out["schema"]
+
+
 def compare_semantics(graph_source):
     import yaml
     base = yaml.safe_load((graph_source / "vendor/bedrock/contract/bedrock-v2.yaml").read_text())
     local = yaml.safe_load((ROOT / "bedrock-v2.yaml").read_text())
+    local_schema = json.loads((ROOT / "bedrock-v2.schema.json").read_text())
+    local, local_schema = retract_additions(local, local_schema)
     # The parent's release coordinate changes only publication identity.
     # Actual source keeps its own pinned vendored contract; never patch it.
     base.pop("bedrock")
@@ -78,7 +113,6 @@ def compare_semantics(graph_source):
     if base != local:
         raise AssertionError("fixed semantics differ from native source contract")
     base_schema = json.loads((graph_source / "vendor/bedrock/contract/bedrock-v2.schema.json").read_text())
-    local_schema = json.loads((ROOT / "bedrock-v2.schema.json").read_text())
     for schema in (base_schema, local_schema):
         schema["properties"]["protocol"].pop("const")
         schema.pop("title", None)

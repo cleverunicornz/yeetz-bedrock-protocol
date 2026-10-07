@@ -1,0 +1,254 @@
+{
+  "description": "The additive Bedrock 2.1.0 changes to contract/bedrock-v2.yaml and contract/bedrock-v2.schema.json (migrations/v2.0.1-to-v2.1.0.md). Each entry is a path, its exact 2.1.0 value, and the 2.0 value it replaced; an entry without a baseline was added. Native replay retracts exactly these against the pinned 2.0 receiver; any other value at these paths, or any other difference, fails.",
+  "contract": [
+    {
+      "path": [
+        "nouns",
+        "Invariant",
+        "fields",
+        "applies_to"
+      ],
+      "added": "applies_to?"
+    },
+    {
+      "path": [
+        "nouns",
+        "Promise",
+        "fields",
+        "applies_to"
+      ],
+      "added": "applies_to?"
+    },
+    {
+      "path": [
+        "group",
+        "Plan",
+        "members"
+      ],
+      "added": [
+        "Candidate",
+        "Promise",
+        "Gap"
+      ],
+      "baseline": [
+        "Candidate",
+        "Promise"
+      ]
+    },
+    {
+      "path": [
+        "group",
+        "Plan",
+        "fields",
+        "members"
+      ],
+      "added": "Candidate, Promise and Gap ids, each once",
+      "baseline": "Candidate and Promise ids, each once"
+    },
+    {
+      "path": [
+        "group",
+        "Plan",
+        "member_work"
+      ],
+      "added": {
+        "Gap": {
+          "work": [
+            "formulate",
+            "refine"
+          ],
+          "outcome": "decide",
+          "complete_when": "decided"
+        }
+      }
+    },
+    {
+      "path": [
+        "group",
+        "Plan",
+        "assigns"
+      ],
+      "added": "nothing; a Plan assigns nothing by existing, as recording a Gap assigns nothing"
+    },
+    {
+      "path": [
+        "refusals",
+        "bad_member"
+      ],
+      "added": "a Plan holds only Candidates, Promises and Gaps, each once; a regroup removes only what the Plan holds; a waits_on link names only members",
+      "baseline": "a Plan holds only Candidates and Promises, each once; a regroup removes only what the Plan holds; a waits_on link names only members"
+    },
+    {
+      "path": [
+        "refusals",
+        "applies_to_mismatch"
+      ],
+      "added": "an Invariant or Promise that names a version scope is made at system level in that scope; a making act or an amendment that names another scope is refused"
+    },
+    {
+      "path": [
+        "structural_acts",
+        "regroup",
+        "members"
+      ],
+      "added": [
+        "Candidate",
+        "Promise",
+        "Gap"
+      ],
+      "baseline": [
+        "Candidate",
+        "Promise"
+      ]
+    },
+    {
+      "path": [
+        "queries",
+        "binds",
+        "answers"
+      ],
+      "added": "Invariants stipulated (neither superseded nor revoked) that apply to the scope - those recorded at the scope or at any scope it reaches by belongs_to, a version scope and the organisation included.",
+      "baseline": "Invariants stipulated (neither superseded nor revoked) for the scope and every scope it is related to by belongs_to."
+    },
+    {
+      "path": [
+        "applies_to"
+      ],
+      "added": {
+        "nouns": [
+          "Invariant",
+          "Promise"
+        ],
+        "values": [
+          "all environments",
+          "a version scope"
+        ],
+        "default": "all environments",
+        "version_scope": "a system-level scope naming a version, such as agent-runtime/2; the making act has level system and that scope",
+        "file_heading": "Applies to"
+      }
+    },
+    {
+      "path": [
+        "records"
+      ],
+      "added": {
+        "authority": "the situation domain - the act log and its projection",
+        "record_templates": "templates/records/",
+        "repository_directory": "a repository's situation/ directory is where its records are authored only until the domain holds them",
+        "projection": {
+          "file": "SITUATION.md",
+          "public_repository": "one generated file, rebuilt on every merge",
+          "private_repository": "none",
+          "level": "repository",
+          "content": "a header, then one section per record class in id order",
+          "excludes": [
+            "security level",
+            "witnesses",
+            "scope context"
+          ],
+          "source": "never; a projection is never a source"
+        },
+        "repository_instructions": {
+          "agents_md": "the root AGENTS.md repository block is one fixed text, templates/repository-block.md",
+          "checks": [
+            "check-agents-md",
+            "situation-projection"
+          ],
+          "pinned_to": "the protocol version the repository adopts"
+        }
+      }
+    }
+  ],
+  "schema": [
+    {
+      "path": [
+        "properties",
+        "protocol"
+      ],
+      "added": {
+        "enum": [
+          "2.0.0",
+          "2.1.0"
+        ],
+        "description": "The Bedrock language version the act was recorded under; 2.1.0 is additive, so acts recorded under 2.0.0 stay valid."
+      },
+      "baseline": {
+        "const": "2.0.0"
+      }
+    },
+    {
+      "path": [
+        "$defs",
+        "applies_to"
+      ],
+      "added": {
+        "description": "What an Invariant or Promise binds: all environments (the default when absent) or a version scope, a system-level scope such as agent-runtime/2. In the domain it is the making act's level and scope; in a record file it is the heading Applies to.",
+        "anyOf": [
+          {
+            "const": "all environments"
+          },
+          {
+            "type": "string",
+            "pattern": "^\\S+$",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        ]
+      }
+    },
+    {
+      "path": [
+        "$defs",
+        "invariant",
+        "properties",
+        "applies_to"
+      ],
+      "added": {
+        "$ref": "#/$defs/applies_to"
+      }
+    },
+    {
+      "path": [
+        "$defs",
+        "promise",
+        "properties",
+        "applies_to"
+      ],
+      "added": {
+        "$ref": "#/$defs/applies_to"
+      }
+    },
+    {
+      "path": [
+        "$defs",
+        "id_plan_member"
+      ],
+      "added": {
+        "description": "A Plan member: a Candidate, a Promise or a Gap, nothing else.",
+        "anyOf": [
+          {
+            "$ref": "#/$defs/id_Candidate"
+          },
+          {
+            "$ref": "#/$defs/id_Promise"
+          },
+          {
+            "$ref": "#/$defs/id_Gap"
+          }
+        ]
+      },
+      "baseline": {
+        "description": "A Plan member: a Candidate or a Promise, nothing else.",
+        "anyOf": [
+          {
+            "$ref": "#/$defs/id_Candidate"
+          },
+          {
+            "$ref": "#/$defs/id_Promise"
+          }
+        ]
+      }
+    }
+  ]
+}

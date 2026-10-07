@@ -1,5 +1,5 @@
 <bedrock-protocol>
-# Bedrock 2.0
+# Bedrock 2.1
 
 Use these tools at session start and throughout the work:
 - Task graph maps the world: records, binding rules and unfinished work in the current scopes.
@@ -17,7 +17,7 @@ A Promise is a falsifiable assertion a judgment can assure; states: asserted, as
 An Oracle is the judgment rule for one Promise; states: defined, superseded, revoked.
 A Witness is an observation retained independently of judgment; states: produced, judged, revoked.
 A Reference is pinned depth supporting a record; states: stored, superseded, revoked.
-A Plan is a group of Candidates and Promises, not a noun or assertion; states: grouped, regrouped, revoked.
+A Plan is a group of Candidates, Promises and Gaps, not a noun or assertion; states: grouped, regrouped, revoked.
 An act is one recorded use of a performed verb or structural operation, with lineage.
 
 Verb skills:
@@ -46,8 +46,9 @@ Organisation scope: example-organisation.
 Consult its graph Invariants and org/skills/operate/SKILL.md for operating practice.
 </bedrock-organization>
 <bedrock-repository>
-Identity: example/parser
-Ownership: OWNED
-Graph scope: example-parser
-Bootstrap: Runtime supplies task graph, memory and board access.
+This repository is operated through the organisation's situation graph. The graph is the source of truth for what this repository is, what it promises, what binds it and what is in motion; nothing outside it is a rule.
+
+If you run inside the organisation's runtime, Paseo has already given you what applies to you: the protocol, the rules that bind this scope, your role and your request. Orient with the graph's queries (`binds`, `open_work`, `what_changed_since`) and go as deep as the work needs. Every tool you have is in your tool tree.
+
+If you are not inside the runtime, or the graph is unavailable to you, read `README.md`; `SITUATION.md`, where present, is a projection of the graph at the last merge and is critical reading.
 </bedrock-repository>

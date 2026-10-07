@@ -1,5 +1,5 @@
 <bedrock-protocol>
-# Bedrock 2.0
+# Bedrock 2.1
 
 Use these tools at session start and throughout the work:
 - Task graph maps the world: records, binding rules and unfinished work in the current scopes.
@@ -17,7 +17,7 @@ A Promise is a falsifiable assertion a judgment can assure; states: asserted, as
 An Oracle is the judgment rule for one Promise; states: defined, superseded, revoked.
 A Witness is an observation retained independently of judgment; states: produced, judged, revoked.
 A Reference is pinned depth supporting a record; states: stored, superseded, revoked.
-A Plan is a group of Candidates and Promises, not a noun or assertion; states: grouped, regrouped, revoked.
+A Plan is a group of Candidates, Promises and Gaps, not a noun or assertion; states: grouped, regrouped, revoked.
 An act is one recorded use of a performed verb or structural operation, with lineage.
 
 Verb skills:

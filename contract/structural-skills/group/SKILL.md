@@ -6,9 +6,10 @@ description: Read before `group` through the task graph structural interface.
 
 # group
 
-Collect existing Candidates and Promises in a Plan.
+Collect existing Candidates, Promises and Gaps in a Plan.
 
-Only returned Candidate and Promise IDs are members. A Plan makes no assertion and has no completion condition.
+Only returned Candidate, Promise and Gap IDs are members. A Plan makes no assertion, assigns nothing and has no completion condition.
+The work on a Gap member is formulate and refine; its outcome is decide, and it is complete when decided.
 
 ## Procedure
 

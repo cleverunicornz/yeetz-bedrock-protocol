@@ -45,6 +45,8 @@ A commitment is accepted.
 
 ## Refusals
 
+- `applies_to_mismatch`: an Promise whose `applies_to` names a version scope is made at
+  level `system` in that scope; another scope is refused, here and in any amendment.
 - `wrong_basis`: a Promise minted from a Candidate cites the Decision that
   accepted that Candidate; any other Decision is refused.
 - Minting from a Candidate whose latest standing outcome is not `accept` is

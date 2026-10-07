@@ -6,8 +6,8 @@ It is exempt from consuming itself: situation/ and organization/ contain
 historical distribution bytes, not this repository's knowledge records.
 The release's protocol Decision is recorded in its migration note.
 
-Read contract/stage0.md and migrations/2.0.0-draft-to-2.0.0.md before changing
-this deliverable. Contract nouns, verbs, states, outcomes and role guidance
+Read contract/stage0.md, migrations/2.0.0-draft-to-2.0.0.md and
+migrations/v2.0.1-to-v2.1.0.md before changing this deliverable. Contract nouns, verbs, states, outcomes and role guidance
 remain fixed in contract/bedrock-v2.yaml and bedrock-v2.schema.json.
 Protocol templates are neutral; organisation operating policy comes from
 the separate paired organisation package. Never copy records or skill

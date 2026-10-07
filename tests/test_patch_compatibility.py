@@ -53,7 +53,8 @@ class PatchCompatibilityTests(unittest.TestCase):
 
     def test_independent_stable_patches_compile_manifest_only_in_all_modes(self):
         protocol = self.package()
-        for pv, ov in (("2.0.0", "2.0.1"), ("2.0.1", "2.0.0"), ("2.0.1", "2.0.37")):
+        for pv, ov in (("2.0.0", "2.0.1"), ("2.0.1", "2.0.0"), ("2.0.1", "2.0.37"),
+                       ("2.1.0", "2.0.1"), ("2.1.0", "2.0.37"), ("2.1.3", "2.1.0"), ("2.0.1", "2.1.0")):
             self.version(protocol, pv)
             self.version(self.org, ov)
             for part in ("full", "user", "repository"):
@@ -64,7 +65,7 @@ class PatchCompatibilityTests(unittest.TestCase):
 
     def test_invalid_versions_fail_closed_for_each_package(self):
         protocol = self.package()
-        invalid = ("1.0.1", "2.1.0", "3.0.0", "2.0.01", "02.0.1", "2.00.1",
+        invalid = ("1.0.1", "2.2.0", "2.10.0", "3.0.0", "2.0.01", "2.1.01", "2.01.0", "02.0.1", "2.00.1",
                    "2.0.1-rc.1", "2.0.1+build", "2.0", "v2.0.1", "2.0.1\n", "", None, 2, ["2.0.1"])
         self.version(self.org, "2.0.0")
         for root in (protocol, self.org):

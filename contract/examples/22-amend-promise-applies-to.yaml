@@ -1,0 +1,27 @@
+# A Promise made at repository level binds all environments. Amending it to
+# name a version scope it was not made in is refused (applies_to_mismatch);
+# naming all environments explicitly is accepted.
+name: amend-promise-applies-to
+defaults:
+  protocol: 2.1.0
+  level: repository
+  scope: example-repository
+  actor: {kind: agent, agent: agent-orch, role: orchestrator, principal: key-repo}
+  session: session:s-orch
+acts:
+  - {id: A-1, verb: store, recorded_at: "2026-10-07T09:00:00Z",
+     payload: {reference: {id: R-1, title: Export specification, kind: artifact, media_type: text/markdown,
+               digest: {sha256: "c411111111111111111111111111111111111111111111111111111111111111"},
+               location: {stored: {store: references, key: r/1.md, version: v1}}}}}
+  - {id: A-2, verb: mint, recorded_at: "2026-10-07T09:01:00Z",
+     payload: {basis: {instruction: R-1}, promise: {id: P-1, title: Exports keep every row, statement: An export writes every source row., scope: The exporter.}}}
+  - {id: A-3, verb: amend, recorded_at: "2026-10-07T09:02:00Z",
+     payload: {target_act: A-2, changes: {promise: {applies_to: all environments}}}}
+  - {id: A-4, verb: amend, recorded_at: "2026-10-07T09:03:00Z",
+     payload: {target_act: A-2, changes: {promise: {applies_to: agent-runtime/2}}}}
+expect:
+  refused: {act_index: 3, code: applies_to_mismatch}
+  states:
+    P-1: asserted
+  records:
+    P-1: {applies_to: all environments}
