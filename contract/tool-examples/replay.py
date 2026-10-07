@@ -68,38 +68,36 @@ def pinned_source(root, spec):
             raise AssertionError(f"source digest differs: {entry['path']}")
 
 
+ADDITIONS = Path(__file__).resolve().parent / "additions-2.1.json"
+
+
 def retract_additions(contract, schema):
-    """Undo exactly the additive 2.1.0 changes (migrations/v2.0.1-to-v2.1.0.md).
+    """Undo exactly the declared additive 2.1.0 changes (`additions-2.1.json`).
 
     The pinned receiver vendors the 2.0 contract. Native replay qualifies that
-    2.0 subset: what remains after retracting the declared additions must equal
-    the receiver's contract, so any other difference still fails. The 2.1
-    additions themselves await a receiver that implements them.
+    2.0 subset: each declared path must hold exactly its declared 2.1 value
+    before it is restored to its 2.0 value or removed, so a change inside a
+    retracted field fails here, and any other difference still fails the
+    comparison with the receiver's contract. The 2.1 additions themselves
+    await a receiver that implements them.
     """
-    contract, schema = copy.deepcopy(contract), copy.deepcopy(schema)
-    for noun in ("Invariant", "Promise"):
-        contract["nouns"][noun]["fields"].pop("applies_to", None)
-    plan = contract["group"]["Plan"]
-    plan["members"] = [m for m in plan["members"] if m != "Gap"]
-    plan["fields"]["members"] = "Candidate and Promise ids, each once"
-    plan.pop("member_work", None)
-    plan.pop("assigns", None)
-    contract["refusals"]["bad_member"] = contract["refusals"]["bad_member"].replace(
-        "Candidates, Promises and Gaps", "Candidates and Promises")
-    regroup = contract["structural_acts"]["regroup"]
-    regroup["members"] = [m for m in regroup["members"] if m != "Gap"]
-    contract["queries"]["binds"]["answers"] = (
-        "Invariants stipulated (neither superseded nor revoked) for the scope and every scope it is related to by belongs_to.")
-    contract.pop("applies_to", None)
-    contract.pop("records", None)
-    defs = schema["$defs"]
-    defs.pop("applies_to", None)
-    for noun in ("invariant", "promise"):
-        defs[noun]["properties"].pop("applies_to", None)
-    defs["id_plan_member"] = {"description": "A Plan member: a Candidate or a Promise, nothing else.",
-                              "anyOf": [ref for ref in defs["id_plan_member"]["anyOf"] if ref != {"$ref": "#/$defs/id_Gap"}]}
-    schema["properties"]["protocol"] = {"const": schema["properties"]["protocol"].get("enum", [None])[-1]}
-    return contract, schema
+    declared = json.loads(ADDITIONS.read_text())
+    out = {"contract": copy.deepcopy(contract), "schema": copy.deepcopy(schema)}
+    for document in ("contract", "schema"):
+        for entry in declared[document]:
+            *parents, key = entry["path"]
+            node = out[document]
+            for name in parents:
+                node = node.get(name) if isinstance(node, dict) else None
+            where = f"{document}:{'.'.join(entry['path'])}"
+            if not isinstance(node, dict) or key not in node or node[key] != entry["added"]:
+                found = node.get(key, "<absent>") if isinstance(node, dict) else "<absent>"
+                raise AssertionError(f"{where} holds {found!r}, not the declared 2.1 addition")
+            if "baseline" in entry:
+                node[key] = copy.deepcopy(entry["baseline"])
+            else:
+                del node[key]
+    return out["contract"], out["schema"]
 
 
 def compare_semantics(graph_source):
