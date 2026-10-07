@@ -36,9 +36,10 @@ jobs:
       push_token: ${{ secrets.SITUATION_PUSH_TOKEN }}
 ```
 
-Both accept an optional `runs-on` input (JSON) for the runner. The projection
-runs only on pull requests of public repositories; a private repository
-carries no `SITUATION.md`. A fork's repository follows its upstream's
+Both accept an optional `runs-on` input (JSON) for the runner; it defaults
+to `"ubuntu-latest"`. The projection runs only on pull requests of public
+repositories; a private repository carries no `SITUATION.md`, and a pull
+request from a fork is refused. A fork's repository follows its upstream's
 `AGENTS.md` and does not call the AGENTS.md check.
 
 ## Qualification boundary

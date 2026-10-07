@@ -55,6 +55,12 @@ class Shape(unittest.TestCase):
         run = step("check-agents-md.yml", "AGENTS.md repository block equals the fixed text")["run"]
         self.assertIn("bedrock/scripts/check-agents-md.py --agents repository/AGENTS.md --template bedrock/templates/repository-block.md", run)
 
+    def test_runs_on_default_is_recorded_with_its_reason(self):
+        text = " ".join((ROOT / "migrations/v2.0.1-to-v2.1.0.md").read_text().split())
+        self.assertIn("`runs-on` defaults to `\"ubuntu-latest\"`", text)
+        for name in WORKFLOWS:
+            self.assertEqual(workflow(name)[True]["workflow_call"]["inputs"]["runs-on"]["default"], '"ubuntu-latest"')
+
     def test_projection_commits_to_the_head_and_refuses_forks_with_instructions(self):
         text = (ROOT / ".github/workflows/situation-projection.yml").read_text()
         [job] = workflow("situation-projection.yml")["jobs"].values()
@@ -62,7 +68,11 @@ class Shape(unittest.TestCase):
         self.assertIn("push_token", workflow("situation-projection.yml")[True]["workflow_call"]["secrets"])
         self.assertIn("bedrock/scripts/situation-projection.py --root repository", text)
         self.assertIn("github.event.pull_request.head.sha", text)
-        self.assertIn("comes from a fork, so it cannot be committed here", text)
+        [job] = workflow("situation-projection.yml")["jobs"].values()
+        names = [s.get("name", s.get("uses")) for s in job["steps"]]
+        self.assertLess(names.index("Refuse a pull request from a fork"), names.index(job["steps"][2]["uses"]),
+                        "a fork is refused before anything is checked out, fetched or projected")
+        self.assertIn("Push the branch to $GITHUB_REPOSITORY and open the pull request from there", text)
         self.assertIn("git push origin", text)
         self.assertIn("--check", text)
         self.assertNotIn("[skip ci]", text)
@@ -73,6 +83,60 @@ class Shape(unittest.TestCase):
             text = (ROOT / ".github/workflows" / name).read_text()
             self.assertEqual(set(re.findall(r"cleverunicornz/[\w.-]+", text)) - {"cleverunicornz/yeetz-bedrock-protocol"}, set(), name)
             self.assertNotRegex(text, r"read_token|\bI-\d{6}\b|\bD-\d{6}\b", name)
+
+
+class ForkBoundary(unittest.TestCase):
+    """A pull request from a fork is never where a projection is produced: it is refused, current or not."""
+
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.repo = Path(directory.name) / "repository"
+        self.repo.mkdir()
+        identity = ["-c", "user.name=t", "-c", "user.email=t@e"]
+        subprocess.run(["git", "init", "-q", str(self.repo)], check=True)
+        (self.repo / "SITUATION.md").write_text("current\n")
+        subprocess.run(["git", "-C", str(self.repo), "add", "."], check=True)
+        subprocess.run(["git", "-C", str(self.repo), *identity, "commit", "-q", "-m", "projection"], check=True)
+        self.steps = [step("situation-projection.yml", title)["run"] for title in
+                      ("Refuse a pull request from a fork", "Commit the projection to the pull request head")]
+
+    def run_step(self, head_repository):
+        """Run the fork refusal and the commit step in job order, stopping at the first failure."""
+        env = {**os.environ, "VERSION": "2.1.0", "GITHUB_REPOSITORY": "owner/project",
+               "HEAD_REPOSITORY": head_repository, "HEAD_REF": "topic", "HAS_PUSH_TOKEN": "false"}
+        stdout = ""
+        for script in self.steps:
+            result = subprocess.run(["bash", "-e", "-c", script], cwd=self.repo, env=env, capture_output=True, text=True)
+            stdout += result.stdout
+            if result.returncode:
+                break
+        result.stdout = stdout
+        return result
+
+    def test_a_fork_is_refused_even_when_the_projection_is_current(self):
+        result = self.run_step("contributor/project")
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn("comes from a fork", result.stdout)
+        self.assertNotIn("SITUATION.md is current", result.stdout)
+
+    def test_a_fork_is_refused_when_the_projection_is_stale(self):
+        (self.repo / "SITUATION.md").write_text("stale\n")
+        result = self.run_step("contributor/project")
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn("comes from a fork", result.stdout)
+
+    def test_a_current_projection_on_a_branch_of_the_repository_passes(self):
+        result = self.run_step("owner/project")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("SITUATION.md is current", result.stdout)
+
+    def test_the_documents_state_the_same_boundary(self):
+        for path in (".github/workflows/situation-projection.yml", "migrations/v2.0.1-to-v2.1.0.md",
+                     "contract/bedrock-v2.md", "README.md"):
+            text = " ".join((ROOT / path).read_text().split())
+            with self.subTest(path=path):
+                self.assertIn("a pull request from a fork is refused", text.lower())
 
 
 class ReleaseVerification(unittest.TestCase):

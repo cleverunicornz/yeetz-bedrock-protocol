@@ -1,7 +1,8 @@
 # Reusable Bedrock check: on a pull request of a public repository, SITUATION.md is the deterministic projection of
 # the repository's situation records (contract section 8), built by scripts/situation-projection.py of the protocol
 # release the repository adopts and committed to the pull request's head when it changed. A private repository
-# carries no projection and the job is skipped. Until the situation domain holds the repository's records, the
+# carries no projection and the job is skipped. A pull request from a fork is refused: a fork is never where a
+# projection is produced. Until the situation domain holds the repository's records, the
 # projection's source is the repository's own situation/ files.
 #
 #   on: pull_request
@@ -56,6 +57,12 @@ jobs:
         run: |
           if [[ ! "$VERSION" =~ ^2\.[1-9][0-9]*\.(0|[1-9][0-9]*)$ ]]; then
             echo "::error::version must be a Bedrock protocol release 2.<minor>.<patch> from 2.1.0, got '$VERSION'"
+            exit 1
+          fi
+      - name: Refuse a pull request from a fork
+        run: |
+          if [ "$HEAD_REPOSITORY" != "$GITHUB_REPOSITORY" ]; then
+            echo "::error file=SITUATION.md::this pull request comes from a fork ($HEAD_REPOSITORY), and a fork is never where a projection is produced: a pull request from a fork is refused, whatever the state of its SITUATION.md. Push the branch to $GITHUB_REPOSITORY and open the pull request from there; the projection is then built and committed to its head."
             exit 1
           fi
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -114,11 +121,6 @@ jobs:
           if git ls-files --error-unmatch SITUATION.md >/dev/null 2>&1 && git diff --quiet -- SITUATION.md; then
             echo "SITUATION.md is current"
             exit 0
-          fi
-          if [ "$HEAD_REPOSITORY" != "$GITHUB_REPOSITORY" ]; then
-            git diff --stat -- SITUATION.md || true
-            echo "::error file=SITUATION.md::SITUATION.md is stale and this pull request comes from a fork, so it cannot be committed here. Build it with scripts/situation-projection.py from bedrock-$VERSION.tar.gz of Bedrock protocol release v$VERSION (python3 bedrock/scripts/situation-projection.py --root <your checkout> --scope $GITHUB_REPOSITORY --output SITUATION.md), commit it to the pull request and push."
-            exit 1
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
