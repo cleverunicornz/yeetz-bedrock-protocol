@@ -1,30 +1,68 @@
 {
-  "version": "2.0.1",
-  "description": "Bedrock 2.0 fixed contract, executable procedures and short instruction compiler; organisation is a separate paired package.",
+  "version": "2.1.0",
+  "description": "Bedrock 2.1 fixed contract, executable procedures, record templates, short instruction compiler and repository checks; organisation is a separate paired package.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
-    "sha256": "7f005ce6bf18ff8b7d7721b46018ebf21497aa8d77ebf5b91ba0c1448607a55f"
+    "sha256": "71ddf61c026a11df75e5f7f62ab6234c5ee6a6ed42e0eaf4e7e40249e12bfd09"
   },
   "repository_block": {
     "path": "templates/repository-block.md",
-    "sha256": "5beff204ef7da1180cf03dc5dbcbe169c87fff5c35547390cd8d68056dd8652a"
+    "sha256": "e19698075d6445025dbc3630e5fe40a3f8d5cb4b70b47c92cd1e1772b12b17de"
   },
+  "record_templates": [
+    {
+      "path": "templates/records/candidate.md",
+      "sha256": "5d7bd2f1950b7ecf379922415ce9b21a077998018edc1e3b88bbe50f9dbd8759"
+    },
+    {
+      "path": "templates/records/decision.md",
+      "sha256": "a03ec22b307eca53e20b3deb143f713c9de01e5a0a841856a10fa2e13e2b4a49"
+    },
+    {
+      "path": "templates/records/gap.md",
+      "sha256": "8d7e8e5f5102dce75da532cd24a7f3eab2f0f09af52cb900ff70c423ee5093eb"
+    },
+    {
+      "path": "templates/records/invariant.md",
+      "sha256": "b05a3f98b37da91837c1da66d92584e2a19da80211c901daae62630e10edb78d"
+    },
+    {
+      "path": "templates/records/oracle.md",
+      "sha256": "2ea8628f84797c51d788524996f8d628f493ec7d946c26022a707cc58311612d"
+    },
+    {
+      "path": "templates/records/plan.md",
+      "sha256": "37d0e734a606041393843604ac0e7b7cd7550e9618ae8208e376ab33bf7dfeb3"
+    },
+    {
+      "path": "templates/records/promise.md",
+      "sha256": "44ec42f52e135458b49c7badc86747d6daeb8fb512ce51a08b25300b65e4fb5a"
+    },
+    {
+      "path": "templates/records/reference.md",
+      "sha256": "cd1c0ed6d2e11962a1ce22b9ecdbfe606382de7fef60c93bfb77be42afe10d7e"
+    },
+    {
+      "path": "templates/records/witness.md",
+      "sha256": "c78f662226e9695feb02fd021baf5701ccc75e6ac1c9c02cfe880853d46263e1"
+    }
+  ],
   "contract": [
     {
       "path": "contract/bedrock-v2.md",
-      "sha256": "d03c3da912e14b996cb5f5115268b427be2435796d8cd06060f9a3bc1ad87165"
+      "sha256": "be76e358748168deff6a058d8dba7e33557808d7162146072a6daa71fa548bdc"
     },
     {
       "path": "contract/bedrock-v2.yaml",
-      "sha256": "13eea576b95fec45b1957518201cef9a44cac99c7ebe58703aa615423482262c"
+      "sha256": "4395f3399a1d5ac6d282c86ece74c7cf794aaf262b0437ed5126c20db0b5296b"
     },
     {
       "path": "contract/bedrock-v2.schema.json",
-      "sha256": "449b14a8d4d5adbf6ea89c5f51086588ee24a6da7c91a467af7e0c8a3b4f38a3"
+      "sha256": "c21a3937d132981b12d634d2a836279aa2ad0a1c31fdc68d23aa7bceb581fea0"
     },
     {
       "path": "contract/tool-interface.md",
-      "sha256": "4faa1a16b442fbeb952170435b9ae584f67f6044c6c7a84e5cf8d6741f3ac5d1"
+      "sha256": "5758427dd5cabef4e11024770a20891362a8c11e0361f38af23a05547dd9cb6f"
     },
     {
       "path": "contract/tool-interface.json",
@@ -45,6 +83,10 @@
     {
       "path": "contract/patch-compatibility-witness.md",
       "sha256": "249d81b3979fbcfc6ba20d5c091bddf3a737ae61ce48463e05a52a1cc85ce06c"
+    },
+    {
+      "path": "contract/release-2.1.md",
+      "sha256": "af6880001b193d57dee0fd676e9db646dcaefca7afbd4251af199109c5ec6dac"
     },
     {
       "path": "contract/gaps/SO-000117-skill-verb-declaration.md",
@@ -112,11 +154,11 @@
     },
     {
       "path": "contract/structural-skills/group/SKILL.md",
-      "sha256": "da2662c08d470216d1c694e5b07d5026de3ac615961690e892c452a5436cfee8"
+      "sha256": "04eded98549b3ced362df96831933615b58456275b5239e436142c66272df5bd"
     },
     {
       "path": "contract/structural-skills/regroup/SKILL.md",
-      "sha256": "c0f40d2d9376e56ac018683a24227798fa002327332ec922ff24c9b8558bc207"
+      "sha256": "c82cca1b12b23f9d247e64ba6939a948a70deac4a12d600b9dd3467d9c009a37"
     },
     {
       "path": "contract/structural-skills/relate/SKILL.md",
@@ -146,7 +188,7 @@
     },
     {
       "path": "contract/tool-examples/replay.py",
-      "sha256": "48c60e98f55d05e4600a3ed7ccb22933f3324526c55f14cd2b972105a919e4ca"
+      "sha256": "1990a6410a03abe8ad1d91a05d69b71b3b126df9a81fc9c2c11aceadf67817ce"
     }
   ],
   "migrations": [
@@ -157,6 +199,10 @@
     {
       "path": "migrations/2.0.0-to-2.0.1.md",
       "sha256": "5841544055fc77fb98d832fd149ec5cf354f0864f041bfde6e8b2880fa2c7256"
+    },
+    {
+      "path": "migrations/v2.0.1-to-v2.1.0.md",
+      "sha256": "ca2ce5a326cd64bf4aadce11fbf76b53a95b3efe94591cb32d6b467614e3822a"
     }
   ],
   "roles": {
@@ -170,15 +216,33 @@
     },
     {
       "path": "compiler/compile.py",
-      "sha256": "9d3a75a17f507e47b0644476ab655ce3785f346b5351bdd19115a6e3ab6337e9"
+      "sha256": "0cb8b6d8b2c26d36e36722c6e23cf0d90aaa47f6b1e0b5b200edf085afa51942"
     },
     {
       "path": "compiler/generate_manifest.py",
-      "sha256": "7e59c02e20d1589234d85b485efb8cb4f108e52d43ce99789336c21bff87dfdd"
+      "sha256": "2e7671daeaef72bb38b5351edf78ab15a7744b3c58ca55ad7aeff7b493b18861"
     },
     {
       "path": "compiler/README.md",
-      "sha256": "5ef26852352795d8f1c918dcd763e52d48125299f13651f069f65ed6b5186f69"
+      "sha256": "573376fe94cbad8ed4d39c59f2a1772c902bc3af104c3dcccbde0b1d01ec736d"
+    }
+  ],
+  "repository_checks": [
+    {
+      "path": ".github/workflows/check-agents-md.yml",
+      "sha256": "6f7e6ef6efae79fc9622576728975baaf2feb0b5427c47fa32b8016b70eb081d"
+    },
+    {
+      "path": ".github/workflows/situation-projection.yml",
+      "sha256": "55371d02e3a3a8f57239576fb50854f9beba5dbf7b360479e02feab15931cbc9"
+    },
+    {
+      "path": "scripts/check-agents-md.py",
+      "sha256": "d31fe4317a8bd421229ae63bd82cf8476c30e4d269cfb0ad6d87f6ee4e554ef1"
+    },
+    {
+      "path": "scripts/situation-projection.py",
+      "sha256": "1284a1a847b38543f5e248d1cd2b5f16a11732716546e5b25e1f78fbabd6588a"
     }
   ],
   "distribution": {
