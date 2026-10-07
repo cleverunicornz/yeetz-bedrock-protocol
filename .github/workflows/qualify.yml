@@ -26,6 +26,27 @@ jobs:
           cp manifest.json /tmp/qualified-manifest.json
           python3 compiler/generate_manifest.py
           cmp manifest.json /tmp/qualified-manifest.json
+      - name: Lint workflows with actionlint and shellcheck
+        run: |
+          tools=$(mktemp -d /tmp/bedrock-lint.XXXXXX)
+          curl --fail --location --silent --show-error --output "$tools/actionlint.tar.gz" \
+            https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
+          curl --fail --location --silent --show-error --output "$tools/shellcheck.tar.xz" \
+            https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz
+          printf '%s  %s\n' \
+            8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8 "$tools/actionlint.tar.gz" \
+            8c3be12b05d5c177a04c29e3c78ce89ac86f1595681cab149b65b97c4e227198 "$tools/shellcheck.tar.xz" | sha256sum --check
+          tar -xzf "$tools/actionlint.tar.gz" -C "$tools" actionlint
+          tar -xJf "$tools/shellcheck.tar.xz" -C "$tools" --strip-components=1 shellcheck-v0.11.0/shellcheck
+          PATH="$tools:$PATH" "$tools/actionlint" -color -shellcheck "$tools/shellcheck"
+      - name: Project this repository's situation records twice
+        run: |
+          for run in 1 2; do
+            python3 scripts/situation-projection.py --scope "$GITHUB_REPOSITORY" --output "situation-$run.md"
+          done
+          cmp situation-1.md situation-2.md
+          head -n 8 situation-1.md
+          rm situation-1.md situation-2.md
       - name: Compile the finite three-part example
         run: |
           python3 compiler/compile.py --protocol-root . --org-root examples/organisation --repository examples/repository.json --output /tmp/compiled-AGENTS.md

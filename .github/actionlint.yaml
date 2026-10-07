@@ -1,0 +1,4 @@
+self-hosted-runner:
+  labels:
+    - automation-test-s
+    - automation-test-xl

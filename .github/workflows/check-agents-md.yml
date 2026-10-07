@@ -1,0 +1,91 @@
+# Reusable Bedrock check: the repository block of the caller's root AGENTS.md is the fixed text published with the
+# protocol release the repository adopts, byte for byte (contract section 8). The user-level protocol block is
+# delivered by the runtime and is not checked.
+#
+#   on: pull_request
+#   jobs:
+#     agents-md:
+#       uses: cleverunicornz/yeetz-bedrock-protocol/.github/workflows/check-agents-md.yml@v2.1.0
+#       with:
+#         version: 2.1.0
+name: Check AGENTS.md
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: Protocol release (2.minor.patch, minor 1 or later) whose templates/repository-block.md the block must equal.
+        required: true
+        type: string
+      runs-on:
+        description: The job's runs-on value as JSON, for example '"ubuntu-latest"' or '{"group":"ci","labels":"automation-test-s"}'.
+        required: false
+        type: string
+        default: '"ubuntu-latest"'
+permissions:
+  contents: read
+jobs:
+  agents-md:
+    name: AGENTS.md repository block is the fixed text
+    runs-on: ${{ fromJSON(inputs.runs-on) }}
+    timeout-minutes: 10
+    env:
+      VERSION: ${{ inputs.version }}
+      RELEASE_BASE: https://github.com/cleverunicornz/yeetz-bedrock-protocol/releases/download/v${{ inputs.version }}
+    steps:
+      - name: Protocol release
+        run: |
+          if [[ ! "$VERSION" =~ ^2\.[1-9][0-9]*\.(0|[1-9][0-9]*)$ ]]; then
+            echo "::error::version must be a Bedrock protocol release 2.<minor>.<patch> from 2.1.0, got '$VERSION'"
+            exit 1
+          fi
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          path: repository
+          persist-credentials: false
+      - name: Fetch and verify the protocol release
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          curl --fail --location --silent --show-error --output release/SHA256SUMS "$RELEASE_BASE/SHA256SUMS"
+          curl --fail --location --silent --show-error --output "release/bedrock-$VERSION.tar.gz" "$RELEASE_BASE/bedrock-$VERSION.tar.gz"
+          awk -v name="bedrock-$VERSION.tar.gz" '$2 == name' release/SHA256SUMS > release/archive.sha256
+          if [ "$(wc -l < release/archive.sha256)" -ne 1 ]; then
+            echo "::error::SHA256SUMS of release v$VERSION does not name bedrock-$VERSION.tar.gz once"
+            exit 1
+          fi
+          (cd release && sha256sum --check --strict archive.sha256)
+          tar -xzf "release/bedrock-$VERSION.tar.gz"
+          python3 - <<'PY'
+          import hashlib, json, os, sys
+          from pathlib import Path
+          root, version = Path("bedrock"), os.environ["VERSION"]
+          manifest = json.loads((root / "manifest.json").read_text())
+          if manifest.get("version") != version or (root / "VERSION").read_text().strip() != version:
+              sys.exit(f"release v{version}: manifest or VERSION names another version")
+          def entries(value):
+              if isinstance(value, dict):
+                  if "path" in value:
+                      yield value
+                  else:
+                      for child in value.values():
+                          yield from entries(child)
+              elif isinstance(value, list):
+                  for child in value:
+                      yield from entries(child)
+          published = set()
+          for entry in entries(manifest):
+              if hashlib.sha256((root / entry["path"]).read_bytes()).hexdigest() != entry["sha256"]:
+                  sys.exit(f"release v{version}: {entry['path']} differs from its manifest digest")
+              published.add(entry["path"])
+          for needed in ("templates/repository-block.md", "scripts/check-agents-md.py", "scripts/situation-projection.py"):
+              if needed not in published:
+                  sys.exit(f"release v{version} does not publish {needed}")
+          print(f"verified protocol release v{version}: {len(published)} published files")
+          PY
+      - name: AGENTS.md repository block equals the fixed text
+        run: |
+          if python3 bedrock/scripts/check-agents-md.py --agents repository/AGENTS.md --template bedrock/templates/repository-block.md; then
+            exit 0
+          fi
+          echo "::error file=AGENTS.md::the AGENTS.md repository block must equal templates/repository-block.md of Bedrock protocol release $VERSION byte for byte"
+          exit 1
