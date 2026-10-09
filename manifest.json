@@ -1,9 +1,9 @@
 {
-  "version": "2.1.0",
-  "description": "Bedrock 2.1 fixed contract, executable procedures, record templates, short instruction compiler and repository checks; organisation is a separate paired package.",
+  "version": "2.1.1",
+  "description": "Bedrock 2.1 fixed contract, STE100 communication, executable procedures, record templates, short instruction compiler and repository checks; organisation is a separate paired package.",
   "root_protocol": {
     "path": "templates/root-protocol.md",
-    "sha256": "71ddf61c026a11df75e5f7f62ab6234c5ee6a6ed42e0eaf4e7e40249e12bfd09"
+    "sha256": "8a37103f4c947c7660c3e5e0644656f1b4a69f8c9c1b1fc9c351b91f8136877e"
   },
   "repository_block": {
     "path": "templates/repository-block.md",
@@ -50,7 +50,7 @@
   "contract": [
     {
       "path": "contract/bedrock-v2.md",
-      "sha256": "4b7bb82d15f320eac95db68a88a44592121675129028b7fe2e0011d893520a0a"
+      "sha256": "d958e0aebf9f0619fb9b1d9f4b86439ee6cd9d4171df36d0c5a121551f452d83"
     },
     {
       "path": "contract/bedrock-v2.yaml",
@@ -95,6 +95,18 @@
     {
       "path": "contract/gaps/SO-000117-skill-verb-declaration.md",
       "sha256": "72dcd216a27a32ea132f507a3921b8ac6da4a3724f93f60d7c6409dddabcea59"
+    },
+    {
+      "path": "contract/communication/asd-ste100-issue9.md",
+      "sha256": "e1bd576b09a5097e1514f54de07f996df6b17d44c764a5f0817a3fea28958890"
+    },
+    {
+      "path": "contract/communication/ste100-writing.md",
+      "sha256": "410d04dd04439dcd1d91a3411fd7443cd17bd186f018e100df2f72683131480e"
+    },
+    {
+      "path": "contract/communication/ste100-review/SKILL.md",
+      "sha256": "cb0976be1ec7945fd6262c5c7a731ff962d0915a8742248e52c67e4e5081c936"
     }
   ],
   "verb_skills": [
@@ -211,6 +223,10 @@
     {
       "path": "migrations/v2.0.1-to-v2.1.0.md",
       "sha256": "c6d9ba0e3cbd4f098b1bdfd9854f897dafc1161560a32b9b198fd4dbbeb67a3a"
+    },
+    {
+      "path": "migrations/v2.1.0-to-v2.1.1.md",
+      "sha256": "9b284b7f9791eeaf0e573a17777e4dfa0c79b80855a0e07d2128e3d6c3e2776d"
     }
   ],
   "roles": {
@@ -228,11 +244,11 @@
     },
     {
       "path": "compiler/generate_manifest.py",
-      "sha256": "3e22dbb2149905218f7bbcd821571132ece8a2d22043a14e137e2da512b08cf3"
+      "sha256": "70a7c836986f03d9ca67ff28a94e935c5e9e32f7daca12b2f7e30e6245870ebe"
     },
     {
       "path": "compiler/README.md",
-      "sha256": "573376fe94cbad8ed4d39c59f2a1772c902bc3af104c3dcccbde0b1d01ec736d"
+      "sha256": "38087033da56c2b9ca8c3dd508c8ebc56b1470ab0a35d51eea229c0b143aa898"
     }
   ],
   "repository_checks": [

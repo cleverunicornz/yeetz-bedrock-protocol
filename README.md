@@ -12,6 +12,14 @@ for the source commitment and its verification, and
 migrations/2.0.0-draft-to-2.0.0.md and migrations/v2.0.1-to-v2.1.0.md for the
 protocol Decisions.
 
+Bedrock STE100 Communication applies to records, handoffs and agent prose,
+including personal use. Read `contract/communication/ste100-writing.md` for
+the compact convention and vocabulary pointers. Its `ste100-review` skill
+evaluates proposed changes through existing Bedrock acts, with independent
+counterarguments. Source lineage and the protocol Decision are retained in
+`contract/communication/asd-ste100-issue9.md` and
+`migrations/v2.1.0-to-v2.1.1.md`.
+
 ## Using it in a repository
 
 Records live in the situation domain; files are projections (contract

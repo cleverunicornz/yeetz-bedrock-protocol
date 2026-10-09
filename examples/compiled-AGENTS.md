@@ -9,6 +9,9 @@ Use these tools at session start and throughout the work:
 The task graph's act log is the authority; records and states are its projections.
 Read the applicable verb skill before an act; query the graph for binding rules and open work.
 
+For authoring and communication, use bedrock/contract/communication/ste100-writing.md.
+For assigned convention reviews, consult bedrock/contract/communication/ste100-review/SKILL.md.
+
 An Invariant is a rule binding its scope; states: stipulated, superseded, revoked.
 A Gap is an encountered absence, concern or uncertainty; states: declared, decided, superseded, revoked.
 A Candidate is an evidence-derived hypothesis for a response; states: formulated, evaluated, decided, superseded, revoked.

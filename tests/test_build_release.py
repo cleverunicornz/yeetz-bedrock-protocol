@@ -44,7 +44,10 @@ class BuildRelease(unittest.TestCase):
             names = tar.getnames()
         self.assertEqual(names, sorted(names))
         for required in ("bedrock/VERSION", "bedrock/manifest.json", "bedrock/templates/repository-block.md",
-                         "bedrock/scripts/situation-projection.py", "bedrock/scripts/check-agents-md.py"):
+                         "bedrock/scripts/situation-projection.py", "bedrock/scripts/check-agents-md.py",
+                         "bedrock/contract/communication/ste100-writing.md",
+                         "bedrock/contract/communication/asd-ste100-issue9.md",
+                         "bedrock/contract/communication/ste100-review/SKILL.md"):
             self.assertIn(required, names)
 
     def test_refuses_a_tree_whose_files_disagree_with_the_manifest(self):
