@@ -97,8 +97,12 @@
       "sha256": "72dcd216a27a32ea132f507a3921b8ac6da4a3724f93f60d7c6409dddabcea59"
     },
     {
+      "path": "contract/communication/asd-ste100-issue9-excerpts.md",
+      "sha256": "ae6cd6dd570e771602d2c5d8cf7930b91df7833901294e1d989655d9ce26904b"
+    },
+    {
       "path": "contract/communication/asd-ste100-issue9.md",
-      "sha256": "e1bd576b09a5097e1514f54de07f996df6b17d44c764a5f0817a3fea28958890"
+      "sha256": "60e5c0d96f075c190517c4269e9364ceb5806384e376ccbf6b6d18d8c7a71e7e"
     },
     {
       "path": "contract/communication/ste100-writing.md",
@@ -226,7 +230,7 @@
     },
     {
       "path": "migrations/v2.1.0-to-v2.1.1.md",
-      "sha256": "9b284b7f9791eeaf0e573a17777e4dfa0c79b80855a0e07d2128e3d6c3e2776d"
+      "sha256": "5cd002a1069d5ef19e1bf976dc9c95cf91ece2755f23021c031c0194cade47f9"
     }
   ],
   "roles": {

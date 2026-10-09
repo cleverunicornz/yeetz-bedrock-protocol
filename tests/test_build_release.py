@@ -47,6 +47,7 @@ class BuildRelease(unittest.TestCase):
                          "bedrock/scripts/situation-projection.py", "bedrock/scripts/check-agents-md.py",
                          "bedrock/contract/communication/ste100-writing.md",
                          "bedrock/contract/communication/asd-ste100-issue9.md",
+                         "bedrock/contract/communication/asd-ste100-issue9-excerpts.md",
                          "bedrock/contract/communication/ste100-review/SKILL.md"):
             self.assertIn(required, names)
 

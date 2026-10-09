@@ -10,12 +10,12 @@ https://www.asd-ste100.org/assets/files/ASD-STE100_ISSUE9.pdf
 Supporting explanation:
 https://www.asd-ste100.org/STE_faq.html
 
-The source was retrieved on 2026-10-09. The SHA-256 of the UTF-8 Markdown
-extraction read for profile 1 is
-`2095436f76c979199f5a3d5531dd7701ae01ee69638082050b99c7c99832b3e5`.
-This fingerprints the extraction, not the PDF bytes. The edition and rule
-coordinates below identify the source independently of that conversion.
-The package publishes its own guidance and citations, not the standard.
+The source was retrieved on 2026-10-09. Selected source excerpts and capture
+metadata are retained in `contract/communication/asd-ste100-issue9-excerpts.md`.
+The release manifest pins those excerpts with this profile. The edition and
+rule coordinates below identify the full source independently of its text
+conversion. The package publishes its own guidance and limited quotations,
+not the full standard.
 
 ## Correspondence
 
