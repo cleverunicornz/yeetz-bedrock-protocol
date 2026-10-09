@@ -456,6 +456,20 @@ Each layer adds and specialises; none redefines the layer below it. Redefining i
 
 Layers are where rules come from; levels are where records apply. They are separate properties.
 
+### Communication at every scope
+
+Bedrock's shared authoring convention is `contract/communication/ste100-writing.md`.
+It applies to agent-authored records, handoffs and general communication, including
+personal use outside an organisation. It names the vocabulary and points to the
+applicable noun definitions and verb skills for progressive disclosure.
+
+`contract/communication/ste100-review/SKILL.md` specialises `evaluate` for a
+proposed convention change. Its supporting and independent adversarial analyses
+feed the existing Decision and revision acts. It introduces no noun, verb, state,
+outcome or receiver refusal. Runtime coordination remains with the adopter.
+The protocol owns this shared convention; its source edition and adaptations are
+in `contract/communication/asd-ste100-issue9.md`.
+
 ### Where records live
 
 - **Records live in the situation domain.** The act log and its projection are the authority. A repository's

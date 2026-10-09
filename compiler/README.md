@@ -51,6 +51,15 @@ structural procedures; no noun skill. Organisation skills install separately
 under `org/skills/`. Namespace and old organisation bytes remaining in source
 are historical; no 2.x manifest publishes them.
 
+The protocol's `contract` manifest entries also include
+`contract/communication/ste100-writing.md`, its ASD-STE100 source note and
+`contract/communication/ste100-review/SKILL.md`. Retain their original paths
+under `bedrock/`; the root protocol template points there directly. The
+review skill specialises `evaluate` and does not add a verb to the fixed
+`verb_skills` set. The compiler checks its sentences like every other
+manifest-listed skill. Communication guidance therefore travels with the
+protocol package, including installations outside an organisation.
+
 ## Repository checks
 
 A repository under the protocol calls two reusable workflows, pinned to the

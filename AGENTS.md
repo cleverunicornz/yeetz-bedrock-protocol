@@ -23,6 +23,8 @@ identity and cannot prove production trust or runtime board integration.
 Preserve collected source work and author history under
 handoff/stage0-unvalidated/. Correct by forward commits; never rewrite it.
 Published edits require VERSION, manifest digests and a migration note.
+For authoring, read contract/communication/ste100-writing.md; assigned
+communication-convention reviews use contract/communication/ste100-review/SKILL.md.
 Regenerate manifest.json with compiler/generate_manifest.py.
 Run qualification through .github/workflows/qualify.yml or the workbench;
 never treat a not-run check as qualification. A complete draft, independent

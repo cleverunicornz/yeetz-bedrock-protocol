@@ -18,7 +18,7 @@ def many(pattern):
 def main():
     data = {
         "version": (ROOT / "VERSION").read_text().strip(),
-        "description": "Bedrock 2.1 fixed contract, executable procedures, record templates, short instruction compiler and repository checks; organisation is a separate paired package.",
+        "description": "Bedrock 2.1 fixed contract, STE100 communication, executable procedures, record templates, short instruction compiler and repository checks; organisation is a separate paired package.",
         "root_protocol": entry("templates/root-protocol.md"),
         "repository_block": entry("templates/repository-block.md"),
         "record_templates": many("templates/records/*.md"),
@@ -32,6 +32,8 @@ def main():
         "repository_checks": [entry(p) for p in (".github/workflows/check-agents-md.yml", ".github/workflows/situation-projection.yml", "scripts/check-agents-md.py", "scripts/situation-projection.py")],
         "distribution": {"protocol_root": "bedrock", "verb_skill_source": "contract/skills", "structural_skill_source": "contract/structural-skills", "installed_skill_root": "bedrock/skills", "organisation_root": "org"},
     }
+    data["contract"] += many("contract/communication/*.md") + many("contract/communication/*/SKILL.md")
+    data["migrations"].append(entry("migrations/v2.1.0-to-v2.1.1.md"))
     (ROOT / "manifest.json").write_text(json.dumps(data, indent=2) + "\n")
 
 
