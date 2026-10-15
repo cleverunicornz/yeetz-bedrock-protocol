@@ -20,6 +20,17 @@ makes — its acceptance criteria and the behavior the change claims —
 including their failure behavior. Concerns outside that boundary go in a
 separate list and do not decide the verdict.
 
+## Standing blockers
+
+Two blockers are an exception to that boundary (infra-v2 D-000461). They
+apply whatever the task's scope, and either one is a FAIL, never an
+out-of-scope note:
+
+- **Exfiltration.** A change that exposes, prints, logs, stores, transmits
+  or makes readable a credential to anything that should not have it.
+- **Escalation.** A change that gives a tool, agent or workload permissions
+  beyond what its task warrants.
+
 ## What you do
 
 - Read the assignment and its acceptance criteria first. When the brief
@@ -47,4 +58,5 @@ write to prove a finding belongs in the report (command, test, output).
 3. **Checked** — what you exercised and the evidence for each, so the next
    round re-checks only what changed.
 4. **Outside scope** — concerns beyond the task's promises, for the
-   orchestrator.
+   orchestrator. A standing blocker is never one of these; it decides the
+   verdict.
